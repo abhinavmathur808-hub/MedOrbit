@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -63,7 +65,7 @@ const DoctorProfileEdit = () => {
                     return;
                 }
 
-                const response = await fetch('http://localhost:5000/api/doctor/profile', {
+                const response = await fetch(`${API_BASE}/api/doctor/profile`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -201,7 +203,7 @@ const DoctorProfileEdit = () => {
                 setFormData((prev) => ({ ...prev, photo: data.secure_url }));
 
                 const token = localStorage.getItem('token');
-                await fetch('http://localhost:5000/api/users/update-profile', {
+                await fetch(`${API_BASE}/api/users/update-profile`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -227,7 +229,7 @@ const DoctorProfileEdit = () => {
         try {
             const token = localStorage.getItem('token');
 
-            const response = await fetch('http://localhost:5000/api/doctor/profile', {
+            const response = await fetch(`${API_BASE}/api/doctor/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -252,7 +254,7 @@ const DoctorProfileEdit = () => {
             }
 
             if (formData.photo) {
-                await fetch('http://localhost:5000/api/users/update-profile', {
+                await fetch(`${API_BASE}/api/users/update-profile`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

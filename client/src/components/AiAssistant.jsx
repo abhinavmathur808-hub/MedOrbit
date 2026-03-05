@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
@@ -42,7 +44,7 @@ const AiAssistant = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/ai/analyze', {
+            const response = await fetch(`${API_BASE}/api/ai/analyze`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

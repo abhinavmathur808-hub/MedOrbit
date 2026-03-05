@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -50,7 +52,7 @@ const MyAppointments = () => {
                     return;
                 }
 
-                const response = await fetch('http://localhost:5000/api/appointments', {
+                const response = await fetch(`${API_BASE}/api/appointments`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -81,7 +83,7 @@ const MyAppointments = () => {
         try {
             const token = localStorage.getItem('token');
 
-            const response = await fetch(`http://localhost:5000/api/appointments/${appointmentId}`, {
+            const response = await fetch(`${API_BASE}/api/appointments/${appointmentId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -123,7 +125,7 @@ const MyAppointments = () => {
         setUpdating(appointmentId);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/users/cancel-appointment', {
+            const response = await fetch(`${API_BASE}/api/users/cancel-appointment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

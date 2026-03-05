@@ -7,6 +7,8 @@ import { FcGoogle } from 'react-icons/fc';
 import heroBg from '../assets/hero-medical-bg.png';
 import logo from '../assets/logo-light-mode.png';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const Login = () => {
     const [formData, setFormData] = useState({
         email: '',
@@ -126,7 +128,7 @@ const Login = () => {
                 </div>
 
                 <a
-                    href="http://localhost:5000/auth/google"
+                    href={`${API_BASE}/auth/google`}
                     className="w-full flex items-center justify-center gap-2 bg-[#121212] hover:bg-zinc-900 border border-zinc-800 text-zinc-300 py-3 rounded-lg text-sm transition-colors"
                 >
                     <FcGoogle className="w-5 h-5" />

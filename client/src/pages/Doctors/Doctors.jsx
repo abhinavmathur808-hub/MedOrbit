@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Stethoscope, Search } from 'lucide-react';
@@ -21,7 +23,7 @@ const Doctors = () => {
         const fetchDoctors = async () => {
 
             try {
-                const response = await fetch('http://localhost:5000/api/doctor', {
+                const response = await fetch(`${API_BASE}/api/doctor`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

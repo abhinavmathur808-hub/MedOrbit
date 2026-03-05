@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState } from 'react';
 import { X, Plus, Trash2, Send, Loader2, FileText } from 'lucide-react';
 
@@ -46,7 +48,7 @@ const PrescriptionModal = ({ isOpen, onClose, appointment, onPrescriptionSubmitt
         try {
             const token = localStorage.getItem('token');
 
-            const response = await fetch('http://localhost:5000/api/doctor/prescription', {
+            const response = await fetch(`${API_BASE}/api/doctor/prescription`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

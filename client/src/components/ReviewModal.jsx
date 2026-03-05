@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState } from 'react';
 import { Star, X, Send, Loader2 } from 'lucide-react';
 
@@ -22,7 +24,7 @@ const ReviewModal = ({ isOpen, onClose, appointment, onReviewSubmitted }) => {
 
         try {
             const token = localStorage.getItem('token');
-            const url = 'http://localhost:5000/api/doctor/add-review';
+            const url = `${API_BASE}/api/doctor/add-review`;
 
             const response = await fetch(url, {
                 method: 'POST',

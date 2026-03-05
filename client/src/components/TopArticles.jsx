@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Loader2 } from 'lucide-react';
@@ -10,7 +12,7 @@ const TopArticles = () => {
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/articles/list');
+                const response = await fetch(`${API_BASE}/api/articles/list`);
                 const data = await response.json();
                 if (data.success) {
                     setArticles(data.articles);

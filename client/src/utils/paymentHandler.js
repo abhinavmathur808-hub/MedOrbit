@@ -1,6 +1,4 @@
-
-
-const API_URL = 'http://localhost:5000/api/payment';
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/payment`;
 
 const loadRazorpayScript = () => {
     return new Promise((resolve) => {

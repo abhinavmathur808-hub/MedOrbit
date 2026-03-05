@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -36,7 +38,7 @@ const DoctorProfile = () => {
                     return;
                 }
 
-                const response = await fetch('http://localhost:5000/api/doctor/profile', {
+                const response = await fetch(`${API_BASE}/api/doctor/profile`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

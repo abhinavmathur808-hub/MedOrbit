@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -61,7 +63,7 @@ const UserProfile = () => {
                     return;
                 }
 
-                const response = await fetch('http://localhost:5000/api/users/profile', {
+                const response = await fetch(`${API_BASE}/api/users/profile`, {
                     headers: { 'Authorization': `Bearer ${token}` },
                 });
 
@@ -112,7 +114,7 @@ const UserProfile = () => {
                 setFormData((prev) => ({ ...prev, photo: data.secure_url }));
 
                 const token = localStorage.getItem('token');
-                await fetch('http://localhost:5000/api/users/update-profile', {
+                await fetch(`${API_BASE}/api/users/update-profile`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -138,7 +140,7 @@ const UserProfile = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/users/update-profile', {
+            const response = await fetch(`${API_BASE}/api/users/update-profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -182,7 +184,7 @@ const UserProfile = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/users/medical-history', {
+            const response = await fetch(`${API_BASE}/api/users/medical-history`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

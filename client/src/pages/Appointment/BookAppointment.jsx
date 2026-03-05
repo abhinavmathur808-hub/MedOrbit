@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -103,7 +105,7 @@ const BookAppointment = () => {
 
     const fetchDoctor = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/doctor/${id}`, {
+            const response = await fetch(`${API_BASE}/api/doctor/${id}`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -126,7 +128,7 @@ const BookAppointment = () => {
         const fetchRelatedDoctors = async (specialization, doctorId) => {
             try {
                 const response = await fetch(
-                    `http://localhost:5000/api/doctor/related?specialization=${encodeURIComponent(specialization)}&excludeId=${doctorId}`
+                    `${API_BASE}/api/doctor/related?specialization=${encodeURIComponent(specialization)}&excludeId=${doctorId}`
                 );
                 const data = await response.json();
                 if (data.success) setRelatedDoctors(data.doctors);
@@ -211,7 +213,7 @@ const BookAppointment = () => {
             };
 
             try {
-                const response = await fetch('http://localhost:5000/api/appointments', {
+                const response = await fetch(`${API_BASE}/api/appointments`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Clock, Loader2 } from 'lucide-react';
@@ -12,7 +14,7 @@ const Article = () => {
     useEffect(() => {
         const fetchArticle = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/articles/${id}`);
+                const response = await fetch(`${API_BASE}/api/articles/${id}`);
                 const data = await response.json();
 
                 if (data.success) {

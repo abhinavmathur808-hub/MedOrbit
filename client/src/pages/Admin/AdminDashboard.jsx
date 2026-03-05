@@ -19,6 +19,8 @@ import {
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const AdminDashboard = () => {
     const { user, token } = useSelector((state) => state.auth);
     const [doctors, setDoctors] = useState([]);
@@ -35,9 +37,9 @@ const AdminDashboard = () => {
                 const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
 
                 const [statsRes, activityRes, doctorsRes] = await Promise.all([
-                    fetch('http://localhost:5000/api/admin/stats', { headers }),
-                    fetch('http://localhost:5000/api/admin/recent-activity', { headers }),
-                    fetch('http://localhost:5000/api/admin/doctors', { headers }),
+                    fetch(`${API_BASE}/api/admin/stats`, { headers }),
+                    fetch(`${API_BASE}/api/admin/recent-activity`, { headers }),
+                    fetch(`${API_BASE}/api/admin/doctors`, { headers }),
                 ]);
 
                 const [statsData, activityData, doctorsData] = await Promise.all([
@@ -62,7 +64,7 @@ const AdminDashboard = () => {
     const handleVerify = async (doctorId) => {
         setVerifyingId(doctorId);
         try {
-            const response = await fetch('http://localhost:5000/api/admin/verify-doctor', {
+            const response = await fetch(`${API_BASE}/api/admin/verify-doctor`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({ doctorId }),

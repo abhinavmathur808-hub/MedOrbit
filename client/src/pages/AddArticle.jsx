@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -48,7 +50,7 @@ const AddArticle = () => {
         setSuccess('');
 
         try {
-            const response = await fetch('http://localhost:5000/api/articles/add', {
+            const response = await fetch(`${API_BASE}/api/articles/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

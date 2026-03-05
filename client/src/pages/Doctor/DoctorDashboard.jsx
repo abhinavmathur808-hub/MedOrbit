@@ -1,3 +1,5 @@
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -46,7 +48,7 @@ const DoctorDashboard = () => {
     const fetchAppointments = async () => {
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:5000/api/appointments', {
+            const response = await fetch(`${API_BASE}/api/appointments`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -77,7 +79,7 @@ const DoctorDashboard = () => {
     const updateStatus = async (appointmentId, newStatus) => {
         setUpdating(appointmentId);
         try {
-            const response = await fetch(`http://localhost:5000/api/appointments/${appointmentId}`, {
+            const response = await fetch(`${API_BASE}/api/appointments/${appointmentId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -116,7 +118,7 @@ const DoctorDashboard = () => {
 
         setUpdating(appointmentId);
         try {
-            const response = await fetch('http://localhost:5000/api/doctor/cancel-appointment', {
+            const response = await fetch(`${API_BASE}/api/doctor/cancel-appointment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
