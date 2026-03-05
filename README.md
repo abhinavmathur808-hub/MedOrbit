@@ -5,6 +5,10 @@
 <h1 align="center">MedOrbit</h1>
 
 <p align="center">
+  <a href="https://medorbit.vercel.app" target="_blank">Live Demo</a>
+</p>
+
+<p align="center">
   A full-stack medical appointment platform with role-based access, secure payments, AI-assisted health guidance, and real-time video consultations.
 </p>
 
