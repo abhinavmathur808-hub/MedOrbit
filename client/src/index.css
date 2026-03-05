@@ -1,0 +1,54 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* ── Modern Black Design Tokens ──────────────── */
+  --bg-base: #09090b;
+  --card-bg: rgba(255, 255, 255, 0.02);
+  --card-border: rgba(255, 255, 255, 0.05);
+  --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --card-hover-bg: rgba(255, 255, 255, 0.04);
+  --card-hover-border: rgba(255, 255, 255, 0.1);
+  --btn-glow: 0 0 15px rgba(255, 255, 255, 0.08);
+
+  /* ── Preserved for non-landing pages ──────────── */
+  --shadow-soft: 0 8px 30px rgb(0 0 0 / 0.04);
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.04), 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-elevated: 0 12px 40px rgb(0 0 0 / 0.06);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-base);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection inside form fields */
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* ── Booking Form Labels ──────────────────────── */
+.booking-label {
+  color: #ffffff !important;
+}
+
+.booking-label-icon {
+  color: #fb7185 !important;
+}
+
+.profile-label {
+  color: #ffffff !important;
+}

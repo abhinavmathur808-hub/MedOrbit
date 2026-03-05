@@ -1,0 +1,18 @@
+{
+  "name": "medorbit",
+  "version": "1.0.0",
+  "description": "MedOrbit - A MERN stack healthcare appointment platform",
+  "scripts": {
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [
+    "healthcare",
+    "appointments",
+    "mern",
+    "telemedicine"
+  ],
+  "author": "",
+  "license": "ISC"
+}
