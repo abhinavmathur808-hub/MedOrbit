@@ -170,6 +170,12 @@ node scripts/seedDoctors.js
 
 ---
 
+### Performance & Optimization
+* **Cloudinary Dynamic Delivery**: Utility interceptors automatically inject `f_auto,q_auto` into Cloudinary URLs, delivering images in the most optimal format (like WebP/AVIF) and quality for the user's specific browser.
+* **Native Lazy Loading**: Implemented `loading="lazy"` on all off-screen and non-critical `<img>` tags, dramatically reducing initial page load times and saving bandwidth.
+* **Asset Compression**: Heavy local assets converted to next-gen formats (WebP), reducing bundle size and preventing render-blocking delays.
+
+
 ## Project Structure
 
 ```
