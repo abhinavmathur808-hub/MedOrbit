@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
+import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
 
 const UserProfile = () => {
     const { user } = useSelector((state) => state.auth);
@@ -246,7 +247,7 @@ const UserProfile = () => {
                                     {formData.photo && formData.photo.length > 0 ? (
                                         <div className="relative w-36 h-36 mx-auto">
                                             <div className="w-36 h-36 rounded-2xl overflow-hidden border border-zinc-700">
-                                                <img src={formData.photo} alt={formData.name} className="w-full h-full object-cover" />
+                                                <img src={optimizeCloudinaryUrl(formData.photo)} alt={formData.name} className="w-full h-full object-cover" loading="lazy" />
                                             </div>
                                             <label className="absolute bottom-0 right-0 w-8 h-8 bg-rose-500 hover:bg-rose-600 rounded-full flex items-center justify-center cursor-pointer shadow-lg">
                                                 {uploading ? <RefreshCw className="w-4 h-4 text-white animate-spin" /> : <Camera className="w-4 h-4 text-white" />}

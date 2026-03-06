@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
+import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
 
 const DoctorProfileEdit = () => {
     const navigate = useNavigate();
@@ -312,7 +313,7 @@ const DoctorProfileEdit = () => {
                                 <label htmlFor="doctor-photo" className="relative cursor-pointer group">
                                     <div className="w-28 h-28 rounded-2xl overflow-hidden bg-gradient-to-br from-rose-600 to-rose-800 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
                                         {formData.photo ? (
-                                            <img src={formData.photo} alt={formData.name} className="w-full h-full object-cover" />
+                                            <img src={optimizeCloudinaryUrl(formData.photo)} alt={formData.name} className="w-full h-full object-cover" loading="lazy" />
                                         ) : (
                                             formData.name?.charAt(0)?.toUpperCase() || 'D'
                                         )}

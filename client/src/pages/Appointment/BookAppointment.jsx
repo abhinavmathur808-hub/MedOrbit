@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 
 import { handlePayment } from '../../utils/paymentHandler';
+import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
 import DoctorCard from '../../components/DoctorCard';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
@@ -343,7 +344,7 @@ const BookAppointment = () => {
                             <div className="flex items-center space-x-4 mb-6">
                                 <div className="w-16 h-16 bg-gradient-to-br from-rose-600 to-rose-800 rounded-xl flex items-center justify-center text-white text-xl font-bold">
                                     {photo ? (
-                                        <img src={photo} alt={name} className="w-full h-full object-cover rounded-xl" />
+                                        <img src={optimizeCloudinaryUrl(photo)} alt={name} className="w-full h-full object-cover rounded-xl" loading="lazy" />
                                     ) : (
                                         name.charAt(0).toUpperCase()
                                     )}

@@ -2,12 +2,12 @@
 import { TypeAnimation } from 'react-type-animation';
 import { useNavigate } from 'react-router-dom';
 
-import cardiologistImg from '../assets/specialities/Cardiologist.png';
-import neurologistImg from '../assets/specialities/Neurologist.png';
-import psychiatristImg from '../assets/specialities/Psychiatrist.png';
-import dermatologistImg from '../assets/specialities/Dermatologist.png';
-import generalPhysicianImg from '../assets/specialities/General Physician.png';
-import orthopedicImg from '../assets/specialities/Orthopedic.png';
+import cardiologistImg from '../assets/specialities/Cardiologist.webp';
+import neurologistImg from '../assets/specialities/Neurologist.webp';
+import psychiatristImg from '../assets/specialities/Psychiatrist.webp';
+import dermatologistImg from '../assets/specialities/Dermatologist.webp';
+import generalPhysicianImg from '../assets/specialities/General Physician.webp';
+import orthopedicImg from '../assets/specialities/Orthopedic.webp';
 
 const specialityData = [
     { speciality: 'Cardiologist', image: cardiologistImg },
@@ -63,6 +63,7 @@ const SpecialityMenu = () => {
                                 src={item.image}
                                 alt={item.speciality}
                                 className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover group-hover:-translate-y-1 transition-transform duration-300 ease-out"
+                                loading="lazy"
                             />
                         </div>
                         <p className="text-sm font-medium text-center text-zinc-500 group-hover:text-white transition-colors duration-200">{item.speciality}</p>

@@ -102,6 +102,7 @@ const Article = () => {
                     src={article.image}
                     alt={article.title}
                     className="w-full h-80 object-cover rounded-xl mb-8"
+                    loading="lazy"
                 />
 
                 <span className="text-xs font-semibold uppercase tracking-wider text-rose-500">

@@ -154,6 +154,7 @@ const Register = () => {
                     alt="MedOrbit"
                     className="h-[120px] w-auto mx-auto mb-3"
                     style={{ filter: 'brightness(0) invert(1)' }}
+                    loading="lazy"
                 />
 
                 <h2 className="text-xl font-bold text-white text-center mb-6">

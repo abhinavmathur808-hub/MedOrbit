@@ -22,6 +22,7 @@ import PrescriptionModal from '../../components/PrescriptionModal';
 import CancelModal from '../../components/CancelModal';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
+import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
 
 const DoctorDashboard = () => {
     const navigate = useNavigate();
@@ -305,9 +306,10 @@ const DoctorDashboard = () => {
                                                         <div className="flex items-center gap-3">
                                                             {patientPhoto ? (
                                                                 <img
-                                                                    src={patientPhoto}
+                                                                    src={optimizeCloudinaryUrl(patientPhoto)}
                                                                     alt={patientName}
                                                                     className="w-10 h-10 rounded-full object-cover"
+                                                                    loading="lazy"
                                                                 />
                                                             ) : (
                                                                 <div className="w-10 h-10 bg-rose-600/20 rounded-full flex items-center justify-center text-rose-400 font-bold">

@@ -49,6 +49,7 @@ const Footer = () => {
                                 alt="MedOrbit"
                                 className="h-36 w-auto object-contain"
                                 style={{ filter: 'brightness(0) invert(1)' }}
+                                loading="lazy"
                             />
                         </Link>
                     </div>

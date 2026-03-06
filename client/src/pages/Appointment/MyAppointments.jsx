@@ -24,6 +24,7 @@ import ViewPrescriptionModal from '../../components/ViewPrescriptionModal';
 import CancelModal from '../../components/CancelModal';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
+import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
 
 const MyAppointments = () => {
     const { user } = useSelector((state) => state.auth);
@@ -344,9 +345,10 @@ const MyAppointments = () => {
                                                             <div className="w-14 h-14 bg-gradient-to-br from-rose-600 to-rose-800 rounded-xl flex items-center justify-center text-white text-xl font-bold">
                                                                 {displayPhoto ? (
                                                                     <img
-                                                                        src={displayPhoto}
+                                                                        src={optimizeCloudinaryUrl(displayPhoto)}
                                                                         alt={displayName}
                                                                         className="w-full h-full object-cover rounded-xl"
+                                                                        loading="lazy"
                                                                     />
                                                                 ) : (
                                                                     displayName?.charAt(0)?.toUpperCase() || 'U'

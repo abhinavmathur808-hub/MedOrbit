@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
+import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
 
 const DoctorProfile = () => {
     const { user, isLoading: authLoading } = useSelector((state) => state.auth);
@@ -143,7 +144,7 @@ const DoctorProfile = () => {
                         <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
                             <div className="w-24 h-24 bg-gradient-to-br from-rose-600 to-rose-800 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg overflow-hidden">
                                 {photo && photo.startsWith('http') ? (
-                                    <img src={photo} alt={name} className="w-full h-full object-cover" />
+                                    <img src={optimizeCloudinaryUrl(photo)} alt={name} className="w-full h-full object-cover" loading="lazy" />
                                 ) : (
                                     name?.charAt(0)?.toUpperCase() || 'D'
                                 )}

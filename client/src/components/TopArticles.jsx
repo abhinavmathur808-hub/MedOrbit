@@ -87,6 +87,7 @@ const TopArticles = () => {
                                         src={article.image}
                                         alt={article.title}
                                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-70 group-hover:opacity-90"
+                                        loading="lazy"
                                     />
                                 </div>
 

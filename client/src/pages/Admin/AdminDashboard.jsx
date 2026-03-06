@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
+import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -274,7 +275,7 @@ const AdminDashboard = () => {
                                                     <div className="flex items-center gap-3">
                                                         <div className="w-10 h-10 bg-gradient-to-br from-rose-600 to-rose-800 rounded-full flex items-center justify-center text-white font-semibold">
                                                             {doctor.photo ? (
-                                                                <img src={doctor.photo} alt={doctor.name} className="w-full h-full rounded-full object-cover" />
+                                                                <img src={optimizeCloudinaryUrl(doctor.photo)} alt={doctor.name} className="w-full h-full rounded-full object-cover" loading="lazy" />
                                                             ) : (
                                                                 doctor.name?.charAt(0).toUpperCase()
                                                             )}

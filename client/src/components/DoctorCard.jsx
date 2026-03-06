@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { optimizeCloudinaryUrl } from '../utils/cloudinaryUrl';
 import { Link } from 'react-router-dom';
 import {
     Clock,
@@ -86,9 +87,10 @@ const DoctorCard = ({ doctor }) => {
                             <div className="w-24 h-24 rounded-full border-2 border-zinc-800 overflow-hidden bg-rose-950/30 flex items-center justify-center">
                                 {photo ? (
                                     <img
-                                        src={photo}
+                                        src={optimizeCloudinaryUrl(photo)}
                                         alt={name}
                                         className="w-full h-full object-cover"
+                                        loading="lazy"
                                     />
                                 ) : (
                                     <span className="text-3xl font-bold text-rose-500">
