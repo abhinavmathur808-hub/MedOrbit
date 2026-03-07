@@ -6,11 +6,19 @@ import Doctor from '../models/Doctor.js';
 import Otp from '../models/otpModel.js';
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.PAYMENT_EMAIL_USER,
         pass: process.env.PAYMENT_EMAIL_PASS,
     },
+    tls: {
+        rejectUnauthorized: false,
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
 });
 
 export const sendOtpController = async (req, res) => {
@@ -79,6 +87,7 @@ export const sendOtpController = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to send OTP',
+            error: error.message,
         });
     }
 };

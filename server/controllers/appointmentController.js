@@ -6,11 +6,19 @@ import nodemailer from 'nodemailer';
 import { escapeHtml } from '../utils/escapeHtml.js';
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.PAYMENT_EMAIL_USER,
         pass: process.env.PAYMENT_EMAIL_PASS,
     },
+    tls: {
+        rejectUnauthorized: false,
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
 });
 
 const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, patientName, date, slotTime) => {
