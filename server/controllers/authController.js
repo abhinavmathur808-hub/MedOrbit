@@ -9,6 +9,7 @@ const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
+    family: 4,
     auth: {
         user: process.env.PAYMENT_EMAIL_USER,
         pass: process.env.PAYMENT_EMAIL_PASS,
