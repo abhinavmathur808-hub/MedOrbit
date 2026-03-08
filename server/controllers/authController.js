@@ -1,26 +1,11 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import User from '../models/User.js';
 import Doctor from '../models/Doctor.js';
 import Otp from '../models/otpModel.js';
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    family: 4,
-    auth: {
-        user: process.env.PAYMENT_EMAIL_USER,
-        pass: process.env.PAYMENT_EMAIL_PASS,
-    },
-    tls: {
-        rejectUnauthorized: false,
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendOtpController = async (req, res) => {
     try {
@@ -53,8 +38,8 @@ export const sendOtpController = async (req, res) => {
             otp: hashedOtp,
         });
 
-        const mailOptions = {
-            from: process.env.PAYMENT_EMAIL_USER,
+        const { data, error } = await resend.emails.send({
+            from: 'MedOrbit <noreply@medorbit.live>',
             to: email,
             subject: '🔐 Your MedOrbit Verification Code',
             html: `
@@ -76,9 +61,9 @@ export const sendOtpController = async (req, res) => {
                     </div>
                 </div>
             `,
-        };
+        });
 
-        await transporter.sendMail(mailOptions);
+        if (error) throw new Error(error.message);
 
         res.status(200).json({
             success: true,

@@ -2,25 +2,10 @@ import Appointment from '../models/Appointment.js';
 import Doctor from '../models/Doctor.js';
 import User from '../models/User.js';
 import Prescription from '../models/Prescription.js';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { escapeHtml } from '../utils/escapeHtml.js';
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    family: 4,
-    auth: {
-        user: process.env.PAYMENT_EMAIL_USER,
-        pass: process.env.PAYMENT_EMAIL_PASS,
-    },
-    tls: {
-        rejectUnauthorized: false,
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, patientName, date, slotTime) => {
     try {
@@ -31,8 +16,8 @@ const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, pati
             year: 'numeric',
         });
 
-        const doctorMailOptions = {
-            from: process.env.PAYMENT_EMAIL_USER,
+        await resend.emails.send({
+            from: 'MedOrbit <noreply@medorbit.live>',
             to: doctorEmail,
             subject: '🏥 New Appointment Request - MedOrbit',
             html: `
@@ -56,10 +41,10 @@ const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, pati
                     </div>
                 </div>
             `,
-        };
+        });
 
-        const patientMailOptions = {
-            from: process.env.PAYMENT_EMAIL_USER,
+        await resend.emails.send({
+            from: 'MedOrbit <noreply@medorbit.live>',
             to: patientEmail,
             subject: '✅ Appointment Booked - MedOrbit',
             html: `
@@ -83,11 +68,7 @@ const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, pati
                     </div>
                 </div>
             `,
-        };
-
-        await transporter.sendMail(doctorMailOptions);
-
-        await transporter.sendMail(patientMailOptions);
+        });
 
     } catch (error) {
     }
@@ -374,8 +355,8 @@ const sendCancellationEmail = async (recipientEmail, recipientName, cancellerRol
             ? `Dr. ${cancellerName}`
             : cancellerName;
 
-        const mailOptions = {
-            from: process.env.PAYMENT_EMAIL_USER,
+        await resend.emails.send({
+            from: 'MedOrbit <noreply@medorbit.live>',
             to: recipientEmail,
             subject: '❌ Appointment Cancelled - MedOrbit',
             html: `
@@ -400,9 +381,7 @@ const sendCancellationEmail = async (recipientEmail, recipientName, cancellerRol
                     </div>
                 </div>
             `,
-        };
-
-        await transporter.sendMail(mailOptions);
+        });
     } catch (error) {
     }
 };
