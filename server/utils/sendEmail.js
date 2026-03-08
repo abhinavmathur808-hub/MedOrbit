@@ -1,30 +1,15 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { escapeHtml } from './escapeHtml.js';
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    family: 4,
-    auth: {
-        user: process.env.PAYMENT_EMAIL_USER,
-        pass: process.env.PAYMENT_EMAIL_PASS,
-    },
-    tls: {
-        rejectUnauthorized: false,
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendPaymentReceiptEmail = async (email, details, paymentId) => {
     try {
         const { doctorName, date, time, amount, patientName } = details;
         const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 
-        const mailOptions = {
-            from: process.env.PAYMENT_EMAIL_USER,
+        const { data, error } = await resend.emails.send({
+            from: 'MedOrbit <noreply@medorbit.live>',
             to: email,
             subject: '💳 Payment Receipt - MedOrbit',
             html: `
@@ -54,10 +39,13 @@ export const sendPaymentReceiptEmail = async (email, details, paymentId) => {
                     </div>
                 </div>
             `,
-        };
+        });
 
-        const info = await transporter.sendMail(mailOptions);
-        return info;
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        return data;
     } catch (error) {
         throw error; // Let caller handle
     }
