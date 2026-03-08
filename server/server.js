@@ -137,10 +137,17 @@ app.use(helmet({
 
 app.use(globalLimiter);
 
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 const allowedOrigins = [
-    process.env.CLIENT_URL || 'http://localhost:5173',
+    clientUrl,
     'http://localhost:5174',
 ];
+// Dynamically allow both www and non-www variants of CLIENT_URL
+if (clientUrl.includes('://www.')) {
+    allowedOrigins.push(clientUrl.replace('://www.', '://'));
+} else if (clientUrl.includes('://')) {
+    allowedOrigins.push(clientUrl.replace('://', '://www.'));
+}
 app.use(
     cors({
         origin: allowedOrigins,
