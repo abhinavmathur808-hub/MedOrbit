@@ -173,7 +173,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/', (req, res) => {
-    res.json({ message: 'API is running' });
+    res.status(200).send('Server is awake');
 });
 
 app.use('/api/auth', authRoutes);
