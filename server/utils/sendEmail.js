@@ -1,14 +1,23 @@
 import { Resend } from 'resend';
 import { escapeHtml } from './escapeHtml.js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend;
+const getResend = () => {
+    if (!_resend) {
+        if (!process.env.RESEND_API_KEY) {
+            throw new Error('RESEND_API_KEY is not set in environment variables');
+        }
+        _resend = new Resend(process.env.RESEND_API_KEY);
+    }
+    return _resend;
+};
 
 export const sendPaymentReceiptEmail = async (email, details, paymentId) => {
     try {
         const { doctorName, date, time, amount, patientName } = details;
         const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 
-        const { data, error } = await resend.emails.send({
+        const { data, error } = await getResend().emails.send({
             from: 'MedOrbit <noreply@medorbit.live>',
             to: email,
             subject: '💳 Payment Receipt - MedOrbit',

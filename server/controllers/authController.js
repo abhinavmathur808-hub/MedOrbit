@@ -5,7 +5,16 @@ import User from '../models/User.js';
 import Doctor from '../models/Doctor.js';
 import Otp from '../models/otpModel.js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend;
+const getResend = () => {
+    if (!_resend) {
+        if (!process.env.RESEND_API_KEY) {
+            throw new Error('RESEND_API_KEY is not set in environment variables');
+        }
+        _resend = new Resend(process.env.RESEND_API_KEY);
+    }
+    return _resend;
+};
 
 export const sendOtpController = async (req, res) => {
     try {
@@ -38,7 +47,7 @@ export const sendOtpController = async (req, res) => {
             otp: hashedOtp,
         });
 
-        const { data, error } = await resend.emails.send({
+        const { data, error } = await getResend().emails.send({
             from: 'MedOrbit <noreply@medorbit.live>',
             to: email,
             subject: '🔐 Your MedOrbit Verification Code',

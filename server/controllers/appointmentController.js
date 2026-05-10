@@ -5,7 +5,16 @@ import Prescription from '../models/Prescription.js';
 import { Resend } from 'resend';
 import { escapeHtml } from '../utils/escapeHtml.js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend;
+const getResend = () => {
+    if (!_resend) {
+        if (!process.env.RESEND_API_KEY) {
+            throw new Error('RESEND_API_KEY is not set in environment variables');
+        }
+        _resend = new Resend(process.env.RESEND_API_KEY);
+    }
+    return _resend;
+};
 
 const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, patientName, date, slotTime) => {
     try {
@@ -16,7 +25,7 @@ const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, pati
             year: 'numeric',
         });
 
-        await resend.emails.send({
+        await getResend().emails.send({
             from: 'MedOrbit <noreply@medorbit.live>',
             to: doctorEmail,
             subject: '🏥 New Appointment Request - MedOrbit',
@@ -43,7 +52,7 @@ const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, pati
             `,
         });
 
-        await resend.emails.send({
+        await getResend().emails.send({
             from: 'MedOrbit <noreply@medorbit.live>',
             to: patientEmail,
             subject: '✅ Appointment Booked - MedOrbit',
@@ -355,7 +364,7 @@ const sendCancellationEmail = async (recipientEmail, recipientName, cancellerRol
             ? `Dr. ${cancellerName}`
             : cancellerName;
 
-        await resend.emails.send({
+        await getResend().emails.send({
             from: 'MedOrbit <noreply@medorbit.live>',
             to: recipientEmail,
             subject: '❌ Appointment Cancelled - MedOrbit',

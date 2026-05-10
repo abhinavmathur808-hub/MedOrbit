@@ -19,7 +19,7 @@ import TopArticles from '../components/TopArticles';
 import UserReviews from '../components/UserReviews';
 import FAQ from '../components/FAQ';
 import CurvedWrapper from '../components/CurvedWrapper';
-import heroBg from '../assets/hero-medical-bg.png';
+
 
 const Home = () => {
     const { user } = useSelector((state) => state.auth);
@@ -74,7 +74,7 @@ const Home = () => {
         <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-base)' }}>
             <section className="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden pb-20 pt-32">
                 <div
-                    style={{ backgroundImage: `url(${heroBg})` }}
+                    style={{ backgroundImage: "url('/hero-medical-bg.webp')" }}
                     className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-0 scale-105"
                 ></div>
 
