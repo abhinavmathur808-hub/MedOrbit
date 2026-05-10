@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { registerUser, reset } from '../redux/features/authSlice';
 import { User, Mail, Lock, ArrowRight, Stethoscope, Send, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
-import heroBg from '../assets/hero-medical-bg.png';
+
 import logo from '../assets/logo-light-mode.png';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -142,7 +142,7 @@ const Register = () => {
     return (
         <div className="min-h-screen w-full flex items-center justify-center relative m-0 py-12 overflow-x-hidden">
             <div
-                style={{ backgroundImage: `url(${heroBg})` }}
+                style={{ backgroundImage: "url('/hero-medical-bg.webp')" }}
                 className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat bg-fixed z-0"
             ></div>
 
