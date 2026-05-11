@@ -107,7 +107,10 @@ export const updateDoctorProfile = async (req, res) => {
 
 export const getAllDoctors = async (req, res) => {
     try {
-        const CACHE_KEY = 'doctorsList';
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 10));
+        const skip = (page - 1) * limit;
+        const CACHE_KEY = `doctorsList:page:${page}:limit:${limit}`;
 
         try {
             const cached = await redisClient.get(CACHE_KEY);
@@ -115,8 +118,9 @@ export const getAllDoctors = async (req, res) => {
                 const parsed = JSON.parse(cached);
                 return res.status(200).json({
                     success: true,
-                    count: parsed.length,
-                    doctors: parsed,
+                    count: parsed.doctors.length,
+                    doctors: parsed.doctors,
+                    hasMore: parsed.hasMore,
                     source: 'cache',
                 });
             }
@@ -127,15 +131,24 @@ export const getAllDoctors = async (req, res) => {
         const doctors = await Doctor.find({ isVerified: true })
             .populate('userId', 'name email phone photo isVerified')
             .select('-__v')
+            .skip(skip)
+            .limit(limit + 1)
             .lean();
 
-        const safeDoctors = doctors.map(doc => ({
+        const hasMore = doctors.length > limit;
+        const paginatedDoctors = hasMore ? doctors.slice(0, limit) : doctors;
+
+        const safeDoctors = paginatedDoctors.map(doc => ({
             ...doc,
             slots_booked: doc.slots_booked || {},
         }));
 
         try {
-            await redisClient.set(CACHE_KEY, JSON.stringify(safeDoctors), { EX: 3600 });
+            await redisClient.set(
+                CACHE_KEY,
+                JSON.stringify({ doctors: safeDoctors, hasMore }),
+                { EX: 3600 }
+            );
         } catch (cacheErr) {
             console.error('Redis write error:', cacheErr.message);
         }
@@ -144,6 +157,7 @@ export const getAllDoctors = async (req, res) => {
             success: true,
             count: safeDoctors.length,
             doctors: safeDoctors,
+            hasMore,
             source: 'db',
         });
     } catch (error) {

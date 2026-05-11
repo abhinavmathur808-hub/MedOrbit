@@ -1,17 +1,22 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Stethoscope, Search } from 'lucide-react';
+import { Stethoscope, Search, Loader2 } from 'lucide-react';
 import DoctorCard from '../../components/DoctorCard';
 import CurvedWrapper from '../../components/CurvedWrapper';
+
+const LIMIT = 10;
 
 const Doctors = () => {
     const location = useLocation();
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(false);
 
     useEffect(() => {
         if (location.state?.speciality) {
@@ -19,33 +24,49 @@ const Doctors = () => {
         }
     }, [location.state]);
 
-    useEffect(() => {
-        const fetchDoctors = async () => {
+    const fetchDoctors = useCallback(async (targetPage) => {
+        if (targetPage === 1) {
+            setLoading(true);
+        } else {
+            setLoadingMore(true);
+        }
 
-            try {
-                const response = await fetch(`${API_BASE}/api/doctor`, {
+        try {
+            const response = await fetch(
+                `${API_BASE}/api/doctor?page=${targetPage}&limit=${LIMIT}`,
+                {
                     method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
 
-                const data = await response.json();
+            const data = await response.json();
 
-                if (data.success) {
+            if (data.success) {
+                if (targetPage === 1) {
                     setDoctors(data.doctors || []);
                 } else {
-                    setError(data.message || 'Failed to fetch doctors');
+                    setDoctors((prev) => [...prev, ...(data.doctors || [])]);
                 }
-            } catch (err) {
-                setError('Failed to connect to server');
-            } finally {
-                setLoading(false);
+                setHasMore(data.hasMore ?? false);
+            } else {
+                setError(data.message || 'Failed to fetch doctors');
             }
-        };
-
-        fetchDoctors();
+        } catch (err) {
+            setError('Failed to connect to server');
+        } finally {
+            setLoading(false);
+            setLoadingMore(false);
+        }
     }, []);
+
+    useEffect(() => {
+        fetchDoctors(page);
+    }, [page, fetchDoctors]);
+
+    const handleLoadMore = () => {
+        setPage((prev) => prev + 1);
+    };
 
     const filteredDoctors = doctors.filter((doctor) => {
         const name = doctor.userId?.name?.toLowerCase() || '';
@@ -146,6 +167,38 @@ const Doctors = () => {
                             ))}
                         </div>
                     )}
+
+                    {hasMore && !searchTerm && (
+                        <div className="flex justify-center mt-12 mb-4">
+                            <button
+                                onClick={handleLoadMore}
+                                disabled={loadingMore}
+                                className="group relative px-8 py-3 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                style={{
+                                    background: 'linear-gradient(135deg, #e11d48, #be123c)',
+                                    color: '#fff',
+                                    boxShadow: '0 0 20px rgba(225, 29, 72, 0.25)',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.boxShadow = '0 0 30px rgba(225, 29, 72, 0.4)';
+                                    e.currentTarget.style.transform = 'translateY(-1px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.boxShadow = '0 0 20px rgba(225, 29, 72, 0.25)';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                }}
+                            >
+                                {loadingMore ? (
+                                    <span className="flex items-center gap-2">
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        Loading...
+                                    </span>
+                                ) : (
+                                    'Load More Doctors'
+                                )}
+                            </button>
+                        </div>
+                    )}
                 </div>
             </CurvedWrapper>
         </div>
@@ -153,3 +206,4 @@ const Doctors = () => {
 };
 
 export default Doctors;
+
