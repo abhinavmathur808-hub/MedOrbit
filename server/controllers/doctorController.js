@@ -3,6 +3,7 @@ import User from '../models/User.js';
 import Review from '../models/Review.js';
 import Appointment from '../models/Appointment.js';
 import Prescription from '../models/Prescription.js';
+import redisClient from '../config/redis.js';
 
 export const getDoctorProfile = async (req, res) => {
     try {
@@ -106,6 +107,23 @@ export const updateDoctorProfile = async (req, res) => {
 
 export const getAllDoctors = async (req, res) => {
     try {
+        const CACHE_KEY = 'doctorsList';
+
+        try {
+            const cached = await redisClient.get(CACHE_KEY);
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                return res.status(200).json({
+                    success: true,
+                    count: parsed.length,
+                    doctors: parsed,
+                    source: 'cache',
+                });
+            }
+        } catch (cacheErr) {
+            console.error('Redis read error:', cacheErr.message);
+        }
+
         const doctors = await Doctor.find({ isVerified: true })
             .populate('userId', 'name email phone photo isVerified')
             .select('-__v')
@@ -116,10 +134,17 @@ export const getAllDoctors = async (req, res) => {
             slots_booked: doc.slots_booked || {},
         }));
 
+        try {
+            await redisClient.set(CACHE_KEY, JSON.stringify(safeDoctors), { EX: 3600 });
+        } catch (cacheErr) {
+            console.error('Redis write error:', cacheErr.message);
+        }
+
         res.status(200).json({
             success: true,
             count: safeDoctors.length,
             doctors: safeDoctors,
+            source: 'db',
         });
     } catch (error) {
         res.status(500).json({

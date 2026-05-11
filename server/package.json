@@ -31,6 +31,7 @@
     "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0",
     "razorpay": "^2.9.6",
+    "redis": "^5.12.1",
     "resend": "^6.9.3"
   },
   "devDependencies": {

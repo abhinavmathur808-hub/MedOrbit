@@ -1,4 +1,5 @@
 import './config/env.js';
+import './config/redis.js';
 
 import express from 'express';
 import cors from 'cors';
