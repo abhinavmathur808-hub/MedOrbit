@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import { optimizeCloudinaryUrl } from '../utils/cloudinaryUrl';
 import { Link } from 'react-router-dom';
 import {
@@ -64,13 +65,16 @@ const DoctorCard = ({ doctor }) => {
             to={`/book-appointment/${doctor._id}`}
             className="block group"
         >
-            <div
+            <motion.div
                 ref={cardRef}
                 onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 className="w-full relative overflow-hidden bg-[#09090b] border border-zinc-800/80 rounded-2xl p-5 hover:border-zinc-700"
                 style={{ transform: cardTransform, transition: opacity === 0 ? 'transform 0.5s ease-out' : 'none' }}
+                whileHover={{ scale: 1.03, boxShadow: '0 8px 30px rgba(225, 29, 72, 0.15)' }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
                 <div
                     className="pointer-events-none absolute -inset-px transition-opacity duration-300 rounded-2xl"
@@ -86,7 +90,8 @@ const DoctorCard = ({ doctor }) => {
                         <div className="relative">
                             <div className="w-24 h-24 rounded-full border-2 border-zinc-800 overflow-hidden bg-rose-950/30 flex items-center justify-center">
                                 {photo ? (
-                                    <img
+                                    <motion.img
+                                        layoutId={`doctor-img-${doctor._id}`}
                                         src={optimizeCloudinaryUrl(photo)}
                                         alt={name}
                                         className="w-full h-full object-cover"
@@ -176,7 +181,7 @@ const DoctorCard = ({ doctor }) => {
                         Book Appointment
                     </button>
                 </div>
-            </div>
+            </motion.div>
         </Link>
     );
 };

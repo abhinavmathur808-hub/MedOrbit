@@ -2,6 +2,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Stethoscope, Search, Loader2 } from 'lucide-react';
 import DoctorCard from '../../components/DoctorCard';
 import CurvedWrapper from '../../components/CurvedWrapper';
@@ -106,7 +107,13 @@ const Doctors = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#09090b]">
+        <motion.div
+            className="min-h-screen bg-[#09090b]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+        >
             <div className="bg-[#09090b] pt-32 pb-20 text-center px-6">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-3">
                     Find Doctors
@@ -197,7 +204,7 @@ const Doctors = () => {
                     )}
                 </div>
             </CurvedWrapper>
-        </div>
+        </motion.div>
     );
 };
 

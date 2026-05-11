@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import AdminRoute from './components/AdminRoute';
 import ScrollToTop from './components/ScrollToTop';
@@ -36,44 +37,46 @@ function AppContent() {
 
       {!hideNavbar && <Navbar />}
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/doctors" element={<Doctors />} />
-        <Route path="/book-appointment/:id" element={<BookAppointment />} />
-        <Route path="/article/:id" element={<Article />} />
-        <Route path="/auth/callback" element={<OAuthCallback />} />
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/doctors" element={<Doctors />} />
+          <Route path="/book-appointment/:id" element={<BookAppointment />} />
+          <Route path="/article/:id" element={<Article />} />
+          <Route path="/auth/callback" element={<OAuthCallback />} />
 
-        <Route path="/profile" element={<UserProfile />} />
+          <Route path="/profile" element={<UserProfile />} />
 
-        <Route path="/doctor/profile" element={<DoctorProfile />} />
-        <Route path="/doctor/profile/edit" element={<DoctorProfileEdit />} />
-        <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+          <Route path="/doctor/profile" element={<DoctorProfile />} />
+          <Route path="/doctor/profile/edit" element={<DoctorProfileEdit />} />
+          <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
 
-        <Route path="/patient/profile" element={<PatientProfile />} />
+          <Route path="/patient/profile" element={<PatientProfile />} />
 
-        <Route path="/appointments" element={<MyAppointments />} />
+          <Route path="/appointments" element={<MyAppointments />} />
 
-        <Route path="/room/:roomId" element={<Room />} />
+          <Route path="/room/:roomId" element={<Room />} />
 
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/add-article"
-          element={
-            <AdminRoute>
-              <AddArticle />
-            </AdminRoute>
-          }
-        />
-      </Routes>
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/add-article"
+            element={
+              <AdminRoute>
+                <AddArticle />
+              </AdminRoute>
+            }
+          />
+        </Routes>
+      </AnimatePresence>
     </>
   );
 }

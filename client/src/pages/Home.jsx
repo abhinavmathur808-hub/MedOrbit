@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -71,7 +72,14 @@ const Home = () => {
     };
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-base)' }}>
+        <motion.div
+            className="min-h-screen"
+            style={{ backgroundColor: 'var(--bg-base)' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+        >
             <section className="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden pb-20 pt-32">
                 <div
                     style={{ backgroundImage: "url('/hero-medical-bg.webp')" }}
@@ -150,7 +158,7 @@ const Home = () => {
 
                 <Footer />
             </div>
-        </div >
+        </motion.div >
     );
 };
 

@@ -2,6 +2,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import {
     ArrowLeft,
@@ -344,7 +345,7 @@ const BookAppointment = () => {
                             <div className="flex items-center space-x-4 mb-6">
                                 <div className="w-16 h-16 bg-gradient-to-br from-rose-600 to-rose-800 rounded-xl flex items-center justify-center text-white text-xl font-bold">
                                     {photo ? (
-                                        <img src={optimizeCloudinaryUrl(photo)} alt={name} className="w-full h-full object-cover rounded-xl" loading="lazy" />
+                                        <motion.img layoutId={`doctor-img-${doctor._id}`} src={optimizeCloudinaryUrl(photo)} alt={name} className="w-full h-full object-cover rounded-xl" loading="lazy" />
                                     ) : (
                                         name.charAt(0).toUpperCase()
                                     )}
