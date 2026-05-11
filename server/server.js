@@ -2,6 +2,7 @@ import './config/env.js';
 import './config/redis.js';
 
 import express from 'express';
+import compression from 'compression';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -135,6 +136,8 @@ app.use(helmet({
     crossOriginOpenerPolicy: false,
     crossOriginEmbedderPolicy: false,
 }));
+
+app.use(compression());
 
 app.use(globalLimiter);
 
