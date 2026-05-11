@@ -1,6 +1,6 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Stethoscope, Search, Loader2 } from 'lucide-react';
 import DoctorCard from '../../components/DoctorCard';
@@ -64,9 +64,26 @@ const Doctors = () => {
         fetchDoctors(page);
     }, [page, fetchDoctors]);
 
-    const handleLoadMore = () => {
-        setPage((prev) => prev + 1);
-    };
+    const observer = useRef(null);
+
+    const sentinelRef = useCallback(
+        (node) => {
+            if (observer.current) observer.current.disconnect();
+            if (!node) return;
+
+            observer.current = new IntersectionObserver(
+                (entries) => {
+                    if (entries[0].isIntersecting && hasMore && !loadingMore) {
+                        setPage((prev) => prev + 1);
+                    }
+                },
+                { rootMargin: '200px' }
+            );
+
+            observer.current.observe(node);
+        },
+        [hasMore, loadingMore]
+    );
 
     const filteredDoctors = doctors.filter((doctor) => {
         const name = doctor.userId?.name?.toLowerCase() || '';
@@ -168,35 +185,14 @@ const Doctors = () => {
                         </div>
                     )}
 
-                    {hasMore && !searchTerm && (
-                        <div className="flex justify-center mt-12 mb-4">
-                            <button
-                                onClick={handleLoadMore}
-                                disabled={loadingMore}
-                                className="group relative px-8 py-3 rounded-xl font-semibold text-sm tracking-wide transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                                style={{
-                                    background: 'linear-gradient(135deg, #e11d48, #be123c)',
-                                    color: '#fff',
-                                    boxShadow: '0 0 20px rgba(225, 29, 72, 0.25)',
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.boxShadow = '0 0 30px rgba(225, 29, 72, 0.4)';
-                                    e.currentTarget.style.transform = 'translateY(-1px)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.boxShadow = '0 0 20px rgba(225, 29, 72, 0.25)';
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                }}
-                            >
-                                {loadingMore ? (
-                                    <span className="flex items-center gap-2">
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                        Loading...
-                                    </span>
-                                ) : (
-                                    'Load More Doctors'
-                                )}
-                            </button>
+                    {!searchTerm && hasMore && (
+                        <div ref={sentinelRef} style={{ height: '1px' }} />
+                    )}
+
+                    {loadingMore && (
+                        <div className="flex flex-col items-center justify-center py-10 gap-3">
+                            <Loader2 className="w-6 h-6 animate-spin text-rose-500" />
+                            <p className="text-sm text-zinc-500 tracking-wide">Loading more doctors...</p>
                         </div>
                     )}
                 </div>
