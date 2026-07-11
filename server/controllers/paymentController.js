@@ -1,6 +1,7 @@
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import { sendPaymentReceiptEmail } from "../utils/sendEmail.js";
+import { sendAppointmentEmails } from "./appointmentController.js";
 import User from "../models/User.js";
 import Doctor from "../models/Doctor.js";
 import Appointment from "../models/Appointment.js";
@@ -97,22 +98,25 @@ export const paymentVerification = async (req, res) => {
         const isAuthentic = expectedSignature === razorpay_signature;
 
         if (isAuthentic) {
+            const userId = req.userId;
+            let appointment = null;
+
             if (appointmentId) {
                 try {
-                    const appointment = await Appointment.findByIdAndUpdate(
-                        appointmentId,
-                        {
-                            paymentStatus: true,
-                        },
-                        { new: true }
-                    );
-                    if (appointment) {
+                    appointment = await Appointment.findById(appointmentId);
+
+                    // Only the patient who owns the appointment can mark it paid
+                    if (appointment && userId && appointment.patientId.toString() === userId.toString()) {
+                        appointment.paymentStatus = true;
+                        await appointment.save();
+                    } else {
+                        appointment = null;
                     }
                 } catch (err) {
+                    appointment = null;
                 }
             }
 
-            const userId = req.userId;
             let user = null;
             let emailToSend = null;
             let patientName = 'there';
@@ -122,6 +126,22 @@ export const paymentVerification = async (req, res) => {
                 if (user) {
                     emailToSend = user.email;
                     patientName = user.name;
+                }
+            }
+
+            // Booking confirmation emails go out only after payment is verified,
+            // using the appointment stored in the database as the source of truth.
+            if (appointment) {
+                const doctorUser = await User.findById(appointment.doctorId).select('name email');
+                if (doctorUser?.email && user?.email) {
+                    sendAppointmentEmails(
+                        doctorUser.email,
+                        doctorUser.name,
+                        user.email,
+                        user.name,
+                        appointment.date,
+                        appointment.slotTime
+                    );
                 }
             }
 

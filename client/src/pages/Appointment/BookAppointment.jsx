@@ -203,49 +203,88 @@ const BookAppointment = () => {
         };
 
         const dateStr = toISODate(selectedDate);
+        const bookedTime = selectedTime;
 
-        const onPaymentSuccess = async (paymentData) => {
-            const payload = {
-                doctorId: doctor?.userId?._id || id,
-                date: dateStr,
-                slotTime: selectedTime,
-                reason,
-                paymentId: paymentData.paymentId,
-                orderId: paymentData.orderId,
-            };
+        // Step 1: secure the slot with a pending, unpaid appointment BEFORE any
+        // money changes hands. If this fails, no payment is ever initiated.
+        let appointmentId = null;
+        try {
+            const response = await fetch(`${API_BASE}/api/appointments`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    doctorId,
+                    date: dateStr,
+                    slotTime: bookedTime,
+                    reason,
+                }),
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) throw new Error(data.message || 'Booking failed');
+            appointmentId = data.appointment._id;
+        } catch (err) {
+            setError(err.message || 'Failed to book appointment');
+            setBooking(false);
+            await fetchDoctor();
+            return;
+        }
 
+        // Frees the held slot if the checkout is abandoned or never opens
+        const releaseAppointment = async () => {
             try {
-                const response = await fetch(`${API_BASE}/api/appointments`, {
+                await fetch(`${API_BASE}/api/users/cancel-appointment`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
                     },
-                    body: JSON.stringify(payload),
+                    body: JSON.stringify({ appointmentId, reason: 'Payment not completed' }),
                 });
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Booking failed');
-                if (data.success) {
-                    await fetchDoctor();
-                    setConfirmedTime(selectedTime);
-                    setConfirmedDate(toISODate(selectedDate));
-                    setSelectedTime(null);
-                    setSuccess(true);
-                }
-                else throw new Error(data.message || 'Booking failed');
             } catch (err) {
-                setError(err.message || 'Failed to book appointment');
-            } finally {
-                setBooking(false);
+                // Slot stays held; it can still be cancelled from My Appointments
             }
         };
 
-        const onPaymentError = (error) => {
-            setError(error.message || 'Payment failed. Please try again.');
+        // Step 2: take payment. On success the server has already verified the
+        // signature and marked the appointment as paid.
+        const onPaymentSuccess = async () => {
+            await fetchDoctor();
+            setConfirmedTime(bookedTime);
+            setConfirmedDate(dateStr);
+            setSelectedTime(null);
+            setSuccess(true);
             setBooking(false);
         };
 
-        const appointmentDetails = { doctorName: name, date: dateStr, time: selectedTime };
+        const onPaymentError = async (error) => {
+            if (error.stage === 'setup') {
+                // Checkout never opened — no money taken, free the slot
+                await releaseAppointment();
+                await fetchDoctor();
+                setError(error.message || 'Payment failed. Please try again.');
+                setBooking(false);
+            } else if (error.stage === 'verification') {
+                // Money may have been taken — keep the appointment record
+                setError('Your payment went through but could not be verified. Your appointment is saved as unpaid — please contact support with your payment reference.');
+                setBooking(false);
+            } else {
+                // A payment attempt failed; Razorpay keeps the modal open for a
+                // retry, and closing it releases the slot via onPaymentDismiss.
+                setError(error.message || 'Payment failed. Please try again.');
+            }
+        };
+
+        const onPaymentDismiss = async () => {
+            await releaseAppointment();
+            await fetchDoctor();
+            setError('Payment was not completed. The slot has been released — you can book again anytime.');
+            setBooking(false);
+        };
+
+        const appointmentDetails = { doctorName: name, date: dateStr, time: bookedTime, appointmentId };
 
         handlePayment(
             fees * 100,
@@ -254,7 +293,8 @@ const BookAppointment = () => {
             onPaymentSuccess,
             onPaymentError,
             token,
-            doctorId
+            doctorId,
+            onPaymentDismiss
         );
     };
 

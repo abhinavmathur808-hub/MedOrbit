@@ -16,7 +16,13 @@ const getResend = () => {
     return _resend;
 };
 
-const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, patientName, date, slotTime) => {
+// Build the slots_booked key (d_m_yyyy) from a stored appointment date.
+// Uses UTC getters because dates are stored as UTC midnight (new Date('YYYY-MM-DD')),
+// so this matches the key built from the raw date string at creation on any server timezone.
+const slotKeyForDate = (date) =>
+    `${date.getUTCDate()}_${date.getUTCMonth() + 1}_${date.getUTCFullYear()}`;
+
+export const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, patientName, date, slotTime) => {
     try {
         const formattedDate = new Date(date).toLocaleDateString('en-IN', {
             weekday: 'long',
@@ -175,7 +181,7 @@ export const getMyAppointments = async (req, res) => {
 export const createAppointment = async (req, res) => {
     try {
         const patientId = req.userId;
-        const { doctorId, date, slotTime, reason, paymentId, orderId } = req.body;
+        const { doctorId, date, slotTime } = req.body;
 
         if (!patientId || !doctorId || !date || !slotTime) {
             return res.status(400).json({
@@ -184,9 +190,11 @@ export const createAppointment = async (req, res) => {
             });
         }
 
+        const appointmentDate = new Date(date);
+
         const existingAppointment = await Appointment.findOne({
             doctorId,
-            date: new Date(date),
+            date: appointmentDate,
             slotTime,
             status: { $ne: 'cancelled' },
         });
@@ -215,16 +223,34 @@ export const createAppointment = async (req, res) => {
             }
         }
 
-        const appointment = new Appointment({
-            patientId,
-            doctorId,
-            date: new Date(date),
-            slotTime,
-            status: 'pending',
-            paymentStatus: !!paymentId,
-        });
+        // Reuse a previously cancelled appointment document for this slot if one
+        // exists, so the unique (doctorId, date, slotTime) index does not reject
+        // the new booking with an E11000 duplicate key error.
+        // Payment status is always false at creation — it is only set to true by
+        // the server-side signature check in paymentVerification.
+        let appointment = await Appointment.findOneAndUpdate(
+            { doctorId, date: appointmentDate, slotTime, status: 'cancelled' },
+            {
+                $set: {
+                    patientId,
+                    status: 'pending',
+                    paymentStatus: false,
+                },
+            },
+            { new: true }
+        );
 
-        await appointment.save();
+        if (!appointment) {
+            appointment = new Appointment({
+                patientId,
+                doctorId,
+                date: appointmentDate,
+                slotTime,
+                status: 'pending',
+                paymentStatus: false,
+            });
+            await appointment.save();
+        }
 
         let updateResult = await Doctor.findOneAndUpdate(
             { userId: doctorId },
@@ -240,22 +266,9 @@ export const createAppointment = async (req, res) => {
             );
         }
 
-
-
-
-        const patient = await User.findById(patientId);
-        const doctor = await User.findById(doctorId);
-
-        if (doctor?.email && patient?.email) {
-            sendAppointmentEmails(
-                doctor.email,
-                doctor.name,
-                patient.email,
-                patient.name,
-                date,
-                slotTime
-            );
-        }
+        // Confirmation emails are sent after payment verification succeeds
+        // (see paymentController.paymentVerification), not at creation, so an
+        // abandoned checkout never emails the doctor about a phantom booking.
 
         res.status(201).json({
             success: true,
@@ -335,8 +348,30 @@ export const updateAppointmentStatus = async (req, res) => {
             });
         }
 
+        // Only the doctor on the appointment can change its status here, except
+        // that the patient may cancel their own appointment. This prevents
+        // patients from marking appointments 'confirmed' or 'completed'.
+        const isActingDoctor = isDoctorOfAppt && req.userRole === 'doctor';
+        if (!isActingDoctor && status !== 'cancelled') {
+            return res.status(403).json({
+                success: false,
+                message: 'Only the doctor can update the appointment to this status',
+            });
+        }
+
+        const wasCancelled = appointment.status === 'cancelled';
         appointment.status = status;
         await appointment.save();
+
+        // Release the booked slot when an appointment is cancelled through this
+        // endpoint (e.g. the doctor's Cancel button), so it can be rebooked.
+        if (status === 'cancelled' && !wasCancelled) {
+            const cancelDateKey = slotKeyForDate(appointment.date);
+            await Doctor.findOneAndUpdate(
+                { userId: appointment.doctorId },
+                { $pull: { [`slots_booked.${cancelDateKey}`]: appointment.slotTime } }
+            );
+        }
 
         res.status(200).json({
             success: true,
@@ -439,11 +474,14 @@ export const cancelAppointment = async (req, res) => {
             });
         }
 
+        // Unpaid pending appointments are abandoned checkouts being released —
+        // no emails were sent for them, so none are needed for their cancellation.
+        const wasPaid = appointment.paymentStatus;
+
         appointment.status = 'cancelled';
         await appointment.save();
 
-        const cancelDate = appointment.date;
-        const cancelDateKey = `${cancelDate.getDate()}_${cancelDate.getMonth() + 1}_${cancelDate.getFullYear()}`;
+        const cancelDateKey = slotKeyForDate(appointment.date);
         await Doctor.findOneAndUpdate(
             { userId: appointment.doctorId },
             { $pull: { [`slots_booked.${cancelDateKey}`]: appointment.slotTime } }
@@ -452,7 +490,7 @@ export const cancelAppointment = async (req, res) => {
         const patient = await User.findById(appointment.patientId);
         const doctor = await User.findById(appointment.doctorId);
 
-        if (isPatientOfAppt && doctor?.email) {
+        if (wasPaid && isPatientOfAppt && doctor?.email) {
             sendCancellationEmail(
                 doctor.email,
                 doctor.name,
@@ -462,7 +500,7 @@ export const cancelAppointment = async (req, res) => {
                 appointment.slotTime,
                 reason
             );
-        } else if (isDoctorOfAppt && patient?.email) {
+        } else if (wasPaid && isDoctorOfAppt && patient?.email) {
             sendCancellationEmail(
                 patient.email,
                 patient.name,

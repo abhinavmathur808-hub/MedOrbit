@@ -15,7 +15,17 @@ const loadRazorpayScript = () => {
     });
 };
 
-export const handlePayment = async (amount, userDetails, appointmentDetails, onSuccess, onError, token, doctorId) => {
+// Tags an error with the stage it occurred in so callers can decide whether to
+// release the held appointment slot:
+//   'setup'        — before any money could be taken (safe to release)
+//   'payment'      — Razorpay reported a failed attempt (modal stays open for retry)
+//   'verification' — money may have been taken but verification failed (do NOT release)
+const stageError = (error, stage) => {
+    error.stage = stage;
+    return error;
+};
+
+export const handlePayment = async (amount, userDetails, appointmentDetails, onSuccess, onError, token, doctorId, onDismiss) => {
 
     try {
         const scriptLoaded = await loadRazorpayScript();
@@ -47,6 +57,8 @@ export const handlePayment = async (amount, userDetails, appointmentDetails, onS
             throw new Error(orderData.message || `Checkout failed with status ${orderResponse.status}`);
         }
 
+        let paymentCompleted = false;
+
         const options = {
             key: rzpKey,
             amount: Math.round(orderData.order.amount),
@@ -55,6 +67,7 @@ export const handlePayment = async (amount, userDetails, appointmentDetails, onS
             description: 'Appointment Booking Fee',
             order_id: orderData.order.id,
             handler: async function (response) {
+                paymentCompleted = true;
 
                 try {
                     const verifyResponse = await fetch(`${API_URL}/paymentVerification`, {
@@ -67,6 +80,7 @@ export const handlePayment = async (amount, userDetails, appointmentDetails, onS
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_signature: response.razorpay_signature,
+                            appointmentId: appointmentDetails?.appointmentId || '',
                             doctorName: appointmentDetails?.doctorName || '',
                             appointmentDate: appointmentDetails?.date || '',
                             appointmentTime: appointmentDetails?.time || '',
@@ -83,7 +97,7 @@ export const handlePayment = async (amount, userDetails, appointmentDetails, onS
                         throw new Error('Payment verification failed');
                     }
                 } catch (error) {
-                    onError(error);
+                    onError(stageError(error, 'verification'));
                 }
             },
             prefill: {
@@ -96,18 +110,23 @@ export const handlePayment = async (amount, userDetails, appointmentDetails, onS
             },
             modal: {
                 ondismiss: function () {
+                    // Only treat as abandoned if no payment went through
+                    if (!paymentCompleted && typeof onDismiss === 'function') {
+                        onDismiss();
+                    }
                 },
             },
         };
 
         const razorpay = new window.Razorpay(options);
         razorpay.on('payment.failed', function (response) {
-            onError(new Error(response.error.description));
+            // Razorpay keeps the modal open for a retry; closing it triggers ondismiss
+            onError(stageError(new Error(response.error.description), 'payment'));
         });
 
         razorpay.open();
     } catch (error) {
-        onError(error);
+        onError(stageError(error, 'setup'));
     }
 };
 
