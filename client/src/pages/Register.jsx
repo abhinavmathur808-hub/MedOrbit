@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { registerUser, reset } from '../redux/features/authSlice';
 import { User, Mail, Lock, ArrowRight, Stethoscope, Send, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
 
 import logo from '../assets/logo-light-mode.png';
 
@@ -289,6 +290,14 @@ const Register = () => {
                 >
                     <FcGoogle className="w-5 h-5" />
                     Continue with Google
+                </a>
+
+                <a
+                    href={`${API_BASE}/auth/github`}
+                    className="w-full flex items-center justify-center gap-2 bg-[#121212] hover:bg-zinc-900 border border-zinc-800 text-zinc-300 py-3 rounded-lg text-sm transition-colors mt-3"
+                >
+                    <FaGithub className="w-5 h-5" />
+                    Continue with GitHub
                 </a>
 
                 <p className="text-center text-zinc-500 text-sm mt-4">

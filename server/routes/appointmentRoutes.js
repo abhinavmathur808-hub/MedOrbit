@@ -4,6 +4,7 @@ import {
     createAppointment,
     getDoctorAppointments,
     updateAppointmentStatus,
+    getRoomAccess,
 } from '../controllers/appointmentController.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 
@@ -14,6 +15,8 @@ router.get('/', authMiddleware, getMyAppointments);
 router.post('/', authMiddleware, createAppointment);
 
 router.get('/doctor', authMiddleware, getDoctorAppointments);
+
+router.get('/:id/room-access', authMiddleware, getRoomAccess);
 
 router.put('/:id', authMiddleware, updateAppointmentStatus);
 

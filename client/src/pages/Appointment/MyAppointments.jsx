@@ -64,7 +64,13 @@ const MyAppointments = () => {
                 const data = await response.json();
 
                 if (data.success) {
-                    setAppointments(data.appointments || []);
+                    const fetched = data.appointments || [];
+                    setAppointments(fetched);
+                    // Hydrate already-reviewed appointments from the server so the
+                    // "Leave Review" button does not reappear after a reload
+                    setReviewedAppointments(
+                        new Set(fetched.filter((a) => a.hasReview).map((a) => a._id))
+                    );
                 } else {
                     setError(data.message || 'Failed to fetch appointments');
                 }

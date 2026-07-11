@@ -2,6 +2,7 @@ import Appointment from '../models/Appointment.js';
 import Doctor from '../models/Doctor.js';
 import User from '../models/User.js';
 import Prescription from '../models/Prescription.js';
+import Review from '../models/Review.js';
 import { Resend } from 'resend';
 import { escapeHtml } from '../utils/escapeHtml.js';
 import { slotKeyForDate } from '../utils/slotKey.js';
@@ -153,9 +154,13 @@ export const getMyAppointments = async (req, res) => {
             const prescriptions = await Prescription.find({ appointmentId: { $in: appointmentIds } }).select('appointmentId');
             const prescribedSet = new Set(prescriptions.map(p => p.appointmentId.toString()));
 
+            const reviews = await Review.find({ appointmentId: { $in: appointmentIds } }).select('appointmentId');
+            const reviewedSet = new Set(reviews.map(r => r.appointmentId.toString()));
+
             formattedAppointments = formattedAppointments.map(a => ({
                 ...a,
                 hasPrescription: prescribedSet.has(a._id.toString()),
+                hasReview: reviewedSet.has(a._id.toString()),
             }));
         }
 
@@ -377,6 +382,67 @@ export const updateAppointmentStatus = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Server error updating appointment',
+        });
+    }
+};
+
+// Server-side gate for the video consultation room: the room id is the
+// appointment id, and only that appointment's doctor or patient may join,
+// and only while the appointment is confirmed.
+export const getRoomAccess = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { id } = req.params;
+
+        const appointment = await Appointment.findById(id);
+
+        if (!appointment) {
+            return res.status(404).json({
+                success: false,
+                message: 'Consultation room not found',
+            });
+        }
+
+        const isDoctorOfAppt = appointment.doctorId.toString() === userId.toString();
+        const isPatientOfAppt = appointment.patientId.toString() === userId.toString();
+
+        if (!isDoctorOfAppt && !isPatientOfAppt) {
+            return res.status(403).json({
+                success: false,
+                message: 'You are not a participant of this consultation',
+            });
+        }
+
+        if (appointment.status !== 'confirmed') {
+            return res.status(403).json({
+                success: false,
+                message: 'Video consultations are only available for confirmed appointments',
+            });
+        }
+
+        // Coarse day-level window. slotTime is interpreted in the client's local
+        // timezone, so the server cannot enforce the exact 5-min-before /
+        // 30-min-after join window without a timezone; it does enforce that the
+        // room is only live around its scheduled day, blocking stale or far-future
+        // confirmed appointments. date is stored as UTC midnight of that day.
+        const DAY_MS = 24 * 60 * 60 * 1000;
+        const scheduledDay = appointment.date.getTime();
+        const now = Date.now();
+        if (now < scheduledDay - DAY_MS || now > scheduledDay + 2 * DAY_MS) {
+            return res.status(403).json({
+                success: false,
+                message: 'This consultation room is not currently active',
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            role: isDoctorOfAppt ? 'doctor' : 'patient',
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server error checking room access',
         });
     }
 };
