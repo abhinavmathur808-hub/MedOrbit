@@ -4,6 +4,7 @@ import User from '../models/User.js';
 import Prescription from '../models/Prescription.js';
 import { Resend } from 'resend';
 import { escapeHtml } from '../utils/escapeHtml.js';
+import { slotKeyForDate } from '../utils/slotKey.js';
 
 let _resend;
 const getResend = () => {
@@ -15,12 +16,6 @@ const getResend = () => {
     }
     return _resend;
 };
-
-// Build the slots_booked key (d_m_yyyy) from a stored appointment date.
-// Uses UTC getters because dates are stored as UTC midnight (new Date('YYYY-MM-DD')),
-// so this matches the key built from the raw date string at creation on any server timezone.
-const slotKeyForDate = (date) =>
-    `${date.getUTCDate()}_${date.getUTCMonth() + 1}_${date.getUTCFullYear()}`;
 
 export const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, patientName, date, slotTime) => {
     try {

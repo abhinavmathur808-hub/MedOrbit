@@ -37,4 +37,19 @@ router.get('/google/callback',
     handleOAuthCallback
 );
 
+// GitHub routes are only registered when the strategy is configured
+// (same guard as the strategy registration in server.js)
+if (process.env.GITHUB_CLIENT_ID && !process.env.GITHUB_CLIENT_ID.startsWith('your-')) {
+    router.get('/github', (req, res, next) => {
+        passport.authenticate('github', { scope: ['user:email'] })(req, res, next);
+    });
+
+    router.get('/github/callback',
+        passport.authenticate('github', {
+            failureRedirect: `${process.env.CLIENT_URL || 'http://localhost:5173'}/login?error=github_failed`,
+        }),
+        handleOAuthCallback
+    );
+}
+
 export default router;

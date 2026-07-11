@@ -117,6 +117,19 @@ export const paymentVerification = async (req, res) => {
                 }
             }
 
+            // The payment is genuine but the appointment could not be marked paid —
+            // most likely its unpaid hold expired and was removed by the sweeper.
+            // Report failure so the client tells the user to contact support
+            // instead of showing a false booking confirmation.
+            if (appointmentId && !appointment) {
+                return res.status(409).json({
+                    success: false,
+                    message: 'Payment received, but the appointment hold had expired. Please contact support with your payment reference for a refund or rebooking.',
+                    paymentId: razorpay_payment_id,
+                    orderId: razorpay_order_id,
+                });
+            }
+
             let user = null;
             let emailToSend = null;
             let patientName = 'there';

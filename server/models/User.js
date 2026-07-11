@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema(
             unique: true,
             sparse: true, // Allows multiple null values
         },
+        githubId: {
+            type: String,
+            unique: true,
+            sparse: true, // Allows multiple null values
+        },
         role: {
             type: String,
             enum: ['patient', 'doctor', 'admin'],

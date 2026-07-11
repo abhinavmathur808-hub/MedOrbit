@@ -112,20 +112,24 @@ export const getAllDoctors = async (req, res) => {
         const skip = (page - 1) * limit;
         const CACHE_KEY = `doctorsList:page:${page}:limit:${limit}`;
 
-        try {
-            const cached = await redisClient.get(CACHE_KEY);
-            if (cached) {
-                const parsed = JSON.parse(cached);
-                return res.status(200).json({
-                    success: true,
-                    count: parsed.doctors.length,
-                    doctors: parsed.doctors,
-                    hasMore: parsed.hasMore,
-                    source: 'cache',
-                });
+        // Cache is optional — when Redis is down, isReady is false and we go
+        // straight to the database without throwing on every request
+        if (redisClient.isReady) {
+            try {
+                const cached = await redisClient.get(CACHE_KEY);
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    return res.status(200).json({
+                        success: true,
+                        count: parsed.doctors.length,
+                        doctors: parsed.doctors,
+                        hasMore: parsed.hasMore,
+                        source: 'cache',
+                    });
+                }
+            } catch (cacheErr) {
+                console.error('Redis read error:', cacheErr.message);
             }
-        } catch (cacheErr) {
-            console.error('Redis read error:', cacheErr.message);
         }
 
         const doctors = await Doctor.find({ isVerified: true })
@@ -143,14 +147,16 @@ export const getAllDoctors = async (req, res) => {
             slots_booked: doc.slots_booked || {},
         }));
 
-        try {
-            await redisClient.set(
-                CACHE_KEY,
-                JSON.stringify({ doctors: safeDoctors, hasMore }),
-                { EX: 3600 }
-            );
-        } catch (cacheErr) {
-            console.error('Redis write error:', cacheErr.message);
+        if (redisClient.isReady) {
+            try {
+                await redisClient.set(
+                    CACHE_KEY,
+                    JSON.stringify({ doctors: safeDoctors, hasMore }),
+                    { EX: 3600 }
+                );
+            } catch (cacheErr) {
+                console.error('Redis write error:', cacheErr.message);
+            }
         }
 
         res.status(200).json({

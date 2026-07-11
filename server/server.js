@@ -1,5 +1,5 @@
 import './config/env.js';
-import './config/redis.js';
+import './config/redis.js'; // optional cache — connects in background, never blocks boot
 
 import express from 'express';
 import compression from 'compression';
@@ -14,6 +14,7 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import connectDB from './config/db.js';
 import { globalLimiter } from './middlewares/rateLimiter.js';
+import { startAppointmentSweeper } from './utils/appointmentSweeper.js';
 import User from './models/User.js';
 
 import authRoutes from './routes/authRoutes.js';
@@ -126,6 +127,9 @@ passport.deserializeUser(async (id, done) => {
 });
 
 connectDB();
+
+// Periodically remove expired unpaid appointment holds and free their slots
+startAppointmentSweeper();
 
 const app = express();
 
