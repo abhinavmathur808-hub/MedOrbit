@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
+import AiAssistant from './components/AiAssistant';
 import AdminRoute from './components/AdminRoute';
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
@@ -36,6 +37,9 @@ function AppContent() {
       <ScrollToTop />
 
       {!hideNavbar && <Navbar />}
+
+      {/* Floating AI assistant — hidden on auth pages and inside video rooms */}
+      {!hideNavbar && <AiAssistant />}
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>

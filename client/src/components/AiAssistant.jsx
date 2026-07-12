@@ -1,6 +1,7 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import {
     MessageCircle,
@@ -11,7 +12,11 @@ import {
     Loader2,
     Sparkles,
     Stethoscope,
+    Zap,
+    Lock,
+    BadgeCheck,
 } from 'lucide-react';
+import { preloadLocalTriage, matchSpecialty, getTriageStatus } from '../utils/localTriage';
 
 const AiAssistant = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +28,9 @@ const AiAssistant = () => {
     ]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
+    // On-device model lifecycle: 'idle' | 'loading' | 'ready' | 'unavailable'
+    const [triageStatus, setTriageStatus] = useState(getTriageStatus());
+    const [modelProgress, setModelProgress] = useState(0);
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
@@ -35,21 +43,69 @@ const AiAssistant = () => {
         return () => window.removeEventListener('open-ai-assistant', handleOpen);
     }, []);
 
-    const handleSend = async () => {
-        if (!input.trim() || loading) return;
+    // Warm up the on-device model the first time the panel opens, so the
+    // instant tier is usually ready before the user finishes typing
+    useEffect(() => {
+        if (!isOpen || getTriageStatus() !== 'idle') return;
+        setTriageStatus('loading');
+        preloadLocalTriage((p) => setModelProgress(p))
+            .then(() => setTriageStatus('ready'))
+            .catch(() => setTriageStatus('unavailable'));
+    }, [isOpen]);
 
-        const userMessage = input.trim();
-        setInput('');
-        setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
-        setLoading(true);
+    // Tier 1: on-device match. Appends its own 'triage' message when it
+    // resolves — usually in a few milliseconds once the model is warm.
+    const runLocalTriage = async (text) => {
+        if (getTriageStatus() === 'unavailable') return;
+        try {
+            const result = await matchSpecialty(text);
+            setTriageStatus('ready');
+
+            let doctors = [];
+            if (result.confidence !== 'low') {
+                try {
+                    const res = await fetch(
+                        `${API_BASE}/api/doctor/related?specialization=${encodeURIComponent(result.top.specialty)}`
+                    );
+                    const data = await res.json();
+                    if (data.success) doctors = (data.doctors || []).slice(0, 3);
+                } catch {
+                    // doctor lookup is a bonus; the match itself still renders
+                }
+            }
+
+            setMessages((prev) => [
+                ...prev,
+                { role: 'assistant', type: 'triage', triage: result, doctors },
+            ]);
+        } catch {
+            setTriageStatus(getTriageStatus());
+        }
+    };
+
+    // Tier 2: Gemini via the server (which itself falls back to tier 3,
+    // a keyword matcher, when the AI is unavailable)
+    const runCloudAdvice = async (text) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setMessages((prev) => [
+                ...prev,
+                {
+                    role: 'assistant',
+                    content: '🔐 **Log in** to get full AI-powered advice. Instant on-device matching works without an account.',
+                },
+            ]);
+            return;
+        }
 
         try {
             const response = await fetch(`${API_BASE}/api/ai/analyze`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ symptoms: userMessage }),
+                body: JSON.stringify({ symptoms: text }),
             });
 
             const data = await response.json();
@@ -76,12 +132,28 @@ const AiAssistant = () => {
                     content: '❌ Connection error. Please check your internet and try again.',
                 },
             ]);
-        } finally {
-            setLoading(false);
         }
     };
 
-    const handleKeyPress = (e) => {
+    const handleSend = async () => {
+        if (!input.trim() || loading) return;
+
+        const userMessage = input.trim();
+        setInput('');
+        setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
+        setLoading(true);
+
+        // Both tiers run in parallel; each appends its message when it resolves
+        const localPromise = runLocalTriage(userMessage);
+        const cloudPromise = runCloudAdvice(userMessage);
+        await Promise.allSettled([localPromise, cloudPromise]);
+
+        setLoading(false);
+    };
+
+    // onKeyDown, not the deprecated onKeyPress — keypress doesn't fire for
+    // synthesized events and is unreliable across browsers
+    const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSend();
@@ -118,7 +190,7 @@ const AiAssistant = () => {
                             </div>
                             <div>
                                 <h3 className="text-white font-semibold">AI Health Assistant</h3>
-                                <p className="text-white/80 text-xs">Powered by Gemini AI</p>
+                                <p className="text-white/80 text-xs">Gemini + on-device AI</p>
                             </div>
                         </div>
                     </div>
@@ -141,7 +213,51 @@ const AiAssistant = () => {
                                         : 'bg-white text-gray-700 border border-gray-200 rounded-bl-md shadow-sm'
                                         }`}
                                 >
-                                    {msg.role === 'assistant' ? (
+                                    {msg.type === 'triage' ? (
+                                        <div>
+                                            <div className="flex items-center gap-1.5 text-xs font-semibold text-purple-600 mb-1.5">
+                                                <Zap className="w-3.5 h-3.5" />
+                                                Instant match — on your device
+                                            </div>
+                                            {msg.triage.confidence === 'low' ? (
+                                                <p>
+                                                    I'm not sure from that description — a{' '}
+                                                    <strong className="font-bold text-rose-600">General Physician</strong>{' '}
+                                                    is a good place to start. Try adding more detail for a better match.
+                                                </p>
+                                            ) : (
+                                                <p>
+                                                    Your symptoms point to a{' '}
+                                                    <strong className="font-bold text-rose-600">{msg.triage.top.specialty}</strong>
+                                                    {msg.triage.confidence === 'moderate' ? ' (possible match)' : ''}.
+                                                </p>
+                                            )}
+                                            {msg.doctors?.length > 0 && (
+                                                <div className="mt-2 space-y-1.5">
+                                                    {msg.doctors.map((doc) => (
+                                                        <Link
+                                                            key={doc._id}
+                                                            to={`/book-appointment/${doc._id}`}
+                                                            onClick={() => setIsOpen(false)}
+                                                            className="flex items-center justify-between gap-2 px-3 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-100 rounded-lg transition-colors"
+                                                        >
+                                                            <span className="flex items-center gap-1 font-medium text-gray-800 truncate">
+                                                                {doc.userId?.name || 'Doctor'}
+                                                                {doc.userId?.isVerified && <BadgeCheck className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />}
+                                                            </span>
+                                                            <span className="text-xs text-rose-600 font-semibold flex-shrink-0">
+                                                                ₹{doc.fees} · Book
+                                                            </span>
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            <div className="flex items-center gap-1 text-[10px] text-gray-400 mt-2">
+                                                <Lock className="w-3 h-3" />
+                                                Matched locally — this text never left your browser
+                                            </div>
+                                        </div>
+                                    ) : msg.role === 'assistant' ? (
                                         <ReactMarkdown
                                             components={{
                                                 strong: ({ children }) => <strong className="font-bold text-rose-600">{children}</strong>,
@@ -186,7 +302,7 @@ const AiAssistant = () => {
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                onKeyPress={handleKeyPress}
+                                onKeyDown={handleKeyDown}
                                 placeholder="Describe your symptoms..."
                                 disabled={loading}
                                 className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-rose-500 focus:border-transparent outline-none disabled:opacity-50 disabled:cursor-not-allowed"
@@ -202,6 +318,18 @@ const AiAssistant = () => {
                         <p className="text-xs text-gray-400 mt-2 text-center">
                             ⚠️ This is not a medical diagnosis. Please consult a doctor.
                         </p>
+                        {triageStatus === 'loading' && (
+                            <p className="text-[10px] text-purple-500 mt-1 text-center flex items-center justify-center gap-1">
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                                Setting up on-device AI… {modelProgress}% (one-time download)
+                            </p>
+                        )}
+                        {triageStatus === 'ready' && (
+                            <p className="text-[10px] text-gray-400 mt-1 text-center flex items-center justify-center gap-1">
+                                <Lock className="w-3 h-3 text-green-500" />
+                                On-device triage active — instant matches never leave your browser
+                            </p>
+                        )}
                     </div>
                 </div>
             )}
