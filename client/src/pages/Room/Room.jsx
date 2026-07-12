@@ -85,12 +85,13 @@ const Room = () => {
             try {
                 // Build the UIKit token from the server-minted Zego token. The
                 // userID must match the id the token was signed for.
+                // Signature (per index.d.ts): (appID, token, roomID, userID, userName)
                 const kitToken = ZegoUIKitPrebuilt.generateKitTokenForProduction(
                     zegoSession.appId,
+                    zegoSession.token,
                     zegoSession.roomId || roomId,
                     zegoSession.userId,
-                    zegoSession.userName,
-                    zegoSession.token
+                    zegoSession.userName
                 );
 
                 const zp = ZegoUIKitPrebuilt.create(kitToken);
