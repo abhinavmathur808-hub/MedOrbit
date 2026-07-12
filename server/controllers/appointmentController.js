@@ -6,6 +6,7 @@ import Review from '../models/Review.js';
 import { Resend } from 'resend';
 import { escapeHtml } from '../utils/escapeHtml.js';
 import { slotKeyForDate } from '../utils/slotKey.js';
+import { generateToken04 } from '../utils/zegoToken.js';
 
 let _resend;
 const getResend = () => {
@@ -435,9 +436,46 @@ export const getRoomAccess = async (req, res) => {
             });
         }
 
+        // Mint the Zego video token server-side so the ServerSecret never ships
+        // to the client. The token binds this user id; the client must join with
+        // the same id (returned below).
+        const zegoAppId = Number(process.env.ZEGO_APP_ID);
+        const zegoSecret = process.env.ZEGO_SERVER_SECRET;
+
+        if (!zegoAppId || !zegoSecret) {
+            return res.status(500).json({
+                success: false,
+                message: 'Video service is not configured. Please contact support.',
+            });
+        }
+
+        const zegoUser = await User.findById(userId).select('name');
+        let zegoToken;
+        try {
+            zegoToken = generateToken04(
+                zegoAppId,
+                userId.toString(),
+                zegoSecret,
+                60 * 60, // 1 hour validity
+                ''
+            );
+        } catch (tokenErr) {
+            return res.status(500).json({
+                success: false,
+                message: 'Failed to create a secure video session.',
+            });
+        }
+
         res.status(200).json({
             success: true,
             role: isDoctorOfAppt ? 'doctor' : 'patient',
+            zego: {
+                appId: zegoAppId,
+                token: zegoToken,
+                userId: userId.toString(),
+                userName: zegoUser?.name || 'Participant',
+                roomId: id,
+            },
         });
     } catch (error) {
         res.status(500).json({

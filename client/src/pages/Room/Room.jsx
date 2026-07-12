@@ -16,9 +16,9 @@ const Room = () => {
     // 'checking' -> 'granted' | 'denied'
     const [accessState, setAccessState] = useState('checking');
     const [denyMessage, setDenyMessage] = useState('');
-
-    const appID = Number(import.meta.env.VITE_ZEGO_APP_ID);
-    const serverSecret = import.meta.env.VITE_ZEGO_SERVER_SECRET;
+    // Zego session details minted server-side (token, appId, ids) — the
+    // ServerSecret is never exposed to the client
+    const [zegoSession, setZegoSession] = useState(null);
 
     const getReturnPath = useCallback(() => {
         if (user?.role === 'doctor') return '/doctor/dashboard';
@@ -56,7 +56,8 @@ const Room = () => {
 
                 if (cancelled) return;
 
-                if (data.success) {
+                if (data.success && data.zego?.token) {
+                    setZegoSession(data.zego);
                     setAccessState('granted');
                 } else {
                     setAccessState('denied');
@@ -78,19 +79,18 @@ const Room = () => {
     }, [roomId, user, navigate]);
 
     useEffect(() => {
-        if (accessState !== 'granted' || !roomId || !containerRef.current || !user) return;
+        if (accessState !== 'granted' || !zegoSession || !roomId || !containerRef.current || !user) return;
 
         const initMeeting = async () => {
-            const userID = user._id || user.id || Date.now().toString();
-            const userName = user.name || 'Guest';
-
             try {
-                const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
-                    appID,
-                    serverSecret,
-                    roomId,
-                    userID,
-                    userName
+                // Build the UIKit token from the server-minted Zego token. The
+                // userID must match the id the token was signed for.
+                const kitToken = ZegoUIKitPrebuilt.generateKitTokenForProduction(
+                    zegoSession.appId,
+                    zegoSession.roomId || roomId,
+                    zegoSession.userId,
+                    zegoSession.userName,
+                    zegoSession.token
                 );
 
                 const zp = ZegoUIKitPrebuilt.create(kitToken);
@@ -129,7 +129,7 @@ const Room = () => {
         return () => {
             destroyZego();
         };
-    }, [accessState, roomId, user, navigate, destroyZego, getReturnPath]);
+    }, [accessState, zegoSession, roomId, user, navigate, destroyZego, getReturnPath]);
 
     if (accessState === 'checking') {
         return (

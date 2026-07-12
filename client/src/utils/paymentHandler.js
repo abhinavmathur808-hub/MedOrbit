@@ -48,7 +48,10 @@ export const handlePayment = async (amount, userDetails, appointmentDetails, onS
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ amount, doctorId }),
+            // The server derives the amount from the appointment's doctor fee and
+            // binds the created order to this appointment; it ignores any
+            // client-supplied amount.
+            body: JSON.stringify({ appointmentId: appointmentDetails?.appointmentId || '' }),
         });
 
         const orderData = await orderResponse.json();

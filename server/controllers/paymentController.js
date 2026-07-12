@@ -27,16 +27,46 @@ const getRazorpayInstance = () => {
 
 export const checkout = async (req, res) => {
     try {
-        const { doctorId } = req.body;
+        const userId = req.userId;
+        const { appointmentId } = req.body;
 
-        if (!doctorId) {
+        if (!appointmentId) {
             return res.status(400).json({
                 success: false,
-                message: "Doctor ID is required to create a payment order.",
+                message: "Appointment ID is required to create a payment order.",
             });
         }
 
-        const doctorProfile = await Doctor.findOne({ userId: doctorId });
+        // The order must be tied to a real, owned, unpaid appointment. Amount is
+        // derived server-side from the doctor's fee, never trusted from the client.
+        const appointment = await Appointment.findById(appointmentId);
+
+        if (!appointment || appointment.patientId.toString() !== userId.toString()) {
+            return res.status(404).json({
+                success: false,
+                message: "Appointment not found.",
+            });
+        }
+
+        if (appointment.status === 'cancelled') {
+            return res.status(400).json({
+                success: false,
+                message: "This appointment has been cancelled and cannot be paid for.",
+            });
+        }
+
+        if (appointment.paymentStatus) {
+            return res.status(400).json({
+                success: false,
+                message: "This appointment has already been paid for.",
+            });
+        }
+
+        // doctorId is normally a User id, with a fallback to a Doctor document id
+        let doctorProfile = await Doctor.findOne({ userId: appointment.doctorId });
+        if (!doctorProfile) {
+            doctorProfile = await Doctor.findById(appointment.doctorId);
+        }
 
         if (!doctorProfile) {
             return res.status(404).json({
@@ -57,11 +87,17 @@ export const checkout = async (req, res) => {
         const options = {
             amount: paymentAmount,
             currency: "INR",
-            receipt: `receipt_${Date.now()}`,
+            receipt: `rcpt_${appointmentId}`,
         };
 
         const razorpay = getRazorpayInstance();
         const order = await razorpay.orders.create(options);
+
+        // Bind this order (and the expected amount) to the appointment so
+        // verification can reject any signature from a different/cheaper order.
+        appointment.razorpayOrderId = order.id;
+        appointment.paymentAmount = paymentAmount;
+        await appointment.save();
 
         res.status(200).json({
             success: true,
@@ -97,39 +133,58 @@ export const paymentVerification = async (req, res) => {
 
         const isAuthentic = expectedSignature === razorpay_signature;
 
-        if (isAuthentic) {
-            const userId = req.userId;
-            let appointment = null;
+        if (!isAuthentic) {
+            return res.status(400).json({
+                success: false,
+                message: "Payment verification failed",
+            });
+        }
 
-            if (appointmentId) {
-                try {
-                    appointment = await Appointment.findById(appointmentId);
+        const userId = req.userId;
 
-                    // Only the patient who owns the appointment can mark it paid
-                    if (appointment && userId && appointment.patientId.toString() === userId.toString()) {
-                        appointment.paymentStatus = true;
-                        await appointment.save();
-                    } else {
-                        appointment = null;
-                    }
-                } catch (err) {
-                    appointment = null;
-                }
-            }
+        if (!appointmentId) {
+            return res.status(400).json({
+                success: false,
+                message: "Appointment reference is required to verify payment.",
+            });
+        }
 
-            // The payment is genuine but the appointment could not be marked paid —
-            // most likely its unpaid hold expired and was removed by the sweeper.
-            // Report failure so the client tells the user to contact support
-            // instead of showing a false booking confirmation.
-            if (appointmentId && !appointment) {
-                return res.status(409).json({
-                    success: false,
-                    message: 'Payment received, but the appointment hold had expired. Please contact support with your payment reference for a refund or rebooking.',
-                    paymentId: razorpay_payment_id,
-                    orderId: razorpay_order_id,
-                });
-            }
+        const appointment = await Appointment.findById(appointmentId);
 
+        // The payment is genuine but the appointment could not be resolved —
+        // most likely its unpaid hold expired and was removed by the sweeper, or
+        // it does not belong to this user. Report failure so the client tells the
+        // user to contact support instead of showing a false booking confirmation.
+        if (!appointment || appointment.patientId.toString() !== userId.toString()) {
+            return res.status(409).json({
+                success: false,
+                message: 'Payment received, but the appointment hold had expired. Please contact support with your payment reference for a refund or rebooking.',
+                paymentId: razorpay_payment_id,
+                orderId: razorpay_order_id,
+            });
+        }
+
+        // Strict binding check: the signed order must be the exact order created
+        // for THIS appointment at checkout. This blocks replaying one payment
+        // across appointments and paying an expensive slot with a cheap order.
+        if (!appointment.razorpayOrderId || appointment.razorpayOrderId !== razorpay_order_id) {
+            return res.status(400).json({
+                success: false,
+                message: "Payment does not match this appointment's order. Verification denied.",
+            });
+        }
+
+        // Idempotent: a replayed verification for an already-paid appointment
+        // succeeds without re-marking or re-sending confirmation emails.
+        const alreadyPaid = appointment.paymentStatus;
+        if (!alreadyPaid) {
+            appointment.paymentStatus = true;
+            await appointment.save();
+        }
+
+        // Only send confirmation/receipt emails on the first successful
+        // verification, not on idempotent replays.
+        if (!alreadyPaid) {
             let user = null;
             let emailToSend = null;
             let patientName = 'there';
@@ -144,18 +199,16 @@ export const paymentVerification = async (req, res) => {
 
             // Booking confirmation emails go out only after payment is verified,
             // using the appointment stored in the database as the source of truth.
-            if (appointment) {
-                const doctorUser = await User.findById(appointment.doctorId).select('name email');
-                if (doctorUser?.email && user?.email) {
-                    sendAppointmentEmails(
-                        doctorUser.email,
-                        doctorUser.name,
-                        user.email,
-                        user.name,
-                        appointment.date,
-                        appointment.slotTime
-                    );
-                }
+            const doctorUser = await User.findById(appointment.doctorId).select('name email');
+            if (doctorUser?.email && user?.email) {
+                sendAppointmentEmails(
+                    doctorUser.email,
+                    doctorUser.name,
+                    user.email,
+                    user.name,
+                    appointment.date,
+                    appointment.slotTime
+                );
             }
 
             if (emailToSend) {
@@ -163,26 +216,22 @@ export const paymentVerification = async (req, res) => {
                     doctorName: doctorName || 'Your Doctor',
                     date: appointmentDate || new Date().toLocaleDateString(),
                     time: appointmentTime || 'As scheduled',
-                    amount: amount ? (amount / 100) : 500,
+                    // Trust the amount bound to the appointment, not the client
+                    amount: (appointment.paymentAmount || 0) / 100,
                     patientName: patientName,
                 };
 
                 sendPaymentReceiptEmail(emailToSend, emailDetails, razorpay_payment_id)
                     .catch(() => { });
             }
-
-            res.status(200).json({
-                success: true,
-                message: "Payment verified successfully",
-                paymentId: razorpay_payment_id,
-                orderId: razorpay_order_id,
-            });
-        } else {
-            res.status(400).json({
-                success: false,
-                message: "Payment verification failed",
-            });
         }
+
+        res.status(200).json({
+            success: true,
+            message: "Payment verified successfully",
+            paymentId: razorpay_payment_id,
+            orderId: razorpay_order_id,
+        });
     } catch (error) {
         res.status(500).json({
             success: false,

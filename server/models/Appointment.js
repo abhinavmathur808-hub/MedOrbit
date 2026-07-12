@@ -29,6 +29,14 @@ const appointmentSchema = new mongoose.Schema(
             type: Boolean,
             default: false, // false = unpaid, true = paid
         },
+        razorpayOrderId: {
+            type: String,
+            default: null, // Razorpay order bound to this appointment at checkout
+        },
+        paymentAmount: {
+            type: Number,
+            default: 0, // Expected amount in paise, set server-side at checkout
+        },
     },
     {
         timestamps: true,
