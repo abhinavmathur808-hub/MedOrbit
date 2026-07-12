@@ -154,6 +154,14 @@ export const registerController = async (req, res) => {
                     userId: user._id,
                 });
             } catch (doctorError) {
+                // A doctor account without a Doctor profile is broken (profile
+                // editing 404s, admin verification silently no-ops), so roll the
+                // registration back and fail loudly instead of swallowing it.
+                await User.findByIdAndDelete(user._id).catch(() => { });
+                return res.status(500).json({
+                    success: false,
+                    message: 'Could not create the doctor profile. Registration was rolled back — please try again.',
+                });
             }
         }
 

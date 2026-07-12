@@ -111,33 +111,3 @@ export const addMedicalHistory = async (req, res) => {
     }
 };
 
-export const getUserAppointments = async (req, res) => {
-    try {
-        const userId = req.userId;
-
-        const Appointment = (await import('../models/Appointment.js')).default;
-        const Doctor = (await import('../models/Doctor.js')).default;
-
-        const appointments = await Appointment.find({ patientId: userId })
-            .populate({
-                path: 'doctorId',
-                select: 'specialization fees hospitalAddress',
-                populate: {
-                    path: 'userId',
-                    select: 'name email photo',
-                },
-            })
-            .sort({ date: -1, createdAt: -1 });
-
-        res.status(200).json({
-            success: true,
-            count: appointments.length,
-            appointments,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Server error fetching appointments',
-        });
-    }
-};

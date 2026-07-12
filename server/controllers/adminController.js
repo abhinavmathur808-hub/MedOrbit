@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import Appointment from '../models/Appointment.js';
 import Doctor from '../models/Doctor.js';
+import { invalidateDoctorsListCache } from '../utils/doctorsCache.js';
 
 export const verifyDoctor = async (req, res) => {
     try {
@@ -33,6 +34,10 @@ export const verifyDoctor = async (req, res) => {
         await doctor.save();
 
         await Doctor.findOneAndUpdate({ userId: doctorId }, { isVerified: true });
+
+        // Verification adds this doctor to the public list — drop the cached
+        // pages so they appear immediately
+        await invalidateDoctorsListCache();
 
         res.status(200).json({
             success: true,

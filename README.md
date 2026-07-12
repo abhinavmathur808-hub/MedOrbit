@@ -22,10 +22,10 @@
 - **Video Consultations** — 35-minute in-browser video calls powered by ZegoCloud UIKit
 - **AI Health Assistant** — Google Gemini–powered chatbot for preliminary health guidance
 - **OAuth Login** — Sign in with Google or GitHub alongside traditional email/password auth
-- **Automated Emails** — Appointment confirmations, OTP verification, and payment receipts via Nodemailer
+- **Automated Emails** — Appointment confirmations, OTP verification, and payment receipts via Resend
 - **Doctor Profiles** — Detailed profiles with specialization, experience, fees, and profile images (Cloudinary)
 - **Admin Panel** — User management and global link oversight with admin-only routes
-- **Health Articles** — Doctors can publish and patients can browse medical articles
+- **Health Articles** — Admins publish curated medical articles that all users can browse
 - **Security Hardened** — Helmet, CORS, rate limiting, JWT authentication, and bcrypt password hashing
 
 ---
@@ -56,7 +56,8 @@
 | Razorpay SDK | Payment gateway |
 | Google Generative AI | AI health assistant (Gemini) |
 | Passport.js | OAuth (Google, GitHub) |
-| Nodemailer | Transactional emails |
+| Resend | Transactional emails |
+| Redis (Upstash) | Doctors list caching (optional) |
 | Cloudinary | Image hosting |
 | JSON Web Tokens | Authentication |
 | bcryptjs | Password hashing |
@@ -91,12 +92,20 @@ GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
 GITHUB_CALLBACK_URL=http://localhost:5000/auth/github/callback
 
-# Email (Nodemailer)
-PAYMENT_EMAIL_USER=
-PAYMENT_EMAIL_PASS=
+# Email (Resend)
+RESEND_API_KEY=
 
 # Google Gemini AI
 GEMINI_API_KEY=
+# Optional: override the model (defaults to gemini-2.5-flash)
+# GEMINI_MODEL=
+
+# Redis cache (optional — the app falls back to database queries without it)
+REDIS_URL=
+
+# ZegoCloud video (tokens are minted server-side; keep the secret OFF the client)
+ZEGO_APP_ID=
+ZEGO_SERVER_SECRET=
 
 # Frontend URL
 CLIENT_URL=http://localhost:5173
@@ -107,7 +116,6 @@ CLIENT_URL=http://localhost:5173
 ```env
 VITE_API_URL=http://localhost:5000
 VITE_ZEGO_APP_ID=
-VITE_ZEGO_SERVER_SECRET=
 ```
 
 ---

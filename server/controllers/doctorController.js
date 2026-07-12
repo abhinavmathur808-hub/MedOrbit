@@ -4,6 +4,7 @@ import Review from '../models/Review.js';
 import Appointment from '../models/Appointment.js';
 import Prescription from '../models/Prescription.js';
 import redisClient from '../config/redis.js';
+import { invalidateDoctorsListCache } from '../utils/doctorsCache.js';
 
 export const getDoctorProfile = async (req, res) => {
     try {
@@ -91,6 +92,10 @@ export const updateDoctorProfile = async (req, res) => {
         }
 
         const updatedDoctor = await Doctor.findOne({ userId }).populate('userId', 'name email phone gender photo');
+
+        // The cached doctors list embeds fees, specialization, and populated
+        // user data — drop it so the change shows immediately
+        await invalidateDoctorsListCache();
 
         res.status(200).json({
             success: true,

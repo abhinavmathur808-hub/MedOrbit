@@ -174,7 +174,9 @@ app.use(session({
     secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false, maxAge: 60000 },
+    // Secure (HTTPS-only) cookie in production; 'trust proxy' above lets
+    // express-session see the original protocol behind Render's proxy.
+    cookie: { secure: process.env.NODE_ENV === 'production', maxAge: 60000 },
 }));
 
 app.use(passport.initialize());
