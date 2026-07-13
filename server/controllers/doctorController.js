@@ -115,7 +115,27 @@ export const getAllDoctors = async (req, res) => {
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 10));
         const skip = (page - 1) * limit;
-        const CACHE_KEY = `doctorsList:page:${page}:limit:${limit}`;
+
+        // Optional specialty filter. Express has already URI-decoded the query
+        // value; we trim it and match case-insensitively so the filter works
+        // regardless of how the specialty was cased upstream (AI match, menu, or
+        // a manually typed URL). Paginating the FILTERED set server-side is what
+        // fixes "Browse all X" only showing the specialists that happened to
+        // land on the first unfiltered page.
+        const specialization = (req.query.specialization || '').trim();
+
+        const query = { isVerified: true };
+        if (specialization) {
+            // Anchored, case-insensitive exact match (regex-escaped to prevent
+            // injection via the query string)
+            const escaped = specialization.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            query.specialization = new RegExp(`^${escaped}$`, 'i');
+        }
+
+        // Cache key must vary by specialty so filtered and unfiltered pages
+        // don't collide (invalidateDoctorsListCache clears all doctorsList:*)
+        const specKey = specialization ? specialization.toLowerCase() : 'all';
+        const CACHE_KEY = `doctorsList:spec:${specKey}:page:${page}:limit:${limit}`;
 
         // Cache is optional — when Redis is down, isReady is false and we go
         // straight to the database without throwing on every request
@@ -137,7 +157,7 @@ export const getAllDoctors = async (req, res) => {
             }
         }
 
-        const doctors = await Doctor.find({ isVerified: true })
+        const doctors = await Doctor.find(query)
             .populate('userId', 'name email phone photo isVerified')
             .select('-__v')
             .skip(skip)

@@ -15,17 +15,20 @@ const Doctors = () => {
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
+    // Server-side specialty filter (from the AI "Browse all X" link or the
+    // specialty menu). Kept separate from the manual text box so pagination
+    // works over the FILTERED set instead of just the first unfiltered page.
+    const [specialtyFilter, setSpecialtyFilter] = useState((location.state?.speciality || '').trim());
+    const [searchTerm, setSearchTerm] = useState(''); // manual name refinement, client-side
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(false);
 
+    // Pick up a new specialty whenever we're navigated here with one
     useEffect(() => {
-        if (location.state?.speciality) {
-            setSearchTerm(location.state.speciality);
-        }
+        setSpecialtyFilter((location.state?.speciality || '').trim());
     }, [location.state]);
 
-    const fetchDoctors = useCallback(async (targetPage) => {
+    const fetchDoctors = useCallback(async (targetPage, specialty) => {
         if (targetPage === 1) {
             setLoading(true);
         } else {
@@ -33,8 +36,9 @@ const Doctors = () => {
         }
 
         try {
+            const specParam = specialty ? `&specialization=${encodeURIComponent(specialty)}` : '';
             const response = await fetch(
-                `${API_BASE}/api/doctor?page=${targetPage}&limit=${LIMIT}`,
+                `${API_BASE}/api/doctor?page=${targetPage}&limit=${LIMIT}${specParam}`,
                 {
                     method: 'GET',
                     headers: { 'Content-Type': 'application/json' },
@@ -61,9 +65,14 @@ const Doctors = () => {
         }
     }, []);
 
+    // Reset to the first page whenever the specialty filter changes
     useEffect(() => {
-        fetchDoctors(page);
-    }, [page, fetchDoctors]);
+        setPage(1);
+    }, [specialtyFilter]);
+
+    useEffect(() => {
+        fetchDoctors(page, specialtyFilter);
+    }, [page, specialtyFilter, fetchDoctors]);
 
     const observer = useRef(null);
 
@@ -125,7 +134,7 @@ const Doctors = () => {
             <CurvedWrapper>
                 <div className="max-w-7xl mx-auto">
 
-                    {location.state?.speciality && (
+                    {specialtyFilter && (
                         <div className="max-w-xl mx-auto mb-6">
                             <div
                                 className="flex items-center justify-between rounded-xl px-5 py-4 border-l-4 bg-white/[0.03] border-white/[0.06]"
@@ -133,14 +142,14 @@ const Doctors = () => {
                             >
                                 <div>
                                     <p className="text-sm font-semibold text-white">
-                                        🩺 Showing results for: <span className="text-rose-500">{location.state.speciality}</span>
+                                        🩺 Showing results for: <span className="text-rose-500">{specialtyFilter}</span>
                                     </p>
                                     <p className="text-xs mt-0.5 text-zinc-500">
                                         Based on your symptom search
                                     </p>
                                 </div>
                                 <button
-                                    onClick={() => { setSearchTerm(''); window.history.replaceState({}, ''); }}
+                                    onClick={() => { setSpecialtyFilter(''); window.history.replaceState({}, ''); }}
                                     className="text-sm font-medium px-4 py-2 rounded-full bg-white/[0.05] border border-zinc-700 text-zinc-300 hover:bg-white/[0.1] hover:text-white transition-all cursor-pointer"
                                 >
                                     Clear filter
