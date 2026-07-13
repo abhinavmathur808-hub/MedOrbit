@@ -1,6 +1,6 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -58,14 +58,29 @@ const Home = () => {
     // Result state for the inline AI panel
     const [hasSearched, setHasSearched] = useState(false);
     const [triage, setTriage] = useState(null);
+    const [refining, setRefining] = useState(false); // on-device match upgrading a keyword result
     const [doctors, setDoctors] = useState([]);
     const [doctorsLoading, setDoctorsLoading] = useState(false);
     const [advice, setAdvice] = useState('');
     const [adviceLoading, setAdviceLoading] = useState(false);
     const [adviceError, setAdviceError] = useState('');
+    const lastSpecRef = useRef(null); // avoid refetching doctors if the specialty is unchanged
 
     useEffect(() => {
         setHealthQuote(getRandomHealthQuote());
+
+        // Preload the model during idle time so the first search is instant,
+        // unless the visitor is on a metered or very slow connection. The 23 MB
+        // download then happens in the background while they read the page and
+        // is cached for every later visit.
+        const conn = navigator.connection;
+        const cheapToLoad = !conn || (!conn.saveData && !/(^|-)2g/.test(conn.effectiveType || ''));
+        if (cheapToLoad) {
+            const schedule = window.requestIdleCallback || ((fn) => setTimeout(fn, 1500));
+            const cancel = window.cancelIdleCallback || clearTimeout;
+            const id = schedule(() => warmUpModel());
+            return () => cancel(id);
+        }
     }, []);
 
     // Warm up the on-device model when the user engages the search box, so the
@@ -119,7 +134,35 @@ const Home = () => {
         }
     };
 
-    const handleSymptomSearch = async () => {
+    // Sets the shown specialty and fetches its doctors, skipping the refetch if
+    // the specialty hasn't changed from what's already displayed.
+    const applySpecialty = (specialty) => {
+        if (specialty === lastSpecRef.current) return;
+        lastSpecRef.current = specialty;
+        fetchRelatedDoctors(specialty);
+    };
+
+    // Runs the on-device semantic match. When it's an upgrade over an instant
+    // keyword result, it only replaces the UI if the model actually loaded.
+    const runSemanticMatch = async (raw, { isUpgrade }) => {
+        try {
+            const result = await matchSpecialty(raw);
+            setTriageStatus('ready');
+            setTriage(result);
+            applySpecialty(result.confidence === 'low' ? 'General Physician' : result.top.specialty);
+        } catch {
+            // Model unavailable — keep the instant keyword result already shown
+            if (!isUpgrade) {
+                const specialty = keywordSpecialty(raw);
+                setTriage({ top: { specialty }, confidence: 'moderate', fallback: true });
+                applySpecialty(specialty);
+            }
+        } finally {
+            setRefining(false);
+        }
+    };
+
+    const handleSymptomSearch = () => {
         const raw = searchQuery.trim();
         if (!raw) {
             navigate('/doctors');
@@ -127,28 +170,31 @@ const Home = () => {
         }
 
         setHasSearched(true);
-        setTriage(null);
         setAdvice('');
         setAdviceError('');
         setDoctors([]);
+        lastSpecRef.current = null;
 
-        // Tier 1: on-device semantic match (falls back to keyword map if the
-        // model could not load)
-        let specialtyForDoctors;
-        try {
-            const result = await matchSpecialty(raw);
-            setTriageStatus('ready');
-            setTriage(result);
-            specialtyForDoctors = result.confidence === 'low' ? 'General Physician' : result.top.specialty;
-        } catch {
-            const specialty = keywordSpecialty(raw);
-            setTriage({ top: { specialty }, confidence: 'moderate', fallback: true });
-            specialtyForDoctors = specialty;
-        }
-
-        // Tiers run in parallel: doctor lookup + Gemini guidance
-        fetchRelatedDoctors(specialtyForDoctors);
+        // Gemini guidance never waits on the local model — fire it immediately
         runCloudAdvice(raw);
+
+        if (getTriageStatus() === 'ready') {
+            // Model is warm: the semantic match is itself near-instant
+            setTriage(null);
+            setRefining(false);
+            runSemanticMatch(raw, { isUpgrade: false });
+        } else {
+            // Model is still downloading/cold: show an instant keyword match and
+            // its doctors right away, then quietly upgrade to the on-device match
+            // once the model is ready — the user never waits on the 23 MB load.
+            const specialty = keywordSpecialty(raw);
+            setTriage({ top: { specialty }, confidence: 'moderate', instant: true });
+            applySpecialty(specialty);
+            if (getTriageStatus() !== 'unavailable') {
+                setRefining(true);
+                runSemanticMatch(raw, { isUpgrade: true });
+            }
+        }
     };
 
     const handleSearchKeyDown = (e) => {
@@ -159,9 +205,11 @@ const Home = () => {
         setSearchQuery('');
         setHasSearched(false);
         setTriage(null);
+        setRefining(false);
         setAdvice('');
         setAdviceError('');
         setDoctors([]);
+        lastSpecRef.current = null;
     };
 
     const matchedSpecialty = triage?.top?.specialty;
@@ -289,6 +337,12 @@ const Home = () => {
                                                 Your symptoms point to a{' '}
                                                 <strong className="font-semibold text-rose-400">{matchedSpecialty}</strong>
                                                 {triage.confidence === 'moderate' ? ' (possible match)' : ''}.
+                                                {refining && (
+                                                    <span className="text-zinc-500 inline-flex items-center gap-1 ml-1">
+                                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                                        refining…
+                                                    </span>
+                                                )}
                                             </p>
                                         )}
 
