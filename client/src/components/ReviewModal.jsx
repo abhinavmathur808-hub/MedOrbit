@@ -65,24 +65,24 @@ const ReviewModal = ({ isOpen, onClose, appointment, onReviewSubmitted }) => {
     const doctorName = appointment?.doctorName || 'Doctor';
 
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl shadow-black/60 max-w-md w-full overflow-hidden animate-in fade-in zoom-in duration-200">
-                <div className="bg-neutral-900 border-b border-neutral-800 px-6 py-4">
+        <div className="fixed inset-0 bg-zinc-950/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl shadow-black/60 max-w-md w-full overflow-hidden animate-in fade-in zoom-in duration-200">
+                <div className="bg-zinc-900 border-b border-zinc-800 px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 bg-burgundy-600/15 border border-burgundy-600/30 rounded-lg flex items-center justify-center">
-                                <Star className="w-4 h-4 text-burgundy-400" />
+                            <div className="w-9 h-9 bg-rose-600/15 border border-rose-600/30 rounded-lg flex items-center justify-center">
+                                <Star className="w-4 h-4 text-rose-400" />
                             </div>
-                            <h2 className="text-xl font-bold text-neutral-100">Leave a Review</h2>
+                            <h2 className="text-xl font-bold text-zinc-100">Leave a Review</h2>
                         </div>
                         <button
                             onClick={onClose}
-                            className="text-neutral-500 hover:text-neutral-300 transition-colors"
+                            className="text-zinc-500 hover:text-zinc-300 transition-colors"
                         >
                             <X className="w-6 h-6" />
                         </button>
                     </div>
-                    <p className="text-neutral-400 text-sm mt-1">Rate your experience with {doctorName}</p>
+                    <p className="text-zinc-400 text-sm mt-1">Rate your experience with {doctorName}</p>
                 </div>
 
                 <div className="p-6">
@@ -91,13 +91,13 @@ const ReviewModal = ({ isOpen, onClose, appointment, onReviewSubmitted }) => {
                             <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Star className="w-8 h-8 text-emerald-400 fill-emerald-400" />
                             </div>
-                            <h3 className="text-xl font-bold text-neutral-100 mb-2">Thank You!</h3>
-                            <p className="text-neutral-400">Your review has been submitted successfully.</p>
+                            <h3 className="text-xl font-bold text-zinc-100 mb-2">Thank You!</h3>
+                            <p className="text-zinc-400">Your review has been submitted successfully.</p>
                         </div>
                     ) : (
                         <>
                             <div className="mb-6">
-                                <label className="block text-sm font-medium text-neutral-300 mb-3 text-center">
+                                <label className="block text-sm font-medium text-zinc-300 mb-3 text-center">
                                     How was your experience?
                                 </label>
                                 <div className="flex justify-center space-x-2">
@@ -113,14 +113,14 @@ const ReviewModal = ({ isOpen, onClose, appointment, onReviewSubmitted }) => {
                                             <Star
                                                 className={`w-10 h-10 transition-colors ${star <= (hoverRating || rating)
                                                     ? 'text-amber-400 fill-amber-400'
-                                                    : 'text-neutral-700'
+                                                    : 'text-zinc-700'
                                                     }`}
                                             />
                                         </button>
                                     ))}
                                 </div>
                                 {rating > 0 && (
-                                    <p className="text-center text-sm text-neutral-400 mt-2">
+                                    <p className="text-center text-sm text-zinc-400 mt-2">
                                         {rating === 1 && 'Poor'}
                                         {rating === 2 && 'Fair'}
                                         {rating === 3 && 'Good'}
@@ -131,7 +131,7 @@ const ReviewModal = ({ isOpen, onClose, appointment, onReviewSubmitted }) => {
                             </div>
 
                             <div className="mb-6">
-                                <label className="block text-sm font-medium text-neutral-300 mb-2">
+                                <label className="block text-sm font-medium text-zinc-300 mb-2">
                                     Write a review (optional)
                                 </label>
                                 <textarea
@@ -140,9 +140,9 @@ const ReviewModal = ({ isOpen, onClose, appointment, onReviewSubmitted }) => {
                                     placeholder="Share your experience with this doctor..."
                                     rows={4}
                                     maxLength={500}
-                                    className="w-full px-4 py-3 bg-neutral-950 border border-neutral-800 rounded-xl text-neutral-200 placeholder-neutral-600 focus:ring-2 focus:ring-burgundy-600/60 focus:border-transparent transition-all outline-none resize-none"
+                                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 rounded-xl text-zinc-200 placeholder-zinc-600 focus:ring-2 focus:ring-rose-600/60 focus:border-transparent transition-all outline-none resize-none"
                                 />
-                                <p className="text-xs text-neutral-500 text-right mt-1">
+                                <p className="text-xs text-zinc-500 text-right mt-1">
                                     {comment.length}/500
                                 </p>
                             </div>
@@ -156,7 +156,7 @@ const ReviewModal = ({ isOpen, onClose, appointment, onReviewSubmitted }) => {
                             <button
                                 onClick={handleSubmit}
                                 disabled={loading || rating === 0}
-                                className="w-full bg-burgundy-600 hover:bg-burgundy-500 text-white py-3 rounded-xl font-medium transition-all flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-burgundy-900/40"
+                                className="w-full bg-rose-600 hover:bg-rose-500 text-white py-3 rounded-xl font-medium transition-all flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-rose-900/40"
                             >
                                 {loading ? (
                                     <>

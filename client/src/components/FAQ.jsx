@@ -24,7 +24,7 @@ const faqData = [
     {
         question: 'Do I need to pay?',
         answer:
-            'No — payments are in <strong>demo mode</strong>. When the Razorpay gateway opens, use the ID <code class="bg-white/[0.04] px-1.5 py-0.5 rounded text-neutral-300 font-mono text-sm border border-neutral-800">success@razorpay</code> to simulate a successful transaction.',
+            'No — payments are in <strong>demo mode</strong>. When the Razorpay gateway opens, use the ID <code class="bg-white/[0.04] px-1.5 py-0.5 rounded text-zinc-300 font-mono text-sm border border-zinc-800">success@razorpay</code> to simulate a successful transaction.',
     },
     {
         question: 'Is this a real medical service?',
@@ -50,19 +50,19 @@ const FAQ = () => {
                         <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight leading-tight mb-4 text-white">
                             Frequently Asked Questions
                         </h2>
-                        <p className="text-neutral-500 leading-relaxed">
+                        <p className="text-zinc-500 leading-relaxed">
                             Can't find the answer you're looking for? Reach out to our support team.
                         </p>
                     </div>
 
                     <div className="lg:col-span-8">
-                        <div className="border-t border-neutral-800/60">
+                        <div className="border-t border-zinc-800/60">
                             {faqData.map((item, index) => {
                                 const isOpen = activeIndex === index;
                                 return (
                                     <div
                                         key={index}
-                                        className="border-b border-neutral-800/60"
+                                        className="border-b border-zinc-800/60"
                                     >
                                         <button
                                             onClick={() => toggle(index)}
@@ -72,21 +72,21 @@ const FAQ = () => {
                                             <span
                                                 className={`text-lg font-medium transition-colors duration-200 pr-6 ${isOpen
                                                     ? 'text-white'
-                                                    : 'text-neutral-400 group-hover:text-white'
+                                                    : 'text-zinc-400 group-hover:text-white'
                                                     }`}
                                             >
                                                 {item.question}
                                             </span>
                                             <span
                                                 className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${isOpen
-                                                    ? 'bg-burgundy-600 text-white'
+                                                    ? 'bg-rose-600 text-white'
                                                     : 'bg-white/[0.03] group-hover:bg-white/[0.06]'
                                                     }`}
                                             >
                                                 {isOpen ? (
                                                     <Minus className="w-4 h-4" />
                                                 ) : (
-                                                    <Plus className="w-4 h-4 text-neutral-600 group-hover:text-neutral-400 transition-colors" />
+                                                    <Plus className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
                                                 )}
                                             </span>
                                         </button>
@@ -99,7 +99,7 @@ const FAQ = () => {
                                         >
                                             <div className="overflow-hidden">
                                                 <div
-                                                    className="pb-6 pr-14 text-neutral-500 leading-relaxed [&_strong]:text-neutral-300 [&_strong]:font-semibold"
+                                                    className="pb-6 pr-14 text-zinc-500 leading-relaxed [&_strong]:text-zinc-300 [&_strong]:font-semibold"
                                                     dangerouslySetInnerHTML={{ __html: item.answer }}
                                                 />
                                             </div>

@@ -50,7 +50,7 @@ const UserReviews = () => {
 
         <button
           onClick={prevReview}
-          className='hidden md:flex absolute left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full bg-neutral-800/50 hover:bg-burgundy-600 text-neutral-400 hover:text-white backdrop-blur-sm border border-neutral-700/50 hover:border-burgundy-500 transition-all z-20'
+          className='hidden md:flex absolute left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full bg-zinc-800/50 hover:bg-rose-600 text-zinc-400 hover:text-white backdrop-blur-sm border border-zinc-700/50 hover:border-rose-500 transition-all z-20'
           aria-label="Previous Review"
         >
           <FiChevronLeft className='w-6 h-6' />
@@ -67,8 +67,8 @@ const UserReviews = () => {
         >
 
           <div
-            className='absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 z-10 flex items-center justify-center rounded-full bg-burgundy-600'
-            style={{ boxShadow: '0 8px 20px rgba(155, 27, 48, 0.3)' }}
+            className='absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 z-10 flex items-center justify-center rounded-full bg-rose-600'
+            style={{ boxShadow: '0 8px 20px rgba(225, 29, 72, 0.3)' }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-white">
               <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
@@ -82,21 +82,21 @@ const UserReviews = () => {
             </h2>
 
             <div className='px-2 sm:px-8 transition-opacity duration-300'>
-              <p className='text-neutral-400 text-lg sm:text-xl leading-relaxed mb-8'>
+              <p className='text-zinc-400 text-lg sm:text-xl leading-relaxed mb-8'>
                 "{reviews[currentIndex].text}"
               </p>
 
               <div className='flex flex-col items-center gap-3'>
                 <div className='flex text-2xl gap-1 mb-2'>
                   {[...Array(5)].map((_, i) => (
-                    <span key={i} className={i < reviews[currentIndex].stars ? 'text-burgundy-500' : 'text-neutral-700'}>★</span>
+                    <span key={i} className={i < reviews[currentIndex].stars ? 'text-rose-500' : 'text-zinc-700'}>★</span>
                   ))}
                 </div>
 
                 <h3 className='font-medium text-white text-lg uppercase tracking-widest border-t border-white/[0.06] pt-4 px-6'>
                   {reviews[currentIndex].name}
                 </h3>
-                <p className='text-neutral-600 text-sm uppercase tracking-wide'>
+                <p className='text-zinc-600 text-sm uppercase tracking-wide'>
                   {reviews[currentIndex].role}
                 </p>
               </div>
@@ -109,7 +109,7 @@ const UserReviews = () => {
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-burgundy-600 scale-125' : 'bg-neutral-700 hover:bg-neutral-500'
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-rose-600 scale-125' : 'bg-zinc-700 hover:bg-zinc-500'
                   }`}
                 aria-label={`Go to review ${index + 1}`}
               />
@@ -120,7 +120,7 @@ const UserReviews = () => {
 
         <button
           onClick={nextReview}
-          className='hidden md:flex absolute right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full bg-neutral-800/50 hover:bg-burgundy-600 text-neutral-400 hover:text-white backdrop-blur-sm border border-neutral-700/50 hover:border-burgundy-500 transition-all z-20'
+          className='hidden md:flex absolute right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full bg-zinc-800/50 hover:bg-rose-600 text-zinc-400 hover:text-white backdrop-blur-sm border border-zinc-700/50 hover:border-rose-500 transition-all z-20'
           aria-label="Next Review"
         >
           <FiChevronRight className='w-6 h-6' />
@@ -129,10 +129,10 @@ const UserReviews = () => {
       </div>
 
       <div className='flex justify-center gap-6 mt-8 md:hidden'>
-        <button onClick={prevReview} className='w-10 h-10 flex items-center justify-center rounded-full bg-neutral-800/50 hover:bg-burgundy-600 text-neutral-400 hover:text-white backdrop-blur-sm border border-neutral-700/50 hover:border-burgundy-500 transition-all' aria-label='Previous Review'>
+        <button onClick={prevReview} className='w-10 h-10 flex items-center justify-center rounded-full bg-zinc-800/50 hover:bg-rose-600 text-zinc-400 hover:text-white backdrop-blur-sm border border-zinc-700/50 hover:border-rose-500 transition-all' aria-label='Previous Review'>
           <FiChevronLeft className='w-5 h-5' />
         </button>
-        <button onClick={nextReview} className='w-10 h-10 flex items-center justify-center rounded-full bg-neutral-800/50 hover:bg-burgundy-600 text-neutral-400 hover:text-white backdrop-blur-sm border border-neutral-700/50 hover:border-burgundy-500 transition-all' aria-label='Next Review'>
+        <button onClick={nextReview} className='w-10 h-10 flex items-center justify-center rounded-full bg-zinc-800/50 hover:bg-rose-600 text-zinc-400 hover:text-white backdrop-blur-sm border border-zinc-700/50 hover:border-rose-500 transition-all' aria-label='Next Review'>
           <FiChevronRight className='w-5 h-5' />
         </button>
       </div>

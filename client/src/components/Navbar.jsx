@@ -22,7 +22,7 @@ const Navbar = () => {
 
     return (
         <nav
-            className="fixed top-6 left-0 right-0 z-50 mx-auto max-w-6xl w-[calc(100%-2rem)] bg-neutral-950/80 backdrop-blur-2xl border border-burgundy-600/50 rounded-full shadow-[0_0_30px_-5px_rgba(155, 27, 48,0.2)] transition-all duration-300 px-8 py-2 flex items-center justify-between"
+            className="fixed top-6 left-0 right-0 z-50 mx-auto max-w-6xl w-[calc(100%-2rem)] bg-zinc-950/80 backdrop-blur-2xl border border-rose-600/50 rounded-full shadow-[0_0_30px_-5px_rgba(225, 29, 72,0.2)] transition-all duration-300 px-8 py-2 flex items-center justify-between"
         >
             <div className="flex-1 flex items-center justify-start h-full">
                 <Link to="/" className="flex items-center">
@@ -37,17 +37,17 @@ const Navbar = () => {
 
             <ul className="hidden md:flex items-center gap-8 text-sm font-medium">
                 <li>
-                    <Link to="/" className={`transition-colors duration-200 ${location.pathname === '/' ? 'text-burgundy-500' : 'text-neutral-400 hover:text-neutral-200'}`}>
+                    <Link to="/" className={`transition-colors duration-200 ${location.pathname === '/' ? 'text-rose-500' : 'text-zinc-400 hover:text-zinc-200'}`}>
                         Home
                     </Link>
                 </li>
                 <li>
                     {user?.role === 'doctor' ? (
-                        <Link to="/doctor/profile/edit" className={`transition-colors duration-200 ${location.pathname === '/doctor/profile/edit' ? 'text-burgundy-500' : 'text-neutral-400 hover:text-neutral-200'}`}>
+                        <Link to="/doctor/profile/edit" className={`transition-colors duration-200 ${location.pathname === '/doctor/profile/edit' ? 'text-rose-500' : 'text-zinc-400 hover:text-zinc-200'}`}>
                             Edit Profile
                         </Link>
                     ) : (
-                        <Link to="/doctors" className={`transition-colors duration-200 ${location.pathname === '/doctors' || location.pathname.startsWith('/doctors') ? 'text-burgundy-500' : 'text-neutral-400 hover:text-neutral-200'}`}>
+                        <Link to="/doctors" className={`transition-colors duration-200 ${location.pathname === '/doctors' || location.pathname.startsWith('/doctors') ? 'text-rose-500' : 'text-zinc-400 hover:text-zinc-200'}`}>
                             Find Doctors
                         </Link>
                     )}
@@ -57,7 +57,7 @@ const Navbar = () => {
                     <li>
                         <Link
                             to={user?.role === 'doctor' ? '/doctor/dashboard' : '/appointments'}
-                            className={`transition-colors duration-200 ${(location.pathname === '/doctor/dashboard' || location.pathname === '/appointments') ? 'text-burgundy-500' : 'text-neutral-400 hover:text-neutral-200'}`}
+                            className={`transition-colors duration-200 ${(location.pathname === '/doctor/dashboard' || location.pathname === '/appointments') ? 'text-rose-500' : 'text-zinc-400 hover:text-zinc-200'}`}
                         >
                             Appointments
                         </Link>
@@ -67,7 +67,7 @@ const Navbar = () => {
                     <li>
                         <Link
                             to="/admin"
-                            className={`transition-colors duration-200 ${location.pathname.startsWith('/admin') ? 'text-burgundy-500' : 'text-neutral-400 hover:text-neutral-200'}`}
+                            className={`transition-colors duration-200 ${location.pathname.startsWith('/admin') ? 'text-rose-500' : 'text-zinc-400 hover:text-zinc-200'}`}
                         >
                             Admin Panel
                         </Link>
@@ -80,13 +80,13 @@ const Navbar = () => {
                     <div className="flex items-center gap-4">
                         <Link
                             to={user?.role === 'doctor' ? '/doctor/profile' : '/profile'}
-                            className="text-neutral-300 hover:text-white font-medium text-sm transition-colors duration-200"
+                            className="text-zinc-300 hover:text-white font-medium text-sm transition-colors duration-200"
                         >
                             {user?.name || 'Profile'}
                         </Link>
                         <button
                             onClick={handleLogout}
-                            className="text-neutral-300 hover:text-white font-medium text-sm px-4 py-2 rounded-full border border-transparent hover:border-neutral-700 transition-all duration-200"
+                            className="text-zinc-300 hover:text-white font-medium text-sm px-4 py-2 rounded-full border border-transparent hover:border-zinc-700 transition-all duration-200"
                         >
                             Logout
                         </button>
@@ -94,7 +94,7 @@ const Navbar = () => {
                 ) : (
                     <Link
                         to="/login"
-                        className="text-neutral-300 hover:text-white font-medium text-sm px-4 py-2 rounded-full border border-transparent hover:border-neutral-700 transition-all duration-200"
+                        className="text-zinc-300 hover:text-white font-medium text-sm px-4 py-2 rounded-full border border-transparent hover:border-zinc-700 transition-all duration-200"
                     >
                         Sign In
                     </Link>
@@ -103,7 +103,7 @@ const Navbar = () => {
 
             <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.04] transition-all duration-200"
+                className="md:hidden p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-all duration-200"
             >
                 {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -115,22 +115,22 @@ const Navbar = () => {
                         background: 'rgba(9,9,11,0.95)',
                         backdropFilter: 'blur(16px)',
                         WebkitBackdropFilter: 'blur(16px)',
-                        border: '1px solid rgba(155, 27, 48,0.3)',
-                        boxShadow: '0 0 20px -5px rgba(155, 27, 48,0.15)',
+                        border: '1px solid rgba(225, 29, 72,0.3)',
+                        boxShadow: '0 0 20px -5px rgba(225, 29, 72,0.15)',
                     }}
                 >
-                    <Link to="/" onClick={closeMenu} className={`block px-4 py-2.5 rounded-lg hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200 ${location.pathname === '/' ? 'text-burgundy-500' : 'text-neutral-400 hover:text-neutral-200'}`}>Home</Link>
+                    <Link to="/" onClick={closeMenu} className={`block px-4 py-2.5 rounded-lg hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200 ${location.pathname === '/' ? 'text-rose-500' : 'text-zinc-400 hover:text-zinc-200'}`}>Home</Link>
                     {user?.role === 'doctor' ? (
-                        <Link to="/doctor/profile/edit" onClick={closeMenu} className={`block px-4 py-2.5 rounded-lg hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200 ${location.pathname === '/doctor/profile/edit' ? 'text-burgundy-500' : 'text-neutral-400 hover:text-neutral-200'}`}>Edit Profile</Link>
+                        <Link to="/doctor/profile/edit" onClick={closeMenu} className={`block px-4 py-2.5 rounded-lg hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200 ${location.pathname === '/doctor/profile/edit' ? 'text-rose-500' : 'text-zinc-400 hover:text-zinc-200'}`}>Edit Profile</Link>
                     ) : (
-                        <Link to="/doctors" onClick={closeMenu} className={`block px-4 py-2.5 rounded-lg hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200 ${location.pathname === '/doctors' || location.pathname.startsWith('/doctors') ? 'text-burgundy-500' : 'text-neutral-400 hover:text-neutral-200'}`}>Find Doctors</Link>
+                        <Link to="/doctors" onClick={closeMenu} className={`block px-4 py-2.5 rounded-lg hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200 ${location.pathname === '/doctors' || location.pathname.startsWith('/doctors') ? 'text-rose-500' : 'text-zinc-400 hover:text-zinc-200'}`}>Find Doctors</Link>
                     )}
 
                     {user && (
                         <Link
                             to={user?.role === 'doctor' ? '/doctor/dashboard' : '/appointments'}
                             onClick={closeMenu}
-                            className={`block px-4 py-2.5 rounded-lg hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200 ${(location.pathname === '/doctor/dashboard' || location.pathname === '/appointments') ? 'text-burgundy-500' : 'text-neutral-400 hover:text-neutral-200'}`}
+                            className={`block px-4 py-2.5 rounded-lg hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200 ${(location.pathname === '/doctor/dashboard' || location.pathname === '/appointments') ? 'text-rose-500' : 'text-zinc-400 hover:text-zinc-200'}`}
                         >
                             Appointments
                         </Link>
@@ -139,22 +139,22 @@ const Navbar = () => {
                         <Link
                             to="/admin"
                             onClick={closeMenu}
-                            className={`block px-4 py-2.5 rounded-lg hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200 ${location.pathname.startsWith('/admin') ? 'text-burgundy-500' : 'text-neutral-400 hover:text-neutral-200'}`}
+                            className={`block px-4 py-2.5 rounded-lg hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200 ${location.pathname.startsWith('/admin') ? 'text-rose-500' : 'text-zinc-400 hover:text-zinc-200'}`}
                         >
                             Admin Panel
                         </Link>
                     )}
 
-                    <div className="border-t border-neutral-800/60 pt-2 mt-2">
+                    <div className="border-t border-zinc-800/60 pt-2 mt-2">
                         {user ? (
                             <>
-                                <Link to={user?.role === 'doctor' ? '/doctor/profile' : '/profile'} onClick={closeMenu} className="block px-4 py-2.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200">
+                                <Link to={user?.role === 'doctor' ? '/doctor/profile' : '/profile'} onClick={closeMenu} className="block px-4 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200">
                                     Profile ({user?.name || 'User'})
                                 </Link>
-                                <button onClick={handleLogout} className="block w-full text-left px-4 py-2.5 rounded-lg text-neutral-500 hover:text-neutral-300 hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200">Logout</button>
+                                <button onClick={handleLogout} className="block w-full text-left px-4 py-2.5 rounded-lg text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200">Logout</button>
                             </>
                         ) : (
-                            <Link to="/login" onClick={closeMenu} className="block px-4 py-2.5 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200">Sign In</Link>
+                            <Link to="/login" onClick={closeMenu} className="block px-4 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.04] text-sm font-medium transition-colors duration-200">Sign In</Link>
                         )}
                     </div>
                 </div>

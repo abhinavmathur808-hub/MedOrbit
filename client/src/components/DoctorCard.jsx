@@ -70,9 +70,9 @@ const DoctorCard = ({ doctor }) => {
                 onMouseMove={handleMouseMove}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-                className="w-full relative overflow-hidden bg-neutral-900 border border-neutral-800 rounded-2xl p-6 shadow-lg shadow-black/30 hover:border-neutral-700"
+                className="w-full relative overflow-hidden bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-lg shadow-black/30 hover:border-zinc-700"
                 style={{ transform: cardTransform, transition: opacity === 0 ? 'transform 0.5s ease-out' : 'none' }}
-                whileHover={{ scale: 1.03, boxShadow: '0 8px 30px rgba(155, 27, 48, 0.15)' }}
+                whileHover={{ scale: 1.03, boxShadow: '0 8px 30px rgba(225, 29, 72, 0.15)' }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
@@ -80,7 +80,7 @@ const DoctorCard = ({ doctor }) => {
                     className="pointer-events-none absolute -inset-px transition-opacity duration-300 rounded-2xl"
                     style={{
                         opacity,
-                        background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(155, 27, 48, 0.15), transparent 40%)`,
+                        background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(225, 29, 72, 0.15), transparent 40%)`,
                     }}
                 />
 
@@ -88,7 +88,7 @@ const DoctorCard = ({ doctor }) => {
 
                     <div className="flex flex-col items-center text-center">
                         <div className="relative">
-                            <div className="w-24 h-24 rounded-full border-2 border-neutral-800 overflow-hidden bg-burgundy-950/30 flex items-center justify-center">
+                            <div className="w-24 h-24 rounded-full border-2 border-zinc-800 overflow-hidden bg-rose-950/30 flex items-center justify-center">
                                 {photo ? (
                                     <motion.img
                                         layoutId={`doctor-img-${doctor._id}`}
@@ -98,33 +98,33 @@ const DoctorCard = ({ doctor }) => {
                                         loading="lazy"
                                     />
                                 ) : (
-                                    <span className="text-3xl font-bold text-burgundy-500">
+                                    <span className="text-3xl font-bold text-rose-500">
                                         {name.charAt(0).toUpperCase()}
                                     </span>
                                 )}
                             </div>
                             {isVerified && (
-                                <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-burgundy-500 rounded-full flex items-center justify-center border-2 border-neutral-900">
+                                <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center border-2 border-zinc-900">
                                     <CheckCircle className="w-4 h-4 text-white" />
                                 </div>
                             )}
                         </div>
 
-                        <h3 className="text-lg font-bold text-neutral-100 mt-4">
+                        <h3 className="text-lg font-bold text-zinc-100 mt-4">
                             {name}
                         </h3>
 
-                        <p className="text-sm text-burgundy-500 font-medium mt-0.5">
+                        <p className="text-sm text-rose-500 font-medium mt-0.5">
                             {specialization}
                         </p>
 
                         {totalRatings > 0 && (
                             <div className="flex items-center gap-1 mt-2">
                                 <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                                <span className="text-sm font-semibold text-neutral-200">
+                                <span className="text-sm font-semibold text-zinc-200">
                                     {averageRating.toFixed(1)}
                                 </span>
-                                <span className="text-xs text-neutral-500">
+                                <span className="text-xs text-zinc-500">
                                     ({totalRatings})
                                 </span>
                             </div>
@@ -135,7 +135,7 @@ const DoctorCard = ({ doctor }) => {
                                 {tags.map((tag, i) => (
                                     <span
                                         key={i}
-                                        className="bg-neutral-800 text-neutral-300 text-xs font-medium px-2.5 py-1 rounded-full border border-neutral-700"
+                                        className="bg-zinc-800 text-zinc-300 text-xs font-medium px-2.5 py-1 rounded-full border border-zinc-700"
                                     >
                                         {tag}
                                     </span>
@@ -144,39 +144,39 @@ const DoctorCard = ({ doctor }) => {
                         )}
                     </div>
 
-                    <div className="grid grid-cols-3 gap-2 bg-neutral-950 border border-neutral-800 rounded-xl p-3 mt-4">
+                    <div className="grid grid-cols-3 gap-2 bg-zinc-950 border border-zinc-800 rounded-xl p-3 mt-4">
                         <div className="flex flex-col items-center text-center">
-                            <Clock className="w-4 h-4 text-burgundy-500 mb-1" />
-                            <span className="text-sm font-semibold text-neutral-200">
+                            <Clock className="w-4 h-4 text-rose-500 mb-1" />
+                            <span className="text-sm font-semibold text-zinc-200">
                                 {experience} {experience === 1 ? 'Year' : 'Years'}
                             </span>
-                            <span className="text-[10px] text-neutral-500 uppercase tracking-wider">
+                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
                                 Exp.
                             </span>
                         </div>
 
-                        <div className="flex flex-col items-center text-center border-x border-neutral-800">
-                            <DollarSign className="w-4 h-4 text-burgundy-500 mb-1" />
-                            <span className="text-sm font-semibold text-neutral-200">
+                        <div className="flex flex-col items-center text-center border-x border-zinc-800">
+                            <DollarSign className="w-4 h-4 text-rose-500 mb-1" />
+                            <span className="text-sm font-semibold text-zinc-200">
                                 ₹{fees}
                             </span>
-                            <span className="text-[10px] text-neutral-500 uppercase tracking-wider">
+                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
                                 Fees
                             </span>
                         </div>
 
                         <div className="flex flex-col items-center text-center">
-                            <MapPin className="w-4 h-4 text-burgundy-500 mb-1" />
-                            <span className="text-sm font-semibold text-neutral-200 truncate max-w-[80px]">
+                            <MapPin className="w-4 h-4 text-rose-500 mb-1" />
+                            <span className="text-sm font-semibold text-zinc-200 truncate max-w-[80px]">
                                 {shortLocation}
                             </span>
-                            <span className="text-[10px] text-neutral-500 uppercase tracking-wider">
+                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
                                 Location
                             </span>
                         </div>
                     </div>
 
-                    <button className="w-full mt-4 bg-burgundy-700 hover:bg-burgundy-600 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                    <button className="w-full mt-4 bg-rose-700 hover:bg-rose-600 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2 cursor-pointer">
                         <Calendar className="w-4 h-4" />
                         Book Appointment
                     </button>

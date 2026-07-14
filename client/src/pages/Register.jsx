@@ -138,7 +138,7 @@ const Register = () => {
         dispatch(registerUser({ name: fullName, email, password, role, otp }));
     };
 
-    const inputClass = "w-full bg-[#121212] border border-neutral-800 rounded-lg px-4 py-3 text-sm text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-neutral-600 transition-colors mb-4";
+    const inputClass = "w-full bg-[#121212] border border-zinc-800 rounded-lg px-4 py-3 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors mb-4";
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center relative m-0 py-12 overflow-x-hidden">
@@ -147,9 +147,9 @@ const Register = () => {
                 className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat bg-fixed z-0"
             ></div>
 
-            <div className="absolute inset-0 w-full h-full bg-black/85 z-[1]"></div>
+            <div className="absolute inset-0 w-full h-full bg-zinc-950/85 z-[1]"></div>
 
-            <div className="w-full max-w-[400px] bg-neutral-950/95 backdrop-blur-md border border-neutral-800/50 p-8 rounded-2xl shadow-2xl z-10 mx-4">
+            <div className="w-full max-w-[400px] bg-zinc-950/95 backdrop-blur-md border border-zinc-800/50 p-8 rounded-2xl shadow-2xl z-10 mx-4">
                 <img
                     src={logo}
                     alt="MedOrbit"
@@ -195,11 +195,11 @@ const Register = () => {
                             disabled={otpLoading || otpCooldown > 0}
                             className={`px-3 py-3 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 shrink-0 ${otpSent && otpCooldown > 0
                                 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                : 'bg-burgundy-950/30 text-burgundy-500 hover:bg-burgundy-950/50 border border-burgundy-900/30'
+                                : 'bg-rose-950/30 text-rose-500 hover:bg-rose-950/50 border border-rose-900/30'
                                 } disabled:opacity-50 disabled:cursor-not-allowed`}
                         >
                             {otpLoading ? (
-                                <div className="w-4 h-4 border-2 border-burgundy-500 border-t-transparent rounded-full animate-spin" />
+                                <div className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
                             ) : otpCooldown > 0 ? (
                                 <>
                                     <CheckCircle className="w-4 h-4" />
@@ -222,7 +222,7 @@ const Register = () => {
                     {otpSent && (
                         <div className="mb-4">
                             <input type="text" id="otp" name="otp" value={otp} onChange={handleChange} required maxLength={6} placeholder="Enter 6-digit OTP" className={`${inputClass} text-center text-lg tracking-widest mb-0`} />
-                            <p className="text-[10px] text-neutral-600 mt-1">OTP valid for 10 minutes • Check your email for the code</p>
+                            <p className="text-[10px] text-zinc-600 mt-1">OTP valid for 10 minutes • Check your email for the code</p>
                         </div>
                     )}
 
@@ -231,8 +231,8 @@ const Register = () => {
                             type="button"
                             onClick={() => setFormData({ ...formData, role: 'patient' })}
                             className={`p-3 rounded-lg border transition-all flex items-center justify-center gap-2 text-sm ${role === 'patient'
-                                ? 'border-burgundy-900/50 bg-burgundy-950/30 text-burgundy-500'
-                                : 'border-neutral-800 bg-[#121212] hover:border-neutral-700 text-neutral-500'
+                                ? 'border-rose-900/50 bg-rose-950/30 text-rose-500'
+                                : 'border-zinc-800 bg-[#121212] hover:border-zinc-700 text-zinc-500'
                                 }`}
                         >
                             <User className="w-4 h-4" />
@@ -242,8 +242,8 @@ const Register = () => {
                             type="button"
                             onClick={() => setFormData({ ...formData, role: 'doctor' })}
                             className={`p-3 rounded-lg border transition-all flex items-center justify-center gap-2 text-sm ${role === 'doctor'
-                                ? 'border-burgundy-900/50 bg-burgundy-950/30 text-burgundy-500'
-                                : 'border-neutral-800 bg-[#121212] hover:border-neutral-700 text-neutral-500'
+                                ? 'border-rose-900/50 bg-rose-950/30 text-rose-500'
+                                : 'border-zinc-800 bg-[#121212] hover:border-zinc-700 text-zinc-500'
                                 }`}
                         >
                             <Stethoscope className="w-4 h-4" />
@@ -253,14 +253,14 @@ const Register = () => {
 
                     <div className="relative mb-4">
                         <input type={showPassword ? "text" : "password"} id="password" name="password" value={password} onChange={handleChange} required placeholder="Password" className={`${inputClass} mb-0 pr-10`} />
-                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 transition-colors cursor-pointer" tabIndex={-1}>
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer" tabIndex={-1}>
                             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                     </div>
 
                     <div className="relative mb-4">
                         <input type={showConfirmPassword ? "text" : "password"} id="confirmPassword" name="confirmPassword" value={confirmPassword} onChange={handleChange} required placeholder="Confirm password" className={`${inputClass} mb-0 pr-10`} />
-                        <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-300 transition-colors cursor-pointer" tabIndex={-1}>
+                        <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer" tabIndex={-1}>
                             {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                     </div>
@@ -268,10 +268,10 @@ const Register = () => {
                     <button
                         type="submit"
                         disabled={isLoading || !otpSent}
-                        className="w-full bg-burgundy-950/30 text-burgundy-500 hover:bg-burgundy-950/50 border border-burgundy-900/30 py-3 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full bg-rose-950/30 text-rose-500 hover:bg-rose-950/50 border border-rose-900/30 py-3 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {isLoading ? (
-                            <div className="w-4 h-4 border-2 border-burgundy-500 border-t-transparent rounded-full animate-spin" />
+                            <div className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
                         ) : (
                             'Continue'
                         )}
@@ -279,14 +279,14 @@ const Register = () => {
                 </form>
 
                 <div className="flex items-center my-6">
-                    <div className="flex-grow border-t border-neutral-800/50"></div>
-                    <span className="mx-4 text-neutral-600 text-[10px] uppercase tracking-wider">or</span>
-                    <div className="flex-grow border-t border-neutral-800/50"></div>
+                    <div className="flex-grow border-t border-zinc-800/50"></div>
+                    <span className="mx-4 text-zinc-600 text-[10px] uppercase tracking-wider">or</span>
+                    <div className="flex-grow border-t border-zinc-800/50"></div>
                 </div>
 
                 <a
                     href={`${API_BASE}/auth/google`}
-                    className="w-full flex items-center justify-center gap-2 bg-[#121212] hover:bg-neutral-900 border border-neutral-800 text-neutral-300 py-3 rounded-lg text-sm transition-colors"
+                    className="w-full flex items-center justify-center gap-2 bg-[#121212] hover:bg-zinc-900 border border-zinc-800 text-zinc-300 py-3 rounded-lg text-sm transition-colors"
                 >
                     <FcGoogle className="w-5 h-5" />
                     Continue with Google
@@ -294,22 +294,22 @@ const Register = () => {
 
                 <a
                     href={`${API_BASE}/auth/github`}
-                    className="w-full flex items-center justify-center gap-2 bg-[#121212] hover:bg-neutral-900 border border-neutral-800 text-neutral-300 py-3 rounded-lg text-sm transition-colors mt-3"
+                    className="w-full flex items-center justify-center gap-2 bg-[#121212] hover:bg-zinc-900 border border-zinc-800 text-zinc-300 py-3 rounded-lg text-sm transition-colors mt-3"
                 >
                     <FaGithub className="w-5 h-5" />
                     Continue with GitHub
                 </a>
 
-                <p className="text-center text-neutral-500 text-sm mt-4">
+                <p className="text-center text-zinc-500 text-sm mt-4">
                     Already have an account?{' '}
-                    <Link to="/login" className="text-burgundy-500 hover:text-burgundy-400 transition-colors">
+                    <Link to="/login" className="text-rose-500 hover:text-rose-400 transition-colors">
                         Sign in
                     </Link>
                 </p>
 
                 <div className="text-center mt-6">
-                    <Link to="/" className="text-sm text-neutral-400 hover:text-neutral-300 transition-colors">
-                        Skip & continue to <span className="text-burgundy-500">Home</span>
+                    <Link to="/" className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors">
+                        Skip & continue to <span className="text-rose-500">Home</span>
                     </Link>
                 </div>
             </div>

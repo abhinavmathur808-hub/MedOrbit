@@ -18,11 +18,11 @@ const CancelModal = ({ isOpen, onClose, onConfirm, loading = false }) => {
 
     return (
         <div
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center backdrop-blur-sm"
+            className="fixed inset-0 bg-zinc-950/70 z-50 flex items-center justify-center backdrop-blur-sm"
             onClick={handleClose}
         >
             <div
-                className="bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl shadow-black/60 w-full max-w-md p-6 transform transition-all scale-100 mx-4"
+                className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl shadow-black/60 w-full max-w-md p-6 transform transition-all scale-100 mx-4"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center justify-between mb-4">
@@ -30,17 +30,17 @@ const CancelModal = ({ isOpen, onClose, onConfirm, loading = false }) => {
                         <div className="w-10 h-10 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center">
                             <AlertTriangle className="w-5 h-5 text-red-400" />
                         </div>
-                        <h2 className="text-xl font-bold text-neutral-100">Cancel Appointment</h2>
+                        <h2 className="text-xl font-bold text-zinc-100">Cancel Appointment</h2>
                     </div>
                     <button
                         onClick={handleClose}
-                        className="text-neutral-500 hover:text-neutral-300 transition-colors"
+                        className="text-zinc-500 hover:text-zinc-300 transition-colors"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
-                <p className="text-sm text-neutral-400 mb-4">
+                <p className="text-sm text-zinc-400 mb-4">
                     Are you sure you want to cancel? This action cannot be undone.
                 </p>
 
@@ -48,13 +48,13 @@ const CancelModal = ({ isOpen, onClose, onConfirm, loading = false }) => {
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                     placeholder="Please share the reason for cancellation..."
-                    className="w-full bg-neutral-950 border border-neutral-800 rounded-lg p-3 focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 outline-none h-32 resize-none text-sm text-neutral-200 placeholder-neutral-600"
+                    className="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 outline-none h-32 resize-none text-sm text-zinc-200 placeholder-zinc-600"
                 />
 
                 <div className="flex items-center justify-end gap-3 mt-5">
                     <button
                         onClick={handleClose}
-                        className="text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 px-4 py-2 rounded-lg transition-colors text-sm font-medium"
+                        className="text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 px-4 py-2 rounded-lg transition-colors text-sm font-medium"
                     >
                         Back
                     </button>

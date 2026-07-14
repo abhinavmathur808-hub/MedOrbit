@@ -147,48 +147,48 @@ const PrescriptionModal = ({ isOpen, onClose, appointment, onPrescriptionSubmitt
     const patientName = appointment?.patientName || 'Patient';
 
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl shadow-black/60 max-w-2xl w-full max-h-[90vh] overflow-hidden animate-in fade-in zoom-in duration-200">
-                <div className="bg-neutral-900 border-b border-neutral-800 px-6 py-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden animate-in fade-in zoom-in duration-200">
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-burgundy-600/15 border border-burgundy-600/30 rounded-xl flex items-center justify-center">
-                                <FileText className="w-5 h-5 text-burgundy-400" />
+                            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                                <FileText className="w-5 h-5 text-white" />
                             </div>
-                            <h2 className="text-xl font-bold text-neutral-100">Write Prescription</h2>
+                            <h2 className="text-xl font-bold text-white">Write Prescription</h2>
                         </div>
                         <button
                             onClick={onClose}
-                            className="text-neutral-500 hover:text-neutral-300 transition-colors"
+                            className="text-white/70 hover:text-white transition-colors"
                         >
                             <X className="w-6 h-6" />
                         </button>
                     </div>
-                    <p className="text-neutral-400 text-sm mt-1">Prescription for {patientName}</p>
+                    <p className="text-blue-100 text-sm mt-1">Prescription for {patientName}</p>
                 </div>
 
                 <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
                     {success ? (
                         <div className="text-center py-8">
-                            <div className="w-16 h-16 bg-emerald-500/10 border border-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <FileText className="w-8 h-8 text-emerald-400" />
+                            <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <FileText className="w-8 h-8 text-emerald-500" />
                             </div>
-                            <h3 className="text-xl font-bold text-neutral-100 mb-2">Prescription Created!</h3>
-                            <p className="text-neutral-400">The prescription has been saved successfully.</p>
+                            <h3 className="text-xl font-bold text-gray-800 mb-2">Prescription Created!</h3>
+                            <p className="text-gray-500">The prescription has been saved successfully.</p>
                         </div>
                     ) : (
                         <>
                             {draftLoading && (
-                                <div className="mb-4 flex items-center gap-2 text-sm text-neutral-400">
+                                <div className="mb-4 flex items-center gap-2 text-sm text-gray-500">
                                     <Loader2 className="w-4 h-4 animate-spin" />
                                     Checking for AI consultation notes…
                                 </div>
                             )}
 
                             {!draftLoading && draftSource && (
-                                <div className="mb-4 p-3 rounded-xl bg-burgundy-600/10 border border-burgundy-600/30 flex items-start gap-2">
-                                    <Sparkles className="w-4 h-4 text-burgundy-400 flex-shrink-0 mt-0.5" />
-                                    <p className="text-xs text-burgundy-200">
+                                <div className="mb-4 p-3 rounded-xl bg-blue-50 border border-blue-200 flex items-start gap-2">
+                                    <Sparkles className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                                    <p className="text-xs text-blue-700">
                                         {draftSource === 'ai'
                                             ? 'Pre-filled from your AI-drafted SOAP note. Please review and edit before saving.'
                                             : 'Pre-filled from your consultation transcript (AI structuring was unavailable). Please review before saving.'}
@@ -197,7 +197,7 @@ const PrescriptionModal = ({ isOpen, onClose, appointment, onPrescriptionSubmitt
                             )}
 
                             <div className="mb-6">
-                                <label className="block text-sm font-medium text-neutral-300 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Diagnosis *
                                 </label>
                                 <textarea
@@ -205,19 +205,19 @@ const PrescriptionModal = ({ isOpen, onClose, appointment, onPrescriptionSubmitt
                                     onChange={(e) => setDiagnosis(e.target.value)}
                                     placeholder="Enter diagnosis..."
                                     rows={3}
-                                    className="w-full px-4 py-3 bg-neutral-950 border border-neutral-800 rounded-xl text-neutral-200 placeholder-neutral-600 focus:ring-2 focus:ring-burgundy-600/60 focus:border-transparent transition-all outline-none resize-none"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent transition-all outline-none resize-none"
                                 />
                             </div>
 
                             <div className="mb-6">
                                 <div className="flex items-center justify-between mb-3">
-                                    <label className="block text-sm font-medium text-neutral-300">
+                                    <label className="block text-sm font-medium text-gray-700">
                                         Medicines *
                                     </label>
                                     <button
                                         type="button"
                                         onClick={addMedicine}
-                                        className="flex items-center gap-1 text-burgundy-400 hover:text-burgundy-300 text-sm font-medium transition-colors"
+                                        className="flex items-center gap-1 text-blue-600 hover:text-blue-500 text-sm font-medium transition-colors"
                                     >
                                         <Plus className="w-4 h-4" />
                                         Add Medicine
@@ -233,28 +233,28 @@ const PrescriptionModal = ({ isOpen, onClose, appointment, onPrescriptionSubmitt
                                                     value={medicine.name}
                                                     onChange={(e) => updateMedicine(index, 'name', e.target.value)}
                                                     placeholder="Medicine name"
-                                                    className="px-3 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-neutral-200 placeholder-neutral-600 focus:ring-2 focus:ring-burgundy-600/60 focus:border-transparent transition-all outline-none text-sm"
+                                                    className="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent transition-all outline-none text-sm"
                                                 />
                                                 <input
                                                     type="text"
                                                     value={medicine.dosage}
                                                     onChange={(e) => updateMedicine(index, 'dosage', e.target.value)}
                                                     placeholder="Dosage (e.g., 500mg)"
-                                                    className="px-3 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-neutral-200 placeholder-neutral-600 focus:ring-2 focus:ring-burgundy-600/60 focus:border-transparent transition-all outline-none text-sm"
+                                                    className="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent transition-all outline-none text-sm"
                                                 />
                                                 <input
                                                     type="text"
                                                     value={medicine.frequency}
                                                     onChange={(e) => updateMedicine(index, 'frequency', e.target.value)}
                                                     placeholder="Frequency (e.g., 2x daily)"
-                                                    className="px-3 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-neutral-200 placeholder-neutral-600 focus:ring-2 focus:ring-burgundy-600/60 focus:border-transparent transition-all outline-none text-sm"
+                                                    className="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent transition-all outline-none text-sm"
                                                 />
                                             </div>
                                             {medicines.length > 1 && (
                                                 <button
                                                     type="button"
                                                     onClick={() => removeMedicine(index)}
-                                                    className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                                    className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
@@ -265,7 +265,7 @@ const PrescriptionModal = ({ isOpen, onClose, appointment, onPrescriptionSubmitt
                             </div>
 
                             <div className="mb-6">
-                                <label className="block text-sm font-medium text-neutral-300 mb-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Additional Notes (optional)
                                 </label>
                                 <textarea
@@ -273,12 +273,12 @@ const PrescriptionModal = ({ isOpen, onClose, appointment, onPrescriptionSubmitt
                                     onChange={(e) => setNotes(e.target.value)}
                                     placeholder="Any additional instructions..."
                                     rows={2}
-                                    className="w-full px-4 py-3 bg-neutral-950 border border-neutral-800 rounded-xl text-neutral-200 placeholder-neutral-600 focus:ring-2 focus:ring-burgundy-600/60 focus:border-transparent transition-all outline-none resize-none"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/60 focus:border-transparent transition-all outline-none resize-none"
                                 />
                             </div>
 
                             {error && (
-                                <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm">
+                                <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm">
                                     {error}
                                 </div>
                             )}
@@ -286,7 +286,7 @@ const PrescriptionModal = ({ isOpen, onClose, appointment, onPrescriptionSubmitt
                             <button
                                 onClick={handleSubmit}
                                 disabled={loading}
-                                className="w-full bg-burgundy-600 hover:bg-burgundy-500 text-white py-3 rounded-xl font-medium transition-all flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-burgundy-900/40"
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium transition-all flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/30"
                             >
                                 {loading ? (
                                     <>

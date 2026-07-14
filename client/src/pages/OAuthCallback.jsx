@@ -32,11 +32,11 @@ const OAuthCallback = () => {
     }, [searchParams, navigate, dispatch]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-neutral-950">
-            <div className="text-center bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl shadow-black/60 p-8 max-w-sm">
-                <Loader2 className="w-12 h-12 text-burgundy-500 animate-spin mx-auto mb-4" />
-                <h2 className="text-xl font-bold text-neutral-100 mb-2">Signing you in...</h2>
-                <p className="text-neutral-400 text-sm">Please wait while we complete your login.</p>
+        <div className="min-h-screen flex items-center justify-center bg-zinc-950">
+            <div className="text-center bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl shadow-black/60 p-8 max-w-sm">
+                <Loader2 className="w-12 h-12 text-rose-500 animate-spin mx-auto mb-4" />
+                <h2 className="text-xl font-bold text-zinc-100 mb-2">Signing you in...</h2>
+                <p className="text-zinc-400 text-sm">Please wait while we complete your login.</p>
             </div>
         </div>
     );

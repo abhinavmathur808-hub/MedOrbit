@@ -83,19 +83,19 @@ const AddArticle = () => {
     };
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-neutral-950 pt-28 py-10 px-4">
+        <div className="min-h-[calc(100vh-64px)] bg-zinc-950 pt-28 py-10 px-4">
             <div className="max-w-2xl mx-auto">
-                <div className="bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl shadow-black/60 p-8 border border-neutral-800">
+                <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl shadow-black/60 p-8 border border-zinc-800">
                     <div className="mb-8">
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="w-12 h-12 bg-gradient-to-br from-burgundy-500 to-burgundy-800 rounded-xl flex items-center justify-center shadow-lg">
+                            <div className="w-12 h-12 bg-gradient-to-br from-rose-500 to-rose-800 rounded-xl flex items-center justify-center shadow-lg">
                                 <FileText className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-2xl font-bold" style={{ color: '#2C3E50' }}>
+                                <h1 className="text-2xl font-bold" style={{ color: '#2c3e50' }}>
                                     Add New Article
                                 </h1>
-                                <p className="text-sm text-neutral-400">Publish a health article for patients</p>
+                                <p className="text-sm text-zinc-400">Publish a health article for patients</p>
                             </div>
                         </div>
                     </div>
@@ -114,11 +114,11 @@ const AddArticle = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label htmlFor="title" className="block text-sm font-medium text-neutral-300 mb-2">
+                            <label htmlFor="title" className="block text-sm font-medium text-zinc-300 mb-2">
                                 Title
                             </label>
                             <div className="relative">
-                                <FileText className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+                                <FileText className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                                 <input
                                     type="text"
                                     id="title"
@@ -127,17 +127,17 @@ const AddArticle = () => {
                                     onChange={handleChange}
                                     required
                                     placeholder="Article title"
-                                    className="w-full pl-12 pr-4 py-3 bg-neutral-950 text-neutral-200 placeholder-neutral-600 border border-neutral-800 rounded-xl focus:ring-2 focus:ring-burgundy-500 focus:border-transparent transition-all outline-none"
+                                    className="w-full pl-12 pr-4 py-3 bg-zinc-950 text-zinc-200 placeholder-zinc-600 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all outline-none"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label htmlFor="image" className="block text-sm font-medium text-neutral-300 mb-2">
+                            <label htmlFor="image" className="block text-sm font-medium text-zinc-300 mb-2">
                                 Image URL
                             </label>
                             <div className="relative">
-                                <Image className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+                                <Image className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                                 <input
                                     type="text"
                                     id="image"
@@ -146,25 +146,25 @@ const AddArticle = () => {
                                     onChange={handleChange}
                                     required
                                     placeholder="Paste image URL or local path"
-                                    className="w-full pl-12 pr-4 py-3 bg-neutral-950 text-neutral-200 placeholder-neutral-600 border border-neutral-800 rounded-xl focus:ring-2 focus:ring-burgundy-500 focus:border-transparent transition-all outline-none"
+                                    className="w-full pl-12 pr-4 py-3 bg-zinc-950 text-zinc-200 placeholder-zinc-600 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all outline-none"
                                 />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label htmlFor="category" className="block text-sm font-medium text-neutral-300 mb-2">
+                                <label htmlFor="category" className="block text-sm font-medium text-zinc-300 mb-2">
                                     Category
                                 </label>
                                 <div className="relative">
-                                    <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+                                    <Tag className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                                     <select
                                         id="category"
                                         name="category"
                                         value={formData.category}
                                         onChange={handleChange}
                                         required
-                                        className="w-full pl-12 pr-4 py-3 bg-neutral-950 text-neutral-200 placeholder-neutral-600 border border-neutral-800 rounded-xl focus:ring-2 focus:ring-burgundy-500 focus:border-transparent transition-all outline-none appearance-none"
+                                        className="w-full pl-12 pr-4 py-3 bg-zinc-950 text-zinc-200 placeholder-zinc-600 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all outline-none appearance-none"
                                     >
                                         <option value="">Select category</option>
                                         {CATEGORIES.map((cat) => (
@@ -175,11 +175,11 @@ const AddArticle = () => {
                             </div>
 
                             <div>
-                                <label htmlFor="author" className="block text-sm font-medium text-neutral-300 mb-2">
+                                <label htmlFor="author" className="block text-sm font-medium text-zinc-300 mb-2">
                                     Author
                                 </label>
                                 <div className="relative">
-                                    <UserCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+                                    <UserCheck className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                                     <input
                                         type="text"
                                         id="author"
@@ -188,7 +188,7 @@ const AddArticle = () => {
                                         onChange={handleChange}
                                         required
                                         placeholder="Dr. Name"
-                                        className="w-full pl-12 pr-4 py-3 bg-neutral-950 text-neutral-200 placeholder-neutral-600 border border-neutral-800 rounded-xl focus:ring-2 focus:ring-burgundy-500 focus:border-transparent transition-all outline-none"
+                                        className="w-full pl-12 pr-4 py-3 bg-zinc-950 text-zinc-200 placeholder-zinc-600 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all outline-none"
                                     />
                                 </div>
                             </div>
@@ -196,11 +196,11 @@ const AddArticle = () => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label htmlFor="date" className="block text-sm font-medium text-neutral-300 mb-2">
+                                <label htmlFor="date" className="block text-sm font-medium text-zinc-300 mb-2">
                                     Date
                                 </label>
                                 <div className="relative">
-                                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+                                    <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                                     <input
                                         type="date"
                                         id="date"
@@ -208,17 +208,17 @@ const AddArticle = () => {
                                         value={formData.date}
                                         onChange={handleChange}
                                         required
-                                        className="w-full pl-12 pr-4 py-3 bg-neutral-950 text-neutral-200 placeholder-neutral-600 border border-neutral-800 rounded-xl focus:ring-2 focus:ring-burgundy-500 focus:border-transparent transition-all outline-none"
+                                        className="w-full pl-12 pr-4 py-3 bg-zinc-950 text-zinc-200 placeholder-zinc-600 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all outline-none"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label htmlFor="readTime" className="block text-sm font-medium text-neutral-300 mb-2">
+                                <label htmlFor="readTime" className="block text-sm font-medium text-zinc-300 mb-2">
                                     Read Time
                                 </label>
                                 <div className="relative">
-                                    <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+                                    <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                                     <input
                                         type="text"
                                         id="readTime"
@@ -226,18 +226,18 @@ const AddArticle = () => {
                                         value={formData.readTime}
                                         onChange={handleChange}
                                         placeholder="5 min read"
-                                        className="w-full pl-12 pr-4 py-3 bg-neutral-950 text-neutral-200 placeholder-neutral-600 border border-neutral-800 rounded-xl focus:ring-2 focus:ring-burgundy-500 focus:border-transparent transition-all outline-none"
+                                        className="w-full pl-12 pr-4 py-3 bg-zinc-950 text-zinc-200 placeholder-zinc-600 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all outline-none"
                                     />
                                 </div>
                             </div>
                         </div>
 
                         <div>
-                            <label htmlFor="content" className="block text-sm font-medium text-neutral-300 mb-2">
+                            <label htmlFor="content" className="block text-sm font-medium text-zinc-300 mb-2">
                                 Content
                             </label>
                             <div className="relative">
-                                <AlignLeft className="absolute left-4 top-4 w-5 h-5 text-neutral-500" />
+                                <AlignLeft className="absolute left-4 top-4 w-5 h-5 text-zinc-500" />
                                 <textarea
                                     id="content"
                                     name="content"
@@ -246,7 +246,7 @@ const AddArticle = () => {
                                     required
                                     rows={10}
                                     placeholder="Paste your article content here..."
-                                    className="w-full pl-12 pr-4 py-3 bg-neutral-950 text-neutral-200 placeholder-neutral-600 border border-neutral-800 rounded-xl focus:ring-2 focus:ring-burgundy-500 focus:border-transparent transition-all outline-none resize-y"
+                                    className="w-full pl-12 pr-4 py-3 bg-zinc-950 text-zinc-200 placeholder-zinc-600 border border-zinc-800 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all outline-none resize-y"
                                 />
                             </div>
                         </div>
@@ -254,7 +254,7 @@ const AddArticle = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-gradient-to-r from-burgundy-500 to-burgundy-600 hover:from-burgundy-600 hover:to-burgundy-700 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                            className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold py-3.5 px-4 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
                         >
                             {loading ? (
                                 <Loader2 className="w-5 h-5 animate-spin" />

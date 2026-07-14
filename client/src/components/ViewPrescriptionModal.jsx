@@ -55,7 +55,7 @@ const ViewPrescriptionModal = ({ isOpen, onClose, appointmentId }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-zinc-950/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div
                 className="w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl"
                 style={{
@@ -64,31 +64,31 @@ const ViewPrescriptionModal = ({ isOpen, onClose, appointmentId }) => {
                     boxShadow: '0 0 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)',
                 }}
             >
-                <div className="relative px-6 py-5 border-b border-neutral-800/60">
+                <div className="relative px-6 py-5 border-b border-zinc-800/60">
                     <button
                         onClick={onClose}
-                        className="absolute right-4 top-4 p-1.5 rounded-lg text-neutral-500 hover:text-white hover:bg-white/[0.06] transition-all"
+                        className="absolute right-4 top-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-white/[0.06] transition-all"
                     >
                         <X className="w-5 h-5" />
                     </button>
 
                     <div className="flex items-center gap-3 mb-1">
-                        <div className="w-8 h-8 rounded-lg bg-burgundy-600/15 flex items-center justify-center">
-                            <Stethoscope className="w-4 h-4 text-burgundy-500" />
+                        <div className="w-8 h-8 rounded-lg bg-rose-600/15 flex items-center justify-center">
+                            <Stethoscope className="w-4 h-4 text-rose-500" />
                         </div>
-                        <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-burgundy-500/80">
+                        <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-rose-500/80">
                             MedOrbit
                         </span>
                     </div>
                     <h2 className="text-lg font-bold text-white mt-2">Prescription</h2>
-                    <p className="text-neutral-500 text-xs mt-0.5">Official medical document</p>
+                    <p className="text-zinc-500 text-xs mt-0.5">Official medical document</p>
                 </div>
 
                 <div className="p-6 overflow-y-auto max-h-[calc(90vh-110px)] custom-scrollbar">
                     {loading ? (
                         <div className="text-center py-16">
-                            <Loader2 className="w-8 h-8 text-burgundy-500 animate-spin mx-auto mb-3" />
-                            <p className="text-neutral-500 text-sm">Loading prescription…</p>
+                            <Loader2 className="w-8 h-8 text-rose-500 animate-spin mx-auto mb-3" />
+                            <p className="text-zinc-500 text-sm">Loading prescription…</p>
                         </div>
                     ) : error ? (
                         <div className="text-center py-16">
@@ -105,11 +105,11 @@ const ViewPrescriptionModal = ({ isOpen, onClose, appointmentId }) => {
                                     className="flex-1 min-w-[180px] flex items-center gap-3 px-4 py-3 rounded-xl"
                                     style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
                                 >
-                                    <div className="w-9 h-9 rounded-lg bg-burgundy-600/10 flex items-center justify-center shrink-0">
-                                        <User className="w-4 h-4 text-burgundy-400" />
+                                    <div className="w-9 h-9 rounded-lg bg-rose-600/10 flex items-center justify-center shrink-0">
+                                        <User className="w-4 h-4 text-rose-400" />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-medium">Prescribed by</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Prescribed by</p>
                                         <p className="text-sm font-semibold text-white">
                                             {prescription.doctorId?.name || 'Doctor'}
                                         </p>
@@ -119,11 +119,11 @@ const ViewPrescriptionModal = ({ isOpen, onClose, appointmentId }) => {
                                     className="flex-1 min-w-[180px] flex items-center gap-3 px-4 py-3 rounded-xl"
                                     style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
                                 >
-                                    <div className="w-9 h-9 rounded-lg bg-burgundy-600/10 flex items-center justify-center shrink-0">
-                                        <Calendar className="w-4 h-4 text-burgundy-400" />
+                                    <div className="w-9 h-9 rounded-lg bg-rose-600/10 flex items-center justify-center shrink-0">
+                                        <Calendar className="w-4 h-4 text-rose-400" />
                                     </div>
                                     <div>
-                                        <p className="text-[10px] uppercase tracking-wider text-neutral-500 font-medium">Date issued</p>
+                                        <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-medium">Date issued</p>
                                         <p className="text-sm font-semibold text-white">
                                             {formatDate(prescription.createdAt)}
                                         </p>
@@ -131,25 +131,25 @@ const ViewPrescriptionModal = ({ isOpen, onClose, appointmentId }) => {
                                 </div>
                             </div>
 
-                            <div className="border-t border-neutral-800/50" />
+                            <div className="border-t border-zinc-800/50" />
 
                             <div>
-                                <h3 className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold mb-2 flex items-center gap-1.5">
-                                    <FileText className="w-3.5 h-3.5 text-burgundy-500/60" />
+                                <h3 className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold mb-2 flex items-center gap-1.5">
+                                    <FileText className="w-3.5 h-3.5 text-rose-500/60" />
                                     Diagnosis
                                 </h3>
                                 <div
                                     className="rounded-xl px-4 py-3"
                                     style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
                                 >
-                                    <p className="text-neutral-200 text-sm leading-relaxed">{prescription.diagnosis}</p>
+                                    <p className="text-zinc-200 text-sm leading-relaxed">{prescription.diagnosis}</p>
                                 </div>
                             </div>
 
                             {prescription.medicines && prescription.medicines.length > 0 && (
                                 <div>
-                                    <h3 className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold mb-2 flex items-center gap-1.5">
-                                        <Pill className="w-3.5 h-3.5 text-burgundy-400/60" />
+                                    <h3 className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold mb-2 flex items-center gap-1.5">
+                                        <Pill className="w-3.5 h-3.5 text-rose-400/60" />
                                         Medicines
                                     </h3>
                                     <div
@@ -159,9 +159,9 @@ const ViewPrescriptionModal = ({ isOpen, onClose, appointmentId }) => {
                                         <table className="w-full">
                                             <thead>
                                                 <tr style={{ background: 'rgba(255,255,255,0.04)' }}>
-                                                    <th className="text-left px-4 py-2.5 text-[10px] uppercase tracking-wider text-neutral-500 font-semibold">Medicine</th>
-                                                    <th className="text-left px-4 py-2.5 text-[10px] uppercase tracking-wider text-neutral-500 font-semibold">Dosage</th>
-                                                    <th className="text-left px-4 py-2.5 text-[10px] uppercase tracking-wider text-neutral-500 font-semibold">Frequency</th>
+                                                    <th className="text-left px-4 py-2.5 text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Medicine</th>
+                                                    <th className="text-left px-4 py-2.5 text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Dosage</th>
+                                                    <th className="text-left px-4 py-2.5 text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">Frequency</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -172,8 +172,8 @@ const ViewPrescriptionModal = ({ isOpen, onClose, appointmentId }) => {
                                                         style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
                                                     >
                                                         <td className="px-4 py-3 text-sm text-white font-medium">{med.name}</td>
-                                                        <td className="px-4 py-3 text-sm text-neutral-400">{med.dosage}</td>
-                                                        <td className="px-4 py-3 text-sm text-neutral-400">{med.frequency}</td>
+                                                        <td className="px-4 py-3 text-sm text-zinc-400">{med.dosage}</td>
+                                                        <td className="px-4 py-3 text-sm text-zinc-400">{med.frequency}</td>
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -184,7 +184,7 @@ const ViewPrescriptionModal = ({ isOpen, onClose, appointmentId }) => {
 
                             {prescription.notes && (
                                 <div>
-                                    <h3 className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold mb-2">
+                                    <h3 className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold mb-2">
                                         Additional Notes
                                     </h3>
                                     <div
@@ -194,16 +194,16 @@ const ViewPrescriptionModal = ({ isOpen, onClose, appointmentId }) => {
                                             border: '1px solid rgba(251, 191, 36, 0.08)',
                                         }}
                                     >
-                                        <p className="text-neutral-300 text-sm leading-relaxed">{prescription.notes}</p>
+                                        <p className="text-zinc-300 text-sm leading-relaxed">{prescription.notes}</p>
                                     </div>
                                 </div>
                             )}
 
-                            <div className="pt-3 border-t border-neutral-800/40 flex items-center justify-between">
-                                <p className="text-[10px] text-neutral-600">
+                            <div className="pt-3 border-t border-zinc-800/40 flex items-center justify-between">
+                                <p className="text-[10px] text-zinc-600">
                                     This is a digitally issued document from MedOrbit
                                 </p>
-                                <span className="text-[10px] text-neutral-700 font-mono">
+                                <span className="text-[10px] text-zinc-700 font-mono">
                                     #{appointmentId?.slice(-8)?.toUpperCase()}
                                 </span>
                             </div>

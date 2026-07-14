@@ -109,7 +109,7 @@ export const handlePayment = async (amount, userDetails, appointmentDetails, onS
                 contact: userDetails?.phone || '9999999999',
             },
             theme: {
-                color: '#9b1b30', // Rose-600
+                color: '#e11d48', // Rose-600
             },
             modal: {
                 ondismiss: function () {

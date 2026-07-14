@@ -243,7 +243,7 @@ const Room = () => {
         return (
             <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
                 <div className="text-center">
-                    <Loader2 className="w-12 h-12 text-burgundy-500 animate-spin mx-auto mb-4" />
+                    <Loader2 className="w-12 h-12 text-rose-500 animate-spin mx-auto mb-4" />
                     <p className="text-neutral-400">Verifying consultation access...</p>
                 </div>
             </div>
@@ -259,7 +259,7 @@ const Room = () => {
                     <p className="text-neutral-400 mb-6">{denyMessage}</p>
                     <button
                         onClick={() => navigate(getReturnPath())}
-                        className="bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-3 rounded-xl transition-all"
+                        className="bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl transition-all"
                     >
                         Back to Appointments
                     </button>
@@ -281,9 +281,9 @@ const Room = () => {
                     {!transcribing ? (
                         <button
                             onClick={startTranscription}
-                            className="mx-auto flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0c0c0e]/90 backdrop-blur border border-white/10 text-neutral-200 text-sm font-medium shadow-lg hover:border-burgundy-500/40 hover:text-white transition-all"
+                            className="mx-auto flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#0c0c0e]/90 backdrop-blur border border-white/10 text-neutral-200 text-sm font-medium shadow-lg hover:border-rose-500/40 hover:text-white transition-all"
                         >
-                            <Mic className="w-4 h-4 text-burgundy-400" />
+                            <Mic className="w-4 h-4 text-rose-400" />
                             Start AI Scribe
                         </button>
                     ) : (
@@ -291,8 +291,8 @@ const Room = () => {
                             <div className="flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-2 text-sm font-medium text-white">
                                     <span className="relative flex h-2.5 w-2.5">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-burgundy-500 opacity-70"></span>
-                                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-burgundy-500"></span>
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-70"></span>
+                                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
                                     </span>
                                     Transcribing your mic
                                 </div>

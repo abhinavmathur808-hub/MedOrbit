@@ -29,7 +29,7 @@ const TopArticles = () => {
     const getCategoryColor = (category) => {
         const colors = {
             Nutrition: '#34d399',
-            Cardiology: '#d4637e',
+            Cardiology: '#fb7185',
             'Mental Health': '#a78bfa',
             Neurology: '#94a3b8',
             Dermatology: '#fbbf24',
@@ -50,7 +50,7 @@ const TopArticles = () => {
                     <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mb-3">
                         Read top articles from our<br />health experts
                     </h2>
-                    <p className="text-base sm:text-lg max-w-xl mx-auto text-neutral-400 leading-relaxed">
+                    <p className="text-base sm:text-lg max-w-xl mx-auto text-zinc-400 leading-relaxed">
                         Health articles that keep you informed about good health practices
                         and achieving your goals.
                     </p>
@@ -58,7 +58,7 @@ const TopArticles = () => {
 
                 {loading ? (
                     <div className="flex justify-center py-12">
-                        <Loader2 className="w-8 h-8 animate-spin text-burgundy-600" />
+                        <Loader2 className="w-8 h-8 animate-spin text-rose-600" />
                     </div>
                 ) : (
                     /* Cards Grid */
@@ -104,17 +104,17 @@ const TopArticles = () => {
                                     </h3>
 
                                     <div className="flex items-center justify-between">
-                                        <p className="text-sm text-neutral-600">
+                                        <p className="text-sm text-zinc-600">
                                             {article.author}
                                             {article.readTime && (
                                                 <>
-                                                    {' '}<span className="text-neutral-700">·</span>{' '}
-                                                    <span className="text-neutral-600">{article.readTime}</span>
+                                                    {' '}<span className="text-zinc-700">·</span>{' '}
+                                                    <span className="text-zinc-600">{article.readTime}</span>
                                                 </>
                                             )}
                                         </p>
                                         <ArrowRight
-                                            className="w-4 h-4 text-neutral-700 group-hover:text-burgundy-500 group-hover:translate-x-1 transition-all duration-200"
+                                            className="w-4 h-4 text-zinc-700 group-hover:text-rose-500 group-hover:translate-x-1 transition-all duration-200"
                                         />
                                     </div>
                                 </div>

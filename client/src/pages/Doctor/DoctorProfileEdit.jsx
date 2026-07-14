@@ -122,11 +122,11 @@ const DoctorProfileEdit = () => {
 
     if (authLoading) {
         return (
-            <div className="min-h-screen bg-neutral-950">
+            <div className="min-h-screen bg-zinc-950">
                 <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
                     <div className="text-center">
-                        <div className="w-12 h-12 border-4 border-burgundy-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-neutral-400">Loading...</p>
+                        <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                        <p className="text-zinc-400">Loading...</p>
                     </div>
                 </div>
             </div>
@@ -135,11 +135,11 @@ const DoctorProfileEdit = () => {
 
     if (isFetching) {
         return (
-            <div className="min-h-screen bg-neutral-950">
+            <div className="min-h-screen bg-zinc-950">
                 <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
                     <div className="text-center">
-                        <RefreshCw className="w-12 h-12 text-burgundy-500 animate-spin mx-auto mb-4" />
-                        <p className="text-neutral-400">Loading profile data...</p>
+                        <RefreshCw className="w-12 h-12 text-rose-500 animate-spin mx-auto mb-4" />
+                        <p className="text-zinc-400">Loading profile data...</p>
                     </div>
                 </div>
             </div>
@@ -148,15 +148,15 @@ const DoctorProfileEdit = () => {
 
     if (!user) {
         return (
-            <div className="min-h-screen bg-neutral-950">
+            <div className="min-h-screen bg-zinc-950">
                 <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
                     <div className="text-center rounded-2xl p-8 max-w-md" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
-                        <XCircle className="w-16 h-16 text-burgundy-500 mx-auto mb-4" />
+                        <XCircle className="w-16 h-16 text-rose-500 mx-auto mb-4" />
                         <h2 className="text-xl font-bold text-white mb-2">Not Logged In</h2>
-                        <p className="text-neutral-400 mb-6">Please login to edit your profile.</p>
+                        <p className="text-zinc-400 mb-6">Please login to edit your profile.</p>
                         <Link
                             to="/login"
-                            className="inline-block bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-3 rounded-xl transition-all"
+                            className="inline-block bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl transition-all"
                         >
                             Go to Login
                         </Link>
@@ -276,17 +276,17 @@ const DoctorProfileEdit = () => {
         }
     };
 
-    const inputClasses = "w-full px-4 py-3 bg-black/50 border border-neutral-800 rounded-xl focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 transition-all outline-none text-white placeholder-neutral-600";
+    const inputClasses = "w-full px-4 py-3 bg-zinc-950/50 border border-zinc-800 rounded-xl focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all outline-none text-white placeholder-zinc-600";
 
     return (
-        <div className="min-h-screen bg-neutral-950">
+        <div className="min-h-screen bg-zinc-950">
             <PageHeader title="Edit Profile" subtitle="Update your professional information" />
             <CurvedWrapper>
                 <div className="max-w-2xl mx-auto">
                     <div className="flex items-center justify-between mb-6">
                         <Link
                             to="/doctor/profile"
-                            className="flex items-center space-x-2 text-neutral-400 hover:text-burgundy-400 transition-colors"
+                            className="flex items-center space-x-2 text-zinc-400 hover:text-rose-400 transition-colors"
                         >
                             <ArrowLeft className="w-5 h-5" />
                             <span>Back to Profile</span>
@@ -311,14 +311,14 @@ const DoctorProfileEdit = () => {
                         <form onSubmit={handleSubmit} className="space-y-5">
                             <div className="flex flex-col items-center mb-2">
                                 <label htmlFor="doctor-photo" className="relative cursor-pointer group">
-                                    <div className="w-28 h-28 rounded-2xl overflow-hidden bg-gradient-to-br from-burgundy-600 to-burgundy-800 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                                    <div className="w-28 h-28 rounded-2xl overflow-hidden bg-gradient-to-br from-rose-600 to-rose-800 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
                                         {formData.photo ? (
                                             <img src={optimizeCloudinaryUrl(formData.photo)} alt={formData.name} className="w-full h-full object-cover" loading="lazy" />
                                         ) : (
                                             formData.name?.charAt(0)?.toUpperCase() || 'D'
                                         )}
                                     </div>
-                                    <div className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="absolute inset-0 bg-zinc-950/50 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         {uploading ? (
                                             <Loader2 className="w-6 h-6 text-white animate-spin" />
                                         ) : (
@@ -334,7 +334,7 @@ const DoctorProfileEdit = () => {
                                     className="hidden"
                                     disabled={uploading}
                                 />
-                                <p className="text-neutral-500 text-xs mt-2">
+                                <p className="text-zinc-500 text-xs mt-2">
                                     {uploading ? 'Uploading...' : 'Click to change photo'}
                                 </p>
                             </div>
@@ -450,7 +450,7 @@ const DoctorProfileEdit = () => {
                                 <button
                                     type="submit"
                                     disabled={isSaving}
-                                    className="flex-1 flex items-center justify-center space-x-2 bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-3 rounded-xl transition-all disabled:opacity-50"
+                                    className="flex-1 flex items-center justify-center space-x-2 bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl transition-all disabled:opacity-50"
                                 >
                                     {isSaving ? (
                                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -463,7 +463,7 @@ const DoctorProfileEdit = () => {
                                 </button>
                                 <Link
                                     to="/doctor/profile"
-                                    className="flex-1 flex items-center justify-center space-x-2 bg-white/[0.06] hover:bg-white/[0.1] text-neutral-300 px-6 py-3 rounded-xl transition-all border border-neutral-800"
+                                    className="flex-1 flex items-center justify-center space-x-2 bg-white/[0.06] hover:bg-white/[0.1] text-zinc-300 px-6 py-3 rounded-xl transition-all border border-zinc-800"
                                 >
                                     <X className="w-5 h-5" />
                                     <span>Cancel</span>
