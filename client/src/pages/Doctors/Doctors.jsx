@@ -104,11 +104,11 @@ const Doctors = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#09090b]">
+            <div className="min-h-screen bg-neutral-950">
                 <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
                     <div className="text-center">
-                        <div className="w-12 h-12 border-4 border-rose-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-zinc-400">Finding doctors near you...</p>
+                        <div className="w-12 h-12 border-4 border-burgundy-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                        <p className="text-neutral-400">Finding doctors near you...</p>
                     </div>
                 </div>
             </div>
@@ -117,17 +117,17 @@ const Doctors = () => {
 
     return (
         <motion.div
-            className="min-h-screen bg-[#09090b]"
+            className="min-h-screen bg-neutral-950"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.35, ease: 'easeInOut' }}
         >
-            <div className="bg-[#09090b] pt-32 pb-20 text-center px-6">
+            <div className="bg-neutral-950 pt-32 pb-20 text-center px-6">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-3">
                     Find Doctors
                 </h1>
-                <p className="text-zinc-400 text-lg">
+                <p className="text-neutral-400 text-lg">
                     Book appointments with verified healthcare professionals
                 </p>
             </div>
@@ -138,19 +138,19 @@ const Doctors = () => {
                         <div className="max-w-xl mx-auto mb-6">
                             <div
                                 className="flex items-center justify-between rounded-xl px-5 py-4 border-l-4 bg-white/[0.03] border-white/[0.06]"
-                                style={{ borderLeftColor: '#e11d48' }}
+                                style={{ borderLeftColor: '#9b1b30' }}
                             >
                                 <div>
                                     <p className="text-sm font-semibold text-white">
-                                        🩺 Showing results for: <span className="text-rose-500">{specialtyFilter}</span>
+                                        🩺 Showing results for: <span className="text-burgundy-500">{specialtyFilter}</span>
                                     </p>
-                                    <p className="text-xs mt-0.5 text-zinc-500">
+                                    <p className="text-xs mt-0.5 text-neutral-500">
                                         Based on your symptom search
                                     </p>
                                 </div>
                                 <button
                                     onClick={() => { setSpecialtyFilter(''); window.history.replaceState({}, ''); }}
-                                    className="text-sm font-medium px-4 py-2 rounded-full bg-white/[0.05] border border-zinc-700 text-zinc-300 hover:bg-white/[0.1] hover:text-white transition-all cursor-pointer"
+                                    className="text-sm font-medium px-4 py-2 rounded-full bg-white/[0.05] border border-neutral-700 text-neutral-300 hover:bg-white/[0.1] hover:text-white transition-all cursor-pointer"
                                 >
                                     Clear filter
                                 </button>
@@ -160,13 +160,13 @@ const Doctors = () => {
 
                     <div className="max-w-xl mx-auto mb-8">
                         <div className="relative">
-                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-zinc-600" />
+                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-600" />
                             <input
                                 type="text"
                                 placeholder="Search by name or specialization..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 bg-black/50 border border-zinc-800 rounded-xl focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all outline-none text-white placeholder-zinc-600"
+                                className="w-full pl-12 pr-4 py-3 bg-black/50 border border-neutral-800 rounded-xl focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 transition-all outline-none text-white placeholder-neutral-600"
                             />
                         </div>
                     </div>
@@ -181,11 +181,11 @@ const Doctors = () => {
 
                     {!error && filteredDoctors.length === 0 && (
                         <div className="text-center py-16">
-                            <Stethoscope className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                            <h3 className="text-xl font-semibold text-zinc-400 mb-2">
+                            <Stethoscope className="w-16 h-16 text-neutral-700 mx-auto mb-4" />
+                            <h3 className="text-xl font-semibold text-neutral-400 mb-2">
                                 No doctors found
                             </h3>
-                            <p className="text-zinc-600">
+                            <p className="text-neutral-600">
                                 {searchTerm
                                     ? 'Try adjusting your search criteria'
                                     : 'Check back later for available doctors'}
@@ -207,8 +207,8 @@ const Doctors = () => {
 
                     {loadingMore && (
                         <div className="flex flex-col items-center justify-center py-10 gap-3">
-                            <Loader2 className="w-6 h-6 animate-spin text-rose-500" />
-                            <p className="text-sm text-zinc-500 tracking-wide">Loading more doctors...</p>
+                            <Loader2 className="w-6 h-6 animate-spin text-burgundy-500" />
+                            <p className="text-sm text-neutral-500 tracking-wide">Loading more doctors...</p>
                         </div>
                     )}
                 </div>

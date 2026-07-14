@@ -1,29 +1,53 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-:root {
-  /* ── Modern Black Design Tokens ──────────────── */
-  --bg-base: #09090b;
-  --card-bg: rgba(255, 255, 255, 0.02);
-  --card-border: rgba(255, 255, 255, 0.05);
-  --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --card-hover-bg: rgba(255, 255, 255, 0.04);
-  --card-hover-border: rgba(255, 255, 255, 0.1);
-  --btn-glow: 0 0 15px rgba(255, 255, 255, 0.08);
+/* ── Clinical Dark Mode — design system (Tailwind v4 @theme) ─────────────────
+   In Tailwind v4 the theme lives in CSS, not tailwind.config.js. Tokens defined
+   here compile to utilities (e.g. bg-burgundy-600, text-burgundy-400). */
+@theme {
+  /* Deep medical red / burgundy — the single unified interactive accent.
+     Use for primary buttons, active nav states, and toggles. */
+  --color-burgundy-50:  #fcf2f4;
+  --color-burgundy-100: #f9e0e5;
+  --color-burgundy-200: #f1c0ca;
+  --color-burgundy-300: #e595a6;
+  --color-burgundy-400: #d4637e;
+  --color-burgundy-500: #bb3a58;
+  --color-burgundy-600: #9b1b30; /* primary buttons / active states */
+  --color-burgundy-700: #7f1729; /* hover / deep */
+  --color-burgundy-800: #691426;
+  --color-burgundy-900: #591324;
+  --color-burgundy-950: #300a12;
 
-  /* ── Preserved for non-landing pages ──────────── */
-  --shadow-soft: 0 8px 30px rgb(0 0 0 / 0.04);
-  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.04), 0 1px 2px rgb(0 0 0 / 0.06);
-  --shadow-elevated: 0 12px 40px rgb(0 0 0 / 0.06);
+  /* Clean, modern sans-serif stack */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+:root {
+  /* ── Surface elevation tokens (retargeted to the clinical neutral palette) ──
+     Every component already consuming these variables adopts the new system. */
+  --bg-base: #0a0a0a;      /* neutral-950 — app background            */
+  --card-bg: #171717;      /* neutral-900 — cards / modals / panels   */
+  --card-border: #262626;  /* neutral-800 — subtle surface border     */
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 12px 32px -12px rgba(0, 0, 0, 0.8);
+  --card-hover-bg: #1f1f1f;
+  --card-hover-border: #333333;
+  --btn-glow: 0 0 20px rgba(155, 27, 48, 0.28); /* burgundy glow */
+
+  /* Preserved elevation shadows */
+  --shadow-soft: 0 8px 30px rgb(0 0 0 / 0.35);
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.5), 0 1px 2px rgb(0 0 0 / 0.6);
+  --shadow-elevated: 0 20px 40px -12px rgb(0 0 0 / 0.7);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-base);
+  color: #f5f5f5; /* neutral-100 — default primary text */
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -40,15 +64,15 @@ textarea,
   user-select: text;
 }
 
-/* ── Booking Form Labels ──────────────────────── */
+/* ── Form label helpers ───────────────────────────────── */
 .booking-label {
-  color: #ffffff !important;
+  color: #f5f5f5 !important; /* neutral-100 */
 }
 
 .booking-label-icon {
-  color: #fb7185 !important;
+  color: #d4637e !important; /* burgundy-400 */
 }
 
 .profile-label {
-  color: #ffffff !important;
+  color: #f5f5f5 !important; /* neutral-100 */
 }

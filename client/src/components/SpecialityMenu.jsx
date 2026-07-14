@@ -39,13 +39,13 @@ const SpecialityMenu = () => {
                         wrapper="span"
                         speed={50}
                         repeat={Infinity}
-                        className="text-rose-500"
+                        className="text-burgundy-500"
                     />
                 </h2>
 
                 <button
                     onClick={() => navigate('/doctors')}
-                    className="bg-rose-600 text-white px-6 py-2 rounded-full hover:bg-rose-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-sm font-medium"
+                    className="bg-burgundy-600 text-white px-6 py-2 rounded-full hover:bg-burgundy-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 text-sm font-medium"
                 >
                     View All Specialities
                 </button>
@@ -58,7 +58,7 @@ const SpecialityMenu = () => {
                         onClick={() => navigate('/doctors', { state: { speciality: item.speciality } })}
                         className="flex flex-col items-center gap-3 cursor-pointer flex-shrink-0 group"
                     >
-                        <div className="rounded-full p-1 border border-white/[0.06] group-hover:border-rose-500/40 transition-colors duration-300">
+                        <div className="rounded-full p-1 border border-white/[0.06] group-hover:border-burgundy-500/40 transition-colors duration-300">
                             <img
                                 src={item.image}
                                 alt={item.speciality}
@@ -66,7 +66,7 @@ const SpecialityMenu = () => {
                                 loading="lazy"
                             />
                         </div>
-                        <p className="text-sm font-medium text-center text-zinc-500 group-hover:text-white transition-colors duration-200">{item.speciality}</p>
+                        <p className="text-sm font-medium text-center text-neutral-500 group-hover:text-white transition-colors duration-200">{item.speciality}</p>
                     </div>
                 ))}
             </div>

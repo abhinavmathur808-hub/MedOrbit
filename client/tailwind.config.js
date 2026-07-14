@@ -1,4 +1,12 @@
-/** @type {import('tailwindcss').Config} */
+/**
+ * @type {import('tailwindcss').Config}
+ *
+ * NOTE: This project is on Tailwind CSS v4, which does NOT auto-load this file.
+ * The authoritative design system (burgundy palette, fonts, surface tokens)
+ * lives in `src/index.css` under `@theme` / `:root`. This config is kept in
+ * sync for reference/tooling only; edits here have no effect unless the CSS is
+ * given an explicit `@config "../tailwind.config.js"` directive.
+ */
 export default {
     content: [
         "./index.html",
@@ -7,18 +15,23 @@ export default {
     theme: {
         extend: {
             colors: {
-                rose: {
-                    50: '#fff1f2',
-                    100: '#ffe4e6',
-                    200: '#fecdd3',
-                    300: '#fda4af',
-                    400: '#fb7185',
-                    500: '#f43f5e',
-                    600: '#e11d48',
-                    700: '#be123c',
-                    800: '#9f1239',
-                    900: '#881337',
+                // Clinical Dark Mode — unified deep medical red / burgundy accent
+                burgundy: {
+                    50: '#fcf2f4',
+                    100: '#f9e0e5',
+                    200: '#f1c0ca',
+                    300: '#e595a6',
+                    400: '#d4637e',
+                    500: '#bb3a58',
+                    600: '#9b1b30',
+                    700: '#7f1729',
+                    800: '#691426',
+                    900: '#591324',
+                    950: '#300a12',
                 },
+            },
+            fontFamily: {
+                sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
             },
             animation: {
                 blob: "blob 7s infinite",

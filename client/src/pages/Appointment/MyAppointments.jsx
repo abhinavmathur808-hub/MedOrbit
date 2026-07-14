@@ -175,15 +175,15 @@ const MyAppointments = () => {
     const getStatusBadge = (status) => {
         switch (status) {
             case 'confirmed':
-                return 'bg-green-100 text-green-700 border-green-200';
+                return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
             case 'pending':
-                return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+                return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
             case 'cancelled':
-                return 'bg-red-100 text-red-700 border-red-200';
+                return 'bg-red-500/10 text-red-400 border-red-500/20';
             case 'completed':
-                return 'bg-blue-100 text-blue-700 border-blue-200';
+                return 'bg-burgundy-500/10 text-burgundy-300 border-burgundy-500/20';
             default:
-                return 'bg-gray-100 text-gray-700 border-gray-200';
+                return 'bg-neutral-800 text-neutral-300 border-neutral-700';
         }
     };
 
@@ -202,13 +202,13 @@ const MyAppointments = () => {
 
     if (!user) {
         return (
-            <div className="min-h-screen bg-[#09090b]">
+            <div className="min-h-screen bg-neutral-950">
                 <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
                     <div className="text-center rounded-2xl p-8 max-w-md" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
-                        <XCircle className="w-16 h-16 text-rose-500 mx-auto mb-4" />
+                        <XCircle className="w-16 h-16 text-burgundy-500 mx-auto mb-4" />
                         <h2 className="text-xl font-bold text-white mb-2">Not Logged In</h2>
-                        <p className="text-zinc-400 mb-6">Please login to view your appointments.</p>
-                        <Link to="/login" className="inline-block bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl transition-all">Go to Login</Link>
+                        <p className="text-neutral-400 mb-6">Please login to view your appointments.</p>
+                        <Link to="/login" className="inline-block bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-3 rounded-xl transition-all">Go to Login</Link>
                     </div>
                 </div>
             </div>
@@ -217,11 +217,11 @@ const MyAppointments = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#09090b]">
+            <div className="min-h-screen bg-neutral-950">
                 <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
                     <div className="text-center">
-                        <RefreshCw className="w-12 h-12 text-rose-500 animate-spin mx-auto mb-4" />
-                        <p className="text-zinc-400">Loading appointments...</p>
+                        <RefreshCw className="w-12 h-12 text-burgundy-500 animate-spin mx-auto mb-4" />
+                        <p className="text-neutral-400">Loading appointments...</p>
                     </div>
                 </div>
             </div>
@@ -229,12 +229,12 @@ const MyAppointments = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#09090b]">
+        <div className="min-h-screen bg-neutral-950">
             <PageHeader title="My Appointments" subtitle={`${appointments.length} appointment${appointments.length !== 1 ? 's' : ''} found`} />
             <CurvedWrapper>
                 <div className="max-w-4xl mx-auto">
                     <div className="mb-8">
-                        <Link to="/doctors" className="w-full bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl transition-all flex items-center justify-center space-x-2">
+                        <Link to="/doctors" className="w-full bg-burgundy-600 hover:bg-burgundy-700 text-white px-4 py-2 rounded-xl transition-all flex items-center justify-center space-x-2">
                             <Calendar className="w-4 h-4" />
                             <span>Book New Appointment</span>
                         </Link>
@@ -248,10 +248,10 @@ const MyAppointments = () => {
 
                     {appointments.length === 0 && !error && (
                         <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
-                            <Calendar className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                            <h3 className="text-xl font-semibold text-zinc-400 mb-2">No appointments yet</h3>
-                            <p className="text-zinc-600 mb-6">Book your first appointment with a doctor</p>
-                            <Link to="/doctors" className="inline-block bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl transition-all">Find Doctors</Link>
+                            <Calendar className="w-16 h-16 text-neutral-700 mx-auto mb-4" />
+                            <h3 className="text-xl font-semibold text-neutral-400 mb-2">No appointments yet</h3>
+                            <p className="text-neutral-600 mb-6">Book your first appointment with a doctor</p>
+                            <Link to="/doctors" className="inline-block bg-burgundy-600 hover:bg-burgundy-700 text-white px-6 py-3 rounded-xl transition-all">Find Doctors</Link>
                         </div>
                     )}
 
@@ -293,12 +293,12 @@ const MyAppointments = () => {
 
                         return (
                             <>
-                                <div className="flex mb-6 rounded-xl overflow-hidden border border-zinc-800">
+                                <div className="flex mb-6 rounded-xl overflow-hidden border border-neutral-800">
                                     <button
                                         onClick={() => setActiveTab('upcoming')}
                                         className={`flex-1 py-3 text-sm font-semibold transition-all ${activeTab === 'upcoming'
-                                            ? 'bg-rose-600 text-white'
-                                            : 'bg-zinc-900 text-zinc-400 hover:text-white'
+                                            ? 'bg-burgundy-600 text-white'
+                                            : 'bg-neutral-900 text-neutral-400 hover:text-white'
                                             }`}
                                     >
                                         Upcoming ({upcomingAppointments.length})
@@ -306,8 +306,8 @@ const MyAppointments = () => {
                                     <button
                                         onClick={() => setActiveTab('past')}
                                         className={`flex-1 py-3 text-sm font-semibold transition-all ${activeTab === 'past'
-                                            ? 'bg-rose-600 text-white'
-                                            : 'bg-zinc-900 text-zinc-400 hover:text-white'
+                                            ? 'bg-burgundy-600 text-white'
+                                            : 'bg-neutral-900 text-neutral-400 hover:text-white'
                                             }`}
                                     >
                                         Past ({pastAppointments.length})
@@ -316,8 +316,8 @@ const MyAppointments = () => {
 
                                 {displayList.length === 0 && (
                                     <div className="text-center py-12 rounded-2xl" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
-                                        <Calendar className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
-                                        <p className="text-zinc-400">
+                                        <Calendar className="w-12 h-12 text-neutral-700 mx-auto mb-3" />
+                                        <p className="text-neutral-400">
                                             {activeTab === 'upcoming' ? 'No upcoming appointments.' : 'No past appointments.'}
                                         </p>
                                     </div>
@@ -348,7 +348,7 @@ const MyAppointments = () => {
                                                 >
                                                     <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
                                                         <div className="flex items-center space-x-4">
-                                                            <div className="w-14 h-14 bg-gradient-to-br from-rose-600 to-rose-800 rounded-xl flex items-center justify-center text-white text-xl font-bold">
+                                                            <div className="w-14 h-14 bg-gradient-to-br from-burgundy-600 to-burgundy-800 rounded-xl flex items-center justify-center text-white text-xl font-bold">
                                                                 {displayPhoto ? (
                                                                     <img
                                                                         src={optimizeCloudinaryUrl(displayPhoto)}
@@ -362,11 +362,11 @@ const MyAppointments = () => {
                                                             </div>
                                                             <div>
                                                                 <h3 className="font-bold text-white">{displayName}</h3>
-                                                                <p className={`text-sm ${isDoctor ? 'text-purple-600' : 'text-rose-600'}`}>
+                                                                <p className={`text-sm ${isDoctor ? 'text-burgundy-400' : 'text-burgundy-600'}`}>
                                                                     {subtitle}
                                                                 </p>
                                                                 {isDoctor && displayPhone && (
-                                                                    <p className="text-gray-500 text-sm flex items-center space-x-1">
+                                                                    <p className="text-neutral-400 text-sm flex items-center space-x-1">
                                                                         <Phone className="w-3 h-3" />
                                                                         <span>{displayPhone}</span>
                                                                     </p>
@@ -376,11 +376,11 @@ const MyAppointments = () => {
 
                                                         <div className="flex items-center space-x-6">
                                                             <div className="text-center">
-                                                                <p className="text-zinc-600 text-xs uppercase">Date</p>
+                                                                <p className="text-neutral-600 text-xs uppercase">Date</p>
                                                                 <p className="font-semibold text-white">{formatDate(appt.date)}</p>
                                                             </div>
                                                             <div className="text-center">
-                                                                <p className="text-zinc-600 text-xs uppercase">Time</p>
+                                                                <p className="text-neutral-600 text-xs uppercase">Time</p>
                                                                 <p className="font-semibold text-white">{appt.slotTime || 'N/A'}</p>
                                                             </div>
 
@@ -394,7 +394,7 @@ const MyAppointments = () => {
                                                                     <button
                                                                         onClick={() => handleStatusChange(appt._id, 'confirmed')}
                                                                         disabled={updating === appt._id}
-                                                                        className="flex items-center space-x-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
+                                                                        className="flex items-center space-x-1 bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
                                                                     >
                                                                         {updating === appt._id ? (
                                                                             <RefreshCw className="w-4 h-4 animate-spin" />
@@ -418,7 +418,7 @@ const MyAppointments = () => {
                                                                 <button
                                                                     onClick={() => openCancelModal(appt._id)}
                                                                     disabled={updating === appt._id}
-                                                                    className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300 ml-4 px-4 disabled:opacity-50"
+                                                                    className="text-sm text-neutral-400 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300 ml-4 px-4 disabled:opacity-50"
                                                                 >
                                                                     {updating === appt._id ? (
                                                                         <RefreshCw className="w-4 h-4 animate-spin inline mr-1" />
@@ -445,8 +445,8 @@ const MyAppointments = () => {
                                                                         onClick={() => canJoin && navigate(`/room/${appt._id}`)}
                                                                         disabled={!canJoin}
                                                                         className={`flex items-center space-x-1 px-4 py-1.5 rounded-lg text-sm font-medium transition-all ml-4 ${canJoin
-                                                                            ? 'bg-blue-500 hover:bg-blue-600 text-white cursor-pointer'
-                                                                            : 'bg-zinc-700/50 text-zinc-500 cursor-not-allowed'
+                                                                            ? 'bg-burgundy-600 hover:bg-burgundy-500 text-white cursor-pointer'
+                                                                            : 'bg-neutral-700/50 text-neutral-500 cursor-not-allowed'
                                                                             }`}
                                                                         title={canJoin ? 'Join Video Call' : 'Available 5 min before appointment'}
                                                                     >
@@ -462,7 +462,7 @@ const MyAppointments = () => {
                                                                         setSelectedAppointment(appt);
                                                                         setReviewModalOpen(true);
                                                                     }}
-                                                                    className="flex items-center space-x-1 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all ml-4"
+                                                                    className="flex items-center space-x-1 bg-burgundy-600 hover:bg-burgundy-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all ml-4"
                                                                 >
                                                                     <Star className="w-4 h-4" />
                                                                     <span>Leave Review</span>
@@ -470,7 +470,7 @@ const MyAppointments = () => {
                                                             )}
 
                                                             {!isDoctor && appt.status === 'completed' && reviewedAppointments.has(appt._id) && (
-                                                                <div className="flex items-center space-x-1 bg-green-100 text-green-700 px-3 py-1.5 rounded-lg text-sm font-medium ml-4">
+                                                                <div className="flex items-center space-x-1 bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-lg text-sm font-medium ml-4">
                                                                     <CheckCircle className="w-4 h-4" />
                                                                     <span>Reviewed</span>
                                                                 </div>
@@ -482,7 +482,7 @@ const MyAppointments = () => {
                                                                         setSelectedAppointmentForPrescription(appt._id);
                                                                         setPrescriptionModalOpen(true);
                                                                     }}
-                                                                    className="flex items-center space-x-1 bg-purple-500 hover:bg-purple-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all ml-4"
+                                                                    className="flex items-center space-x-1 bg-burgundy-600 hover:bg-burgundy-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all ml-4"
                                                                 >
                                                                     <FileText className="w-4 h-4" />
                                                                     <span>View Prescription</span>
