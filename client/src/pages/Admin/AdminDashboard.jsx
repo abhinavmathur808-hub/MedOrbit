@@ -18,12 +18,15 @@ import {
 } from 'lucide-react';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
+import { useToast } from '../../components/ui/Toast';
+import Skeleton from '../../components/ui/Skeleton';
 import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const AdminDashboard = () => {
     const { user, token } = useSelector((state) => state.auth);
+    const toast = useToast();
     const [doctors, setDoctors] = useState([]);
     const [stats, setStats] = useState({ totalPatients: 0, totalDoctors: 0, totalAppointments: 0 });
     const [recentActivity, setRecentActivity] = useState([]);
@@ -54,6 +57,7 @@ const AdminDashboard = () => {
                 if (doctorsData.success) setDoctors(doctorsData.doctors || []);
             } catch (err) {
                 setError('Failed to connect to server');
+                toast.error('Failed to connect to server');
             } finally {
                 setLoading(false);
             }
@@ -63,6 +67,7 @@ const AdminDashboard = () => {
     }, [token]);
 
     const handleVerify = async (doctorId) => {
+        const doctorName = doctors.find((doc) => doc._id === doctorId)?.name || 'Doctor';
         setVerifyingId(doctorId);
         try {
             const response = await fetch(`${API_BASE}/api/admin/verify-doctor`, {
@@ -73,8 +78,12 @@ const AdminDashboard = () => {
             const data = await response.json();
             if (data.success) {
                 setDoctors((prev) => prev.map((doc) => doc._id === doctorId ? { ...doc, isVerified: true } : doc));
+                toast.success(`${doctorName} verified`);
+            } else {
+                toast.error(`Could not verify ${doctorName} — please try again`);
             }
         } catch (err) {
+            toast.error(`Could not verify ${doctorName} — please try again`);
         } finally {
             setVerifyingId(null);
         }
@@ -102,9 +111,45 @@ const AdminDashboard = () => {
     if (loading) {
         return (
             <div className="min-h-screen bg-zinc-950">
-                <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
-                    <Loader2 className="w-12 h-12 text-rose-500 animate-spin" />
-                </div>
+                <PageHeader title="Admin Command Center" subtitle={`Welcome back, ${user?.name}`} />
+                <CurvedWrapper>
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                            {[0, 1, 2].map((i) => (
+                                <div key={i} className="rounded-2xl p-6" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+                                    <div className="flex items-center gap-4">
+                                        <Skeleton className="w-14 h-14 rounded-xl" />
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-8 w-16" />
+                                            <Skeleton className="h-4 w-24" />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="rounded-2xl overflow-hidden" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+                            <div className="p-6 border-b border-zinc-800">
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <Skeleton className="h-6 w-44" />
+                                    <Skeleton className="h-9 w-full max-w-xs" />
+                                </div>
+                            </div>
+                            <div className="divide-y divide-zinc-800/50">
+                                {[0, 1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="flex items-center gap-4 py-4 px-6">
+                                        <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+                                        <div className="flex-1 space-y-2">
+                                            <Skeleton className="h-4 w-40 max-w-full" />
+                                            <Skeleton className="h-3 w-56 max-w-full" />
+                                        </div>
+                                        <Skeleton className="h-8 w-24 rounded-lg flex-shrink-0" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </CurvedWrapper>
             </div>
         );
     }

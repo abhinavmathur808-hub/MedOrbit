@@ -3,14 +3,40 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Stethoscope, Search, Loader2 } from 'lucide-react';
+import { Stethoscope, Search } from 'lucide-react';
 import DoctorCard from '../../components/DoctorCard';
 import CurvedWrapper from '../../components/CurvedWrapper';
+import { useToast } from '../../components/ui/Toast';
+import Skeleton from '../../components/ui/Skeleton';
 
 const LIMIT = 10;
 
+// Content-shaped placeholder mirroring DoctorCard's layout (avatar, name,
+// specialization, 3-column stats strip, book button) so the grid doesn't
+// jump when real cards arrive.
+const DoctorCardSkeleton = () => (
+    <div className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-lg shadow-black/30">
+        <div className="flex flex-col items-center text-center">
+            <Skeleton className="w-24 h-24 rounded-full" />
+            <Skeleton className="h-5 w-32 mt-4" />
+            <Skeleton className="h-4 w-24 mt-2" />
+        </div>
+        <div className="grid grid-cols-3 gap-2 bg-zinc-950 border border-zinc-800 rounded-xl p-3 mt-4">
+            {[0, 1, 2].map((i) => (
+                <div key={i} className="flex flex-col items-center gap-1.5">
+                    <Skeleton className="w-4 h-4 rounded" />
+                    <Skeleton className="h-4 w-10" />
+                    <Skeleton className="h-2 w-8" />
+                </div>
+            ))}
+        </div>
+        <Skeleton className="h-12 w-full mt-4 rounded-xl" />
+    </div>
+);
+
 const Doctors = () => {
     const location = useLocation();
+    const toast = useToast();
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -56,14 +82,20 @@ const Doctors = () => {
                 setHasMore(data.hasMore ?? false);
             } else {
                 setError(data.message || 'Failed to fetch doctors');
+                if (targetPage > 1) {
+                    toast.error('Could not load more doctors — please try again');
+                }
             }
         } catch (err) {
             setError('Failed to connect to server');
+            if (targetPage > 1) {
+                toast.error('Could not load more doctors — please try again');
+            }
         } finally {
             setLoading(false);
             setLoadingMore(false);
         }
-    }, []);
+    }, [toast]);
 
     // Reset to the first page whenever the specialty filter changes
     useEffect(() => {
@@ -105,12 +137,26 @@ const Doctors = () => {
     if (loading) {
         return (
             <div className="min-h-screen bg-zinc-950">
-                <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="w-12 h-12 border-4 border-rose-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-zinc-400">Finding doctors near you...</p>
-                    </div>
+                <div className="bg-zinc-950 pt-32 pb-20 text-center px-6">
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-3">
+                        Find Doctors
+                    </h1>
+                    <p className="text-zinc-400 text-lg">
+                        Book appointments with verified healthcare professionals
+                    </p>
                 </div>
+                <CurvedWrapper>
+                    <div className="max-w-7xl mx-auto">
+                        <div className="max-w-xl mx-auto mb-8">
+                            <Skeleton className="h-[50px] w-full rounded-xl" />
+                        </div>
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {Array.from({ length: 8 }).map((_, i) => (
+                                <DoctorCardSkeleton key={i} />
+                            ))}
+                        </div>
+                    </div>
+                </CurvedWrapper>
             </div>
         );
     }
@@ -198,18 +244,15 @@ const Doctors = () => {
                             {filteredDoctors.map((doctor) => (
                                 <DoctorCard key={doctor._id} doctor={doctor} />
                             ))}
+                            {loadingMore &&
+                                Array.from({ length: 4 }).map((_, i) => (
+                                    <DoctorCardSkeleton key={`loading-more-${i}`} />
+                                ))}
                         </div>
                     )}
 
                     {!searchTerm && hasMore && (
                         <div ref={sentinelRef} style={{ height: '1px' }} />
-                    )}
-
-                    {loadingMore && (
-                        <div className="flex flex-col items-center justify-center py-10 gap-3">
-                            <Loader2 className="w-6 h-6 animate-spin text-rose-500" />
-                            <p className="text-sm text-zinc-500 tracking-wide">Loading more doctors...</p>
-                        </div>
                     )}
                 </div>
             </CurvedWrapper>

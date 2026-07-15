@@ -26,6 +26,8 @@ import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
 import DoctorCard from '../../components/DoctorCard';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
+import { useToast } from '../../components/ui/Toast';
+import Skeleton from '../../components/ui/Skeleton';
 
 const MONTH_NAMES = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -75,6 +77,7 @@ const BookAppointment = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.auth);
+    const toast = useToast();
 
     const [doctor, setDoctor] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -265,6 +268,7 @@ const BookAppointment = () => {
                 await releaseAppointment();
                 await fetchDoctor();
                 setError(error.message || 'Payment failed. Please try again.');
+                toast.error(error.message || 'Payment failed. Please try again.');
                 setBooking(false);
             } else if (error.stage === 'verification') {
                 // Money may have been taken — keep the appointment record
@@ -281,6 +285,7 @@ const BookAppointment = () => {
             await releaseAppointment();
             await fetchDoctor();
             setError('Payment was not completed. The slot has been released — you can book again anytime.');
+            toast.info('Payment window closed — your slot was released');
             setBooking(false);
         };
 
@@ -301,12 +306,64 @@ const BookAppointment = () => {
     if (loading) {
         return (
             <div className="min-h-screen bg-zinc-950">
-                <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="w-12 h-12 border-4 border-rose-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-zinc-400">Loading doctor details...</p>
+                <PageHeader title="Book Appointment" subtitle="Schedule a visit with your doctor" />
+                <CurvedWrapper>
+                    <div className="max-w-5xl mx-auto">
+                        <div className="inline-flex items-center space-x-2 mb-6">
+                            <Skeleton className="w-5 h-5 rounded-md" />
+                            <Skeleton className="h-4 w-28" />
+                        </div>
+
+                        <div className="grid lg:grid-cols-[340px_1fr] gap-6">
+
+                            <div className="rounded-2xl p-6 h-fit" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+                                <Skeleton className="h-5 w-32 mb-4" />
+
+                                <div className="flex items-center space-x-4 mb-6">
+                                    <Skeleton className="w-16 h-16 rounded-xl flex-shrink-0" />
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-5 w-36" />
+                                        <Skeleton className="h-4 w-24" />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3">
+                                    {[0, 1, 2].map((i) => (
+                                        <div key={i} className="flex items-center space-x-3">
+                                            <Skeleton className="w-5 h-5 rounded-md flex-shrink-0" />
+                                            <Skeleton className="h-4 w-40" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="rounded-2xl p-6" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+                                <Skeleton className="h-5 w-44 mb-5" />
+
+                                <Skeleton className="h-4 w-24 mb-3" />
+                                <div className="border border-zinc-800 rounded-xl p-4 mb-6">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <Skeleton className="w-8 h-8 rounded-lg" />
+                                        <Skeleton className="h-5 w-32" />
+                                        <Skeleton className="w-8 h-8 rounded-lg" />
+                                    </div>
+                                    <div className="grid grid-cols-7 gap-1">
+                                        {Array.from({ length: 35 }).map((_, i) => (
+                                            <Skeleton key={i} className="w-full aspect-square rounded-lg" />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <Skeleton className="h-4 w-24 mb-3" />
+                                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                    {Array.from({ length: 12 }).map((_, i) => (
+                                        <Skeleton key={i} className="h-10 rounded-full" />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </CurvedWrapper>
             </div>
         );
     }

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { ToastProvider } from './components/ui/Toast';
 import Navbar from './components/Navbar';
 import AdminRoute from './components/AdminRoute';
 import ScrollToTop from './components/ScrollToTop';
@@ -22,7 +23,9 @@ import OAuthCallback from './pages/OAuthCallback';
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </BrowserRouter>
   );
 }

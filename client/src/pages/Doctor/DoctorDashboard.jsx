@@ -23,9 +23,12 @@ import CancelModal from '../../components/CancelModal';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
 import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
+import { useToast } from '../../components/ui/Toast';
+import Skeleton from '../../components/ui/Skeleton';
 
 const DoctorDashboard = () => {
     const navigate = useNavigate();
+    const toast = useToast();
     const { user, token } = useSelector((state) => state.auth);
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -49,6 +52,7 @@ const DoctorDashboard = () => {
     const fetchAppointments = async () => {
         try {
             setLoading(true);
+            setError('');
             const response = await fetch(`${API_BASE}/api/appointments`, {
                 method: 'GET',
                 headers: {
@@ -63,9 +67,11 @@ const DoctorDashboard = () => {
                 setAppointments(data.appointments);
             } else {
                 setError(data.message || 'Failed to fetch appointments');
+                toast.error(data.message || 'Failed to fetch appointments');
             }
         } catch (err) {
             setError('Failed to connect to server');
+            toast.error('Failed to connect to server');
         } finally {
             setLoading(false);
         }
@@ -97,11 +103,12 @@ const DoctorDashboard = () => {
                         apt._id === appointmentId ? { ...apt, status: newStatus } : apt
                     )
                 );
+                toast.success(newStatus === 'completed' ? 'Marked as completed' : 'Appointment approved');
             } else {
-                setError(data.message || 'Failed to update status');
+                toast.error(data.message || 'Failed to update status');
             }
         } catch (err) {
-            setError('Failed to update appointment status');
+            toast.error('Failed to update appointment status');
         } finally {
             setUpdating(null);
         }
@@ -136,11 +143,12 @@ const DoctorDashboard = () => {
                         apt._id === appointmentId ? { ...apt, status: 'cancelled' } : apt
                     )
                 );
+                toast.success('Appointment cancelled');
             } else {
-                setError(data.message || 'Failed to cancel appointment');
+                toast.error(data.message || 'Failed to cancel appointment');
             }
         } catch (err) {
-            setError('Failed to cancel appointment');
+            toast.error('Failed to cancel appointment');
         } finally {
             setUpdating(null);
         }
@@ -199,12 +207,43 @@ const DoctorDashboard = () => {
     if (loading) {
         return (
             <div className="min-h-screen bg-zinc-950">
-                <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
-                    <div className="text-center">
-                        <Loader2 className="w-12 h-12 text-rose-500 animate-spin mx-auto mb-4" />
-                        <p className="text-zinc-400">Loading appointments...</p>
+                <PageHeader title="Doctor Dashboard" subtitle="Manage your patient appointments" />
+                <CurvedWrapper>
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                            {[0, 1, 2, 3].map((i) => (
+                                <div key={i} className="rounded-2xl p-5 bg-zinc-900 border border-zinc-800 shadow-lg shadow-black/30">
+                                    <Skeleton className="h-4 w-20" />
+                                    <Skeleton className="h-8 w-12 mt-2" />
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 shadow-[var(--card-shadow)]">
+                            <div className="bg-zinc-800/50 border-b border-zinc-800 px-6 py-4 flex items-center gap-6">
+                                {[0, 1, 2, 3, 4].map((i) => (
+                                    <Skeleton key={i} className="h-4 w-24" />
+                                ))}
+                            </div>
+                            <div className="divide-y divide-zinc-800/60">
+                                {[0, 1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="px-6 py-4 flex items-center gap-6">
+                                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                                            <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+                                            <div className="space-y-2">
+                                                <Skeleton className="h-4 w-32" />
+                                                <Skeleton className="h-3 w-40" />
+                                            </div>
+                                        </div>
+                                        <Skeleton className="h-6 w-20 rounded-full" />
+                                        <Skeleton className="h-6 w-20 rounded-full" />
+                                        <Skeleton className="h-7 w-24" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </CurvedWrapper>
             </div>
         );
     }
@@ -259,13 +298,10 @@ const DoctorDashboard = () => {
                     </div>
 
                     {error && (
-                        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl mb-6 flex items-center gap-3">
-                            <AlertCircle className="w-5 h-5" />
+                        <p className="flex items-center gap-2 text-sm text-red-400 mb-4">
+                            <AlertCircle className="w-4 h-4 flex-shrink-0" />
                             {error}
-                            <button onClick={() => setError('')} className="ml-auto">
-                                <X className="w-4 h-4" />
-                            </button>
-                        </div>
+                        </p>
                     )}
 
                     {filteredAppointments.length === 0 && (
