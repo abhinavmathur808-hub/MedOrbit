@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
+import Avatar from '../../components/ui/Avatar';
 import { Link } from 'react-router-dom';
 import {
     User,
@@ -54,13 +54,12 @@ const PatientProfile = () => {
             <div className="max-w-2xl mx-auto">
                 <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl shadow-black/60 p-8 border border-zinc-800">
                     <div className="flex flex-col items-center mb-8">
-                        <div className="w-24 h-24 bg-gradient-to-br from-rose-500 to-rose-800 rounded-full flex items-center justify-center text-white text-3xl font-bold shadow-lg mb-4 overflow-hidden">
-                            {photo && photo.startsWith('http') ? (
-                                <img src={optimizeCloudinaryUrl(photo)} alt={name} className="w-full h-full object-cover" loading="lazy" />
-                            ) : (
-                                name?.charAt(0)?.toUpperCase() || 'P'
-                            )}
-                        </div>
+                        <Avatar
+                            src={photo && photo.startsWith('http') ? photo : ''}
+                            name={name}
+                            size={96}
+                            className="shadow-lg mb-4"
+                        />
                         <h1 className="text-2xl font-bold text-zinc-100">{name}</h1>
                         <p className="text-zinc-400 capitalize">{role}</p>
                     </div>

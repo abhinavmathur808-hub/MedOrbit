@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import {
-    Shield,
     Users,
     CheckCircle,
     XCircle,
@@ -9,7 +8,6 @@ import {
     Search,
     AlertCircle,
     Loader2,
-    Mail,
     Calendar,
     Stethoscope,
     Activity,
@@ -20,7 +18,8 @@ import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
 import { useToast } from '../../components/ui/Toast';
 import Skeleton from '../../components/ui/Skeleton';
-import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
+import StatusBadge from '../../components/ui/StatusBadge';
+import Avatar from '../../components/ui/Avatar';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -97,16 +96,6 @@ const AdminDashboard = () => {
 
     const verifiedCount = doctors.filter((d) => d.isVerified).length;
     const unverifiedCount = doctors.filter((d) => !d.isVerified).length;
-
-    const getStatusBadge = (status) => {
-        switch (status) {
-            case 'completed': return <span className="px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs font-medium">Completed</span>;
-            case 'confirmed': return <span className="px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs font-medium">Confirmed</span>;
-            case 'pending': return <span className="px-2 py-1 bg-amber-500/10 text-amber-400 rounded-full text-xs font-medium">Pending</span>;
-            case 'cancelled': return <span className="px-2 py-1 bg-red-500/10 text-red-400 rounded-full text-xs font-medium">Cancelled</span>;
-            default: return <span className="px-2 py-1 bg-zinc-800 text-zinc-400 rounded-full text-xs font-medium">{status}</span>;
-        }
-    };
 
     if (loading) {
         return (
@@ -237,7 +226,7 @@ const AdminDashboard = () => {
                                                         {apt.patientId?.name || 'Unknown'}
                                                     </td>
                                                     <td className="py-3">
-                                                        {getStatusBadge(apt.status)}
+                                                        <StatusBadge status={apt.status} size="sm" showIcon={false} />
                                                     </td>
                                                 </tr>
                                             ))}
@@ -318,13 +307,7 @@ const AdminDashboard = () => {
                                             <tr key={doctor._id} className="border-b border-zinc-800/50 hover:bg-white/[0.03]">
                                                 <td className="py-4 px-6">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 bg-gradient-to-br from-rose-600 to-rose-800 rounded-full flex items-center justify-center text-white font-semibold">
-                                                            {doctor.photo ? (
-                                                                <img src={optimizeCloudinaryUrl(doctor.photo)} alt={doctor.name} className="w-full h-full rounded-full object-cover" loading="lazy" />
-                                                            ) : (
-                                                                doctor.name?.charAt(0).toUpperCase()
-                                                            )}
-                                                        </div>
+                                                        <Avatar src={doctor.photo} name={doctor.name} size={40} />
                                                         <div className="flex items-center gap-1">
                                                             <span className="font-medium text-white">{doctor.name}</span>
                                                             {doctor.isVerified && <BadgeCheck className="w-4 h-4 text-rose-400" />}

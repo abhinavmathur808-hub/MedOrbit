@@ -6,14 +6,11 @@ import { useNavigate } from 'react-router-dom';
 import {
     Calendar,
     Clock,
-    User,
     CheckCircle,
-    XCircle,
     AlertCircle,
     Loader2,
     Check,
     X,
-    DollarSign,
     Video,
     RefreshCw,
     FileText,
@@ -22,9 +19,11 @@ import PrescriptionModal from '../../components/PrescriptionModal';
 import CancelModal from '../../components/CancelModal';
 import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
-import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
 import { useToast } from '../../components/ui/Toast';
 import Skeleton from '../../components/ui/Skeleton';
+import StatusBadge from '../../components/ui/StatusBadge';
+import Avatar from '../../components/ui/Avatar';
+import EmptyState from '../../components/ui/EmptyState';
 
 const DoctorDashboard = () => {
     const navigate = useNavigate();
@@ -197,13 +196,6 @@ const DoctorDashboard = () => {
         completed: appointments.filter((a) => a.status === 'completed').length,
     };
 
-    const statusColors = {
-        pending: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-        confirmed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-        cancelled: 'bg-red-500/10 text-red-400 border-red-500/20',
-        completed: 'bg-rose-500/10 text-rose-300 border-rose-500/20',
-    };
-
     if (loading) {
         return (
             <div className="min-h-screen bg-zinc-950">
@@ -305,15 +297,13 @@ const DoctorDashboard = () => {
                     )}
 
                     {filteredAppointments.length === 0 && (
-                        <div className="rounded-2xl p-12 text-center bg-zinc-900 border border-zinc-800 shadow-[var(--card-shadow)]">
-                            <Calendar className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                            <h2 className="text-xl font-semibold text-zinc-100 mb-2">No Appointments</h2>
-                            <p className="text-zinc-400">
-                                {filter === 'all'
-                                    ? "You don't have any appointments yet."
-                                    : `No ${filter} appointments found.`}
-                            </p>
-                        </div>
+                        <EmptyState
+                            icon={Calendar}
+                            title="No Appointments"
+                            subtitle={filter === 'all'
+                                ? "You don't have any appointments yet."
+                                : `No ${filter} appointments found.`}
+                        />
                     )}
 
                     {filteredAppointments.length > 0 && (
@@ -340,18 +330,7 @@ const DoctorDashboard = () => {
                                                 <tr key={appointment._id} className="hover:bg-zinc-800/40 transition-colors">
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center gap-3">
-                                                            {patientPhoto ? (
-                                                                <img
-                                                                    src={optimizeCloudinaryUrl(patientPhoto)}
-                                                                    alt={patientName}
-                                                                    className="w-10 h-10 rounded-full object-cover"
-                                                                    loading="lazy"
-                                                                />
-                                                            ) : (
-                                                                <div className="w-10 h-10 bg-rose-600/20 rounded-full flex items-center justify-center text-rose-300 font-bold">
-                                                                    {patientName.charAt(0).toUpperCase()}
-                                                                </div>
-                                                            )}
+                                                            <Avatar src={patientPhoto} name={patientName} size={40} />
                                                             <div>
                                                                 <p className="font-medium text-zinc-100">{patientName}</p>
                                                                 <p className="text-xs text-zinc-500">{patientEmail}</p>
@@ -385,12 +364,7 @@ const DoctorDashboard = () => {
                                                     </td>
 
                                                     <td className="px-6 py-4">
-                                                        <span
-                                                            className={`px-3 py-1 rounded-full text-xs font-medium border ${statusColors[appointment.status] || statusColors.pending
-                                                                }`}
-                                                        >
-                                                            {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
-                                                        </span>
+                                                        <StatusBadge status={appointment.status} size="sm" />
                                                     </td>
 
                                                     <td className="px-6 py-4">

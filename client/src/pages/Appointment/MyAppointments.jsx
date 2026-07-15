@@ -5,13 +5,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
     Calendar,
-    Clock,
-    User,
     CheckCircle,
     XCircle,
-    AlertCircle,
     RefreshCw,
-    Stethoscope,
     Phone,
     Check,
     X,
@@ -26,7 +22,9 @@ import PageHeader from '../../components/PageHeader';
 import CurvedWrapper from '../../components/CurvedWrapper';
 import { useToast } from '../../components/ui/Toast';
 import Skeleton from '../../components/ui/Skeleton';
-import { optimizeCloudinaryUrl } from '../../utils/cloudinaryUrl';
+import StatusBadge from '../../components/ui/StatusBadge';
+import Avatar from '../../components/ui/Avatar';
+import EmptyState from '../../components/ui/EmptyState';
 
 const MyAppointments = () => {
     const { user } = useSelector((state) => state.auth);
@@ -177,34 +175,6 @@ const MyAppointments = () => {
         });
     };
 
-    const getStatusBadge = (status) => {
-        switch (status) {
-            case 'confirmed':
-                return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-            case 'pending':
-                return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-            case 'cancelled':
-                return 'bg-red-500/10 text-red-400 border-red-500/20';
-            case 'completed':
-                return 'bg-rose-500/10 text-rose-300 border-rose-500/20';
-            default:
-                return 'bg-zinc-800 text-zinc-300 border-zinc-700';
-        }
-    };
-
-    const getStatusIcon = (status) => {
-        switch (status) {
-            case 'confirmed':
-                return <CheckCircle className="w-4 h-4" />;
-            case 'pending':
-                return <AlertCircle className="w-4 h-4" />;
-            case 'cancelled':
-                return <XCircle className="w-4 h-4" />;
-            default:
-                return <Clock className="w-4 h-4" />;
-        }
-    };
-
     if (!user) {
         return (
             <div className="min-h-screen bg-zinc-950">
@@ -290,12 +260,14 @@ const MyAppointments = () => {
                     )}
 
                     {appointments.length === 0 && !error && (
-                        <div className="text-center py-16 rounded-2xl" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
-                            <Calendar className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                            <h3 className="text-xl font-semibold text-zinc-400 mb-2">No appointments yet</h3>
-                            <p className="text-zinc-600 mb-6">Book your first appointment with a doctor</p>
-                            <Link to="/doctors" className="inline-block bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl transition-all">Find Doctors</Link>
-                        </div>
+                        <EmptyState
+                            icon={Calendar}
+                            title="No appointments yet"
+                            subtitle="Book your first appointment with a doctor"
+                            action={
+                                <Link to="/doctors" className="inline-block bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl transition-all">Find Doctors</Link>
+                            }
+                        />
                     )}
 
                     {appointments.length > 0 && (() => {
@@ -358,12 +330,11 @@ const MyAppointments = () => {
                                 </div>
 
                                 {displayList.length === 0 && (
-                                    <div className="text-center py-12 rounded-2xl" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
-                                        <Calendar className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
-                                        <p className="text-zinc-400">
-                                            {activeTab === 'upcoming' ? 'No upcoming appointments.' : 'No past appointments.'}
-                                        </p>
-                                    </div>
+                                    <EmptyState
+                                        icon={Calendar}
+                                        title={activeTab === 'upcoming' ? 'No upcoming appointments' : 'No past appointments'}
+                                        subtitle={activeTab === 'upcoming' ? 'Your confirmed and pending visits will appear here.' : 'Completed and cancelled visits will appear here.'}
+                                    />
                                 )}
 
                                 {displayList.length > 0 && (
@@ -391,18 +362,7 @@ const MyAppointments = () => {
                                                 >
                                                     <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
                                                         <div className="flex items-center space-x-4">
-                                                            <div className="w-14 h-14 bg-gradient-to-br from-rose-600 to-rose-800 rounded-xl flex items-center justify-center text-white text-xl font-bold">
-                                                                {displayPhoto ? (
-                                                                    <img
-                                                                        src={optimizeCloudinaryUrl(displayPhoto)}
-                                                                        alt={displayName}
-                                                                        className="w-full h-full object-cover rounded-xl"
-                                                                        loading="lazy"
-                                                                    />
-                                                                ) : (
-                                                                    displayName?.charAt(0)?.toUpperCase() || 'U'
-                                                                )}
-                                                            </div>
+                                                            <Avatar src={displayPhoto} name={displayName} size={56} shape="rounded" />
                                                             <div>
                                                                 <h3 className="font-bold text-white">{displayName}</h3>
                                                                 <p className={`text-sm ${isDoctor ? 'text-rose-400' : 'text-rose-600'}`}>
@@ -427,10 +387,7 @@ const MyAppointments = () => {
                                                                 <p className="font-semibold text-white">{appt.slotTime || 'N/A'}</p>
                                                             </div>
 
-                                                            <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium border ${getStatusBadge(appt.status)}`}>
-                                                                {getStatusIcon(appt.status)}
-                                                                <span className="capitalize">{appt.status}</span>
-                                                            </div>
+                                                            <StatusBadge status={appt.status} />
 
                                                             {isDoctor && appt.status === 'pending' && (
                                                                 <div className="flex items-center space-x-2 ml-4">

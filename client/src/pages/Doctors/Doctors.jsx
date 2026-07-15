@@ -8,6 +8,7 @@ import DoctorCard from '../../components/DoctorCard';
 import CurvedWrapper from '../../components/CurvedWrapper';
 import { useToast } from '../../components/ui/Toast';
 import Skeleton from '../../components/ui/Skeleton';
+import EmptyState from '../../components/ui/EmptyState';
 
 const LIMIT = 10;
 
@@ -226,17 +227,14 @@ const Doctors = () => {
                     )}
 
                     {!error && filteredDoctors.length === 0 && (
-                        <div className="text-center py-16">
-                            <Stethoscope className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-                            <h3 className="text-xl font-semibold text-zinc-400 mb-2">
-                                No doctors found
-                            </h3>
-                            <p className="text-zinc-600">
-                                {searchTerm
-                                    ? 'Try adjusting your search criteria'
-                                    : 'Check back later for available doctors'}
-                            </p>
-                        </div>
+                        <EmptyState
+                            card={false}
+                            icon={Stethoscope}
+                            title="No doctors found"
+                            subtitle={searchTerm
+                                ? 'Try adjusting your search criteria'
+                                : 'Check back later for available doctors'}
+                        />
                     )}
 
                     {filteredDoctors.length > 0 && (
