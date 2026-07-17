@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Plus, Minus } from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 
 const faqData = [
     {
@@ -35,6 +36,7 @@ const faqData = [
 
 const FAQ = () => {
     const [activeIndex, setActiveIndex] = useState(null);
+    const reduce = useReducedMotion();
 
     const toggle = (index) => {
         setActiveIndex(activeIndex === index ? null : index);
@@ -45,69 +47,65 @@ const FAQ = () => {
             <div className="max-w-6xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
 
+                    {/* ── Left: the hook ── */}
                     <div className="lg:col-span-4 lg:sticky lg:top-24 lg:self-start">
-
-                        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight leading-tight mb-4 text-white">
+                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight text-zinc-100">
                             Frequently Asked Questions
                         </h2>
-                        <p className="text-zinc-500 leading-relaxed">
-                            Can't find the answer you're looking for? Reach out to our support team.
-                        </p>
                     </div>
 
-                    <div className="lg:col-span-8">
-                        <div className="border-t border-zinc-800/60">
-                            {faqData.map((item, index) => {
-                                const isOpen = activeIndex === index;
-                                return (
-                                    <div
-                                        key={index}
-                                        className="border-b border-zinc-800/60"
+                    {/* ── Right: the accordion ── */}
+                    <div className="lg:col-span-8 space-y-4">
+                        {faqData.map((item, index) => {
+                            const isOpen = activeIndex === index;
+                            return (
+                                <div
+                                    key={index}
+                                    className={`backdrop-blur-md border rounded-2xl overflow-hidden transition-colors duration-300 ${
+                                        isOpen
+                                            ? 'border-rose-500/50 bg-zinc-800/40'
+                                            : 'border-zinc-800/50 bg-zinc-900/40'
+                                    }`}
+                                >
+                                    <button
+                                        onClick={() => toggle(index)}
+                                        className="w-full px-6 py-5 flex justify-between items-center cursor-pointer text-left gap-4"
+                                        aria-expanded={isOpen}
                                     >
-                                        <button
-                                            onClick={() => toggle(index)}
-                                            className="w-full flex items-center justify-between text-left py-6 group cursor-pointer"
-                                            aria-expanded={isOpen}
-                                        >
-                                            <span
-                                                className={`text-lg font-medium transition-colors duration-200 pr-6 ${isOpen
-                                                    ? 'text-white'
-                                                    : 'text-zinc-400 group-hover:text-white'
-                                                    }`}
-                                            >
-                                                {item.question}
-                                            </span>
-                                            <span
-                                                className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${isOpen
-                                                    ? 'bg-rose-600 text-white'
-                                                    : 'bg-white/[0.03] group-hover:bg-white/[0.06]'
-                                                    }`}
-                                            >
-                                                {isOpen ? (
-                                                    <Minus className="w-4 h-4" />
-                                                ) : (
-                                                    <Plus className="w-4 h-4 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
-                                                )}
-                                            </span>
-                                        </button>
+                                        <span className="text-zinc-100 font-medium">
+                                            {item.question}
+                                        </span>
+                                        <ChevronDown
+                                            className={`flex-shrink-0 text-zinc-400 transition-transform duration-300 ${
+                                                isOpen ? 'rotate-180' : ''
+                                            }`}
+                                        />
+                                    </button>
 
-                                        <div
-                                            className={`grid transition-all duration-300 ease-in-out ${isOpen
-                                                ? 'grid-rows-[1fr] opacity-100'
-                                                : 'grid-rows-[0fr] opacity-0'
-                                                }`}
-                                        >
-                                            <div className="overflow-hidden">
+                                    <AnimatePresence initial={false}>
+                                        {isOpen && (
+                                            <motion.div
+                                                key="answer"
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{
+                                                    duration: reduce ? 0 : 0.3,
+                                                    ease: [0.22, 1, 0.36, 1],
+                                                }}
+                                                // clip the body while its height animates
+                                                className="overflow-hidden"
+                                            >
                                                 <div
-                                                    className="pb-6 pr-14 text-zinc-500 leading-relaxed [&_strong]:text-zinc-300 [&_strong]:font-semibold"
+                                                    className="px-6 pb-5 text-zinc-400 leading-relaxed [&_strong]:text-zinc-200 [&_strong]:font-semibold"
                                                     dangerouslySetInnerHTML={{ __html: item.answer }}
                                                 />
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            );
+                        })}
                     </div>
 
                 </div>

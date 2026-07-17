@@ -59,6 +59,15 @@ export const sweepUnpaidAppointments = async () => {
 };
 
 export const startAppointmentSweeper = () => {
+    // Production only. This sweeper DELETES appointment documents, and a local
+    // .env points MONGO_URI at the same Atlas cluster production uses — so a dev
+    // machine left running would silently reap live unpaid holds. The guard sits
+    // here rather than at the call site so no future caller can bypass it.
+    if (process.env.NODE_ENV !== 'production') {
+        console.log('Appointment sweeper disabled (NODE_ENV is not "production")');
+        return;
+    }
+
     // unref() so the timers never keep the process alive on their own
     setTimeout(sweepUnpaidAppointments, FIRST_SWEEP_DELAY_MS).unref();
     setInterval(sweepUnpaidAppointments, SWEEP_INTERVAL_MS).unref();

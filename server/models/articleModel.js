@@ -9,6 +9,9 @@ const articleSchema = new mongoose.Schema(
         date: { type: String, required: true },
         content: { type: String, required: true },
         readTime: { type: String, default: '5 min read' },
+        // Gemini-generated TL;DR bullets, written once on first request and
+        // reused forever after — see generateArticleSummary in aiController.
+        aiSummary: { type: [String], default: [] },
     },
     { timestamps: true }
 );

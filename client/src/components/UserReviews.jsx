@@ -1,144 +1,198 @@
-import React, { useState } from 'react'
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { useReducedMotion } from 'framer-motion';
 
-const reviews = [
-  {
-    id: 1,
-    name: "Amit Sharma",
-    role: "Software Engineer",
-    text: "Very helpful. Far easier than doing same things on computer. Allows quick and easy search with speedy booking. Even maintains history of doctors visited.",
-    stars: 5
-  },
-  {
-    id: 2,
-    name: "Priya Kapoor",
-    role: "Mother of two",
-    text: "I used to spend hours calling clinics. With MedOrbit, I booked a pediatrician for my son in under 2 minutes. The appointment reminders are a lifesaver!",
-    stars: 5
-  },
-  {
-    id: 3,
-    name: "Rahul Verma",
-    role: "Business Analyst",
-    text: "Finding a good Neurologist in my area was always a struggle until now. The search filters helped me find the right expert near me instantly.",
-    stars: 4
-  },
-  {
-    id: 4,
-    name: "Sneha Gupta",
-    role: "Student",
-    text: "Had a sudden severe toothache and needed a dentist immediately. Found one available in 30 minutes through this app. The booking process was seamless.",
-    stars: 5
-  }
-]
+// Mock social proof: patients on the speed and the AI triage, doctors on the
+// practice side, so the wall reads as a two-sided marketplace rather than a
+// patient-only testimonial reel.
+const REVIEWS = [
+    {
+        name: 'Amit Sharma',
+        role: 'Software Engineer',
+        text: 'Very helpful. Far easier than doing the same things on a computer. Quick search, speedy booking, and it even keeps a history of every doctor I have visited.',
+        stars: 5,
+        tint: 'from-rose-500 to-rose-800',
+    },
+    {
+        name: 'Dr. Anaya Rao',
+        role: 'Cardiologist',
+        text: 'My calendar fills itself now. Patients arrive already routed to the right specialty, so I spend consultations treating people instead of redirecting them.',
+        stars: 5,
+        tint: 'from-sky-500 to-sky-800',
+    },
+    {
+        name: 'Priya Kapoor',
+        role: 'Mother of two',
+        text: 'I used to spend hours calling clinics. With MedOrbit I booked a pediatrician for my son in under two minutes. The appointment reminders are a lifesaver.',
+        stars: 5,
+        tint: 'from-violet-500 to-violet-800',
+    },
+    {
+        name: 'Arjun Menon',
+        role: 'Patient',
+        text: 'I typed what I was feeling in plain English and it pointed me to a neurologist before I had finished my coffee. It never felt like filling out a form.',
+        stars: 5,
+        tint: 'from-emerald-500 to-emerald-800',
+    },
+    {
+        name: 'Rahul Verma',
+        role: 'Business Analyst',
+        text: 'Finding a good neurologist in my area was always a struggle. The search filters put the right expert in front of me instantly.',
+        stars: 4,
+        tint: 'from-amber-500 to-amber-800',
+    },
+    {
+        name: 'Dr. Imran Qureshi',
+        role: 'Neurologist',
+        text: 'The onboarding took an afternoon. No front desk software to rip out, no training. My no-show rate has dropped noticeably since the reminders went live.',
+        stars: 5,
+        tint: 'from-orange-500 to-orange-800',
+    },
+    {
+        name: 'Sneha Gupta',
+        role: 'Student',
+        text: 'Sudden severe toothache, needed someone immediately. Found a dentist available in thirty minutes. The whole booking took three taps.',
+        stars: 5,
+        tint: 'from-rose-500 to-rose-800',
+    },
+    {
+        name: 'Dr. Meera Iyer',
+        role: 'Dermatologist',
+        text: 'Patients turn up with a clear history already attached. That context is worth more to me than any scheduling feature I have used before.',
+        stars: 5,
+        tint: 'from-sky-500 to-sky-800',
+    },
+    {
+        name: 'Kavya Nair',
+        role: 'Patient',
+        text: 'What sold me is that the symptom check runs on my own phone. I did not have to hand my medical history to a server just to find a doctor.',
+        stars: 5,
+        tint: 'from-violet-500 to-violet-800',
+    },
+    {
+        name: 'Dr. Vikram Sethi',
+        role: 'Orthopedic Surgeon',
+        text: 'Rescheduling used to eat an hour of my staff time every morning. It now handles itself, and the video consults mean fewer wasted trips for follow-ups.',
+        stars: 4,
+        tint: 'from-emerald-500 to-emerald-800',
+    },
+];
 
-const UserReviews = () => {
-  const [currentIndex, setCurrentIndex] = useState(0)
+// Two rows travelling opposite ways read as a wall rather than one long belt.
+const ROW_ONE = REVIEWS.slice(0, 5);
+const ROW_TWO = REVIEWS.slice(5);
 
-  const nextReview = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === reviews.length - 1 ? 0 : prevIndex + 1))
-  }
+const initials = (name) =>
+    name
+        .replace(/^Dr\.?\s*/, '')
+        .split(' ')
+        .map((word) => word[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase();
 
-  const prevReview = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? reviews.length - 1 : prevIndex - 1))
-  }
+const ReviewCard = ({ review }) => (
+    // The right margin is deliberate rather than a `gap` on the track: the loop
+    // below shifts by exactly -50%, which only lands seamlessly if every copy is
+    // the same width *including* the space that follows its last card. A gap sits
+    // only *between* children, so the track would come up half a gap short and
+    // snap once per lap.
+    <figure className="mr-5 flex h-full w-80 flex-shrink-0 cursor-pointer flex-col gap-3 rounded-2xl border border-zinc-800/50 bg-zinc-900/40 p-5 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:border-zinc-600 hover:bg-zinc-800/60 hover:shadow-xl hover:shadow-black/50">
+        <blockquote className="text-sm leading-relaxed text-zinc-400">{review.text}</blockquote>
 
-  return (
-    <div className='w-full py-32 relative overflow-hidden'>
-
-      <div className='max-w-6xl mx-auto px-4 relative flex items-center justify-center'>
-
-        <button
-          onClick={prevReview}
-          className='hidden md:flex absolute left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full bg-zinc-800/50 hover:bg-rose-600 text-zinc-400 hover:text-white backdrop-blur-sm border border-zinc-700/50 hover:border-rose-500 transition-all z-20'
-          aria-label="Previous Review"
-        >
-          <FiChevronLeft className='w-6 h-6' />
-        </button>
-
-        <div
-          className='relative w-full max-w-2xl rounded-2xl p-10 sm:p-16 text-center transition-all duration-300 ease-out'
-          style={{
-            minHeight: '400px',
-            background: 'var(--card-bg)',
-            border: '1px solid var(--card-border)',
-            boxShadow: 'var(--card-shadow)',
-          }}
-        >
-
-          <div
-            className='absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 z-10 flex items-center justify-center rounded-full bg-rose-600'
-            style={{ boxShadow: '0 8px 20px rgba(225, 29, 72, 0.3)' }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-white">
-              <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-            </svg>
-          </div>
-
-          <div className='flex flex-col items-center justify-center h-full mt-4'>
-
-            <h2 className='text-3xl sm:text-4xl font-semibold tracking-tight text-white mb-10'>
-              What Our Users Say
-            </h2>
-
-            <div className='px-2 sm:px-8 transition-opacity duration-300'>
-              <p className='text-zinc-400 text-lg sm:text-xl leading-relaxed mb-8'>
-                "{reviews[currentIndex].text}"
-              </p>
-
-              <div className='flex flex-col items-center gap-3'>
-                <div className='flex text-2xl gap-1 mb-2'>
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className={i < reviews[currentIndex].stars ? 'text-rose-500' : 'text-zinc-700'}>★</span>
-                  ))}
-                </div>
-
-                <h3 className='font-medium text-white text-lg uppercase tracking-widest border-t border-white/[0.06] pt-4 px-6'>
-                  {reviews[currentIndex].name}
-                </h3>
-                <p className='text-zinc-600 text-sm uppercase tracking-wide'>
-                  {reviews[currentIndex].role}
-                </p>
-              </div>
+        <figcaption className="mt-auto flex items-center gap-3 pt-1">
+            <span
+                aria-hidden="true"
+                className={`grid h-9 w-9 flex-shrink-0 place-items-center rounded-full bg-gradient-to-br ${review.tint} text-[11px] font-bold text-white`}
+            >
+                {initials(review.name)}
+            </span>
+            <div className="min-w-0">
+                <p className="truncate text-sm font-medium text-white">{review.name}</p>
+                <p className="truncate text-xs text-zinc-500">{review.role}</p>
             </div>
+        </figcaption>
+    </figure>
+);
 
-          </div>
+// One row of the wall. The track holds two identical copies and slides by half
+// its own width (see the keyframes in index.css), so the moment it resets, copy
+// two is sitting exactly where copy one began — no snap, and no hard-coded pixel
+// distance to keep in sync with the card width or the number of reviews.
+//
+// `animationClass` arrives as a complete literal string rather than being built
+// from a duration prop: Tailwind only emits classes it can find whole in the
+// source, so an interpolated `animate-[marquee-left_${duration}s...]` would
+// compile to nothing.
+const MarqueeRow = ({ items, animationClass }) => {
+    const reduce = useReducedMotion();
 
-          <div className='absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3'>
-            {reviews.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-rose-600 scale-125' : 'bg-zinc-700 hover:bg-zinc-500'
-                  }`}
-                aria-label={`Go to review ${index + 1}`}
-              />
+    if (reduce) {
+        // No infinite travel: one copy, and the reader scrolls it themselves.
+        return (
+            <div className="flex overflow-x-auto pb-2">
+                {items.map((review) => (
+                    <ReviewCard key={review.name} review={review} />
+                ))}
+            </div>
+        );
+    }
+
+    return (
+        // Pausing on hover is what makes a moving quote readable at all — and it
+        // pauses only the row under the cursor, since each track owns its own
+        // animation.
+        <div className={`flex w-max ${animationClass} hover:[animation-play-state:paused]`}>
+            {items.map((review) => (
+                <ReviewCard key={review.name} review={review} />
             ))}
-          </div>
+            {/* The second copy exists only to fill the gap the first leaves as it
+                travels — it is the same quotes again, so it is hidden from
+                screen readers rather than read out twice. */}
+            <span className="flex" aria-hidden="true">
+                {items.map((review) => (
+                    <ReviewCard key={review.name} review={review} />
+                ))}
+            </span>
+        </div>
+    );
+};
 
+const UserReviews = () => (
+    <section className="relative w-full py-24">
+        {/* Ambient backlight — breaks up the flat black behind the rows. It sits
+            outside the masked wrapper so the mask doesn't clip it, and the cards'
+            backdrop-blur picks it up through the glass. */}
+        <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[400px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-rose-900/20 blur-[120px]"
+        />
+
+        {/* Header alignment mirrors TopArticles/FAQ exactly: an outer gutter
+            (px-6 md:px-12) then max-w-6xl mx-auto inside it. The section itself
+            stays gutter-less so the marquee below can go full-bleed via -mx-*,
+            so the padding has to live on this wrapper instead of the section —
+            without it the centred box lands 48px right of the other sections at
+            wide viewports. */}
+        <div className="px-6 md:px-12">
+            <div className="mx-auto mb-14 max-w-6xl">
+                <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                    What Our <span className="text-rose-500">Users</span> Say
+                </h2>
+                <p className="mt-3 text-sm text-zinc-500 sm:text-base">
+                    Trusted by patients and doctors across the country.
+                </p>
+            </div>
         </div>
 
-        <button
-          onClick={nextReview}
-          className='hidden md:flex absolute right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center rounded-full bg-zinc-800/50 hover:bg-rose-600 text-zinc-400 hover:text-white backdrop-blur-sm border border-zinc-700/50 hover:border-rose-500 transition-all z-20'
-          aria-label="Next Review"
-        >
-          <FiChevronRight className='w-6 h-6' />
-        </button>
+        {/* Full-bleed: the negative margin cancels the page gutter so the rows
+            run to the viewport edge and the mask has room to fade them out
+            there, instead of clipping hard against the content column. */}
+        <div className="-mx-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)] md:-mx-12">
+            <div className="flex flex-col gap-5">
+                <MarqueeRow items={ROW_ONE} animationClass="animate-[marquee-left_44s_linear_infinite]" />
+                <MarqueeRow items={ROW_TWO} animationClass="animate-[marquee-right_52s_linear_infinite]" />
+            </div>
+        </div>
+    </section>
+);
 
-      </div>
-
-      <div className='flex justify-center gap-6 mt-8 md:hidden'>
-        <button onClick={prevReview} className='w-10 h-10 flex items-center justify-center rounded-full bg-zinc-800/50 hover:bg-rose-600 text-zinc-400 hover:text-white backdrop-blur-sm border border-zinc-700/50 hover:border-rose-500 transition-all' aria-label='Previous Review'>
-          <FiChevronLeft className='w-5 h-5' />
-        </button>
-        <button onClick={nextReview} className='w-10 h-10 flex items-center justify-center rounded-full bg-zinc-800/50 hover:bg-rose-600 text-zinc-400 hover:text-white backdrop-blur-sm border border-zinc-700/50 hover:border-rose-500 transition-all' aria-label='Next Review'>
-          <FiChevronRight className='w-5 h-5' />
-        </button>
-      </div>
-
-    </div>
-  )
-}
-
-export default UserReviews
+export default UserReviews;

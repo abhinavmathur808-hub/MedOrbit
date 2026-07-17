@@ -1,21 +1,9 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
-import {
-    Search,
-    Zap,
-    Lock,
-    Loader2,
-    BadgeCheck,
-    ArrowRight,
-    Sparkles,
-    X,
-    Stethoscope,
-} from 'lucide-react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { Search, Loader2, X } from 'lucide-react';
 import { getRandomHealthQuote } from '../utils/healthQuotes';
 import { preloadLocalTriage, matchSpecialty, getTriageStatus } from '../utils/localTriage';
 import Footer from '../components/Footer';
@@ -23,7 +11,9 @@ import SpecialityMenu from '../components/SpecialityMenu';
 import TopArticles from '../components/TopArticles';
 import UserReviews from '../components/UserReviews';
 import FAQ from '../components/FAQ';
-import CurvedWrapper from '../components/CurvedWrapper';
+import HeroShowcase from '../components/HeroShowcase';
+import HeroResultPanel from '../components/HeroResultPanel';
+import SplashCursor from '../components/ui/SplashCursor';
 
 // Keyword fallback used only if the on-device model fails to load, so the
 // search still routes to a sensible specialty. Restricted to specialties that
@@ -45,11 +35,27 @@ const keywordSpecialty = (query) => {
     return 'General Physician';
 };
 
+// Reveal-on-scroll wrapper. Collapses to a plain fade under reduced-motion.
+const Reveal = ({ children, delay = 0, className = '' }) => {
+    const reduce = useReducedMotion();
+    return (
+        <motion.div
+            className={className}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 48 }}
+            whileInView={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+        >
+            {children}
+        </motion.div>
+    );
+};
+
 const Home = () => {
-    const { user } = useSelector((state) => state.auth);
     const [healthQuote, setHealthQuote] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
+    const searchInputRef = useRef(null);
 
     // On-device model lifecycle: 'idle' | 'loading' | 'ready' | 'unavailable'
     const [triageStatus, setTriageStatus] = useState(getTriageStatus());
@@ -201,6 +207,15 @@ const Home = () => {
         if (e.key === 'Enter') handleSymptomSearch();
     };
 
+    // Entry point for the specialties row's "Not sure?" tile: send the visitor
+    // back to the one control that answers the question for them. preventScroll
+    // keeps the focus from teleporting the viewport past the smooth scroll.
+    const focusSymptomSearch = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        warmUpModel();
+        searchInputRef.current?.focus({ preventScroll: true });
+    };
+
     const clearSearch = () => {
         setSearchQuery('');
         setHasSearched(false);
@@ -212,257 +227,236 @@ const Home = () => {
         lastSpecRef.current = null;
     };
 
-    const matchedSpecialty = triage?.top?.specialty;
-    const lowConfidence = triage?.confidence === 'low';
-
     return (
         <motion.div
-            className="min-h-screen"
+            className="relative min-h-screen overflow-x-hidden"
             style={{ backgroundColor: 'var(--bg-base)' }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.35, ease: 'easeInOut' }}
         >
-            <section className="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden pb-20 pt-32">
-                <div
-                    style={{ backgroundImage: "url('/hero-medical-bg.webp')" }}
-                    className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-0 scale-105"
-                ></div>
+            {/* Trailing splash cursor (desktop, fine-pointer, motion-safe only) */}
+            <SplashCursor />
 
-                <div className="absolute inset-0 w-full h-full bg-zinc-950/85 z-10"></div>
+            {/* ===================== HERO ===================== */}
+            <section className="relative w-full min-h-[92vh] flex items-center overflow-hidden pt-32 pb-20 lg:pb-24">
 
-                <div className="relative z-20 w-full max-w-6xl mx-auto flex flex-col items-center text-center px-4 md:px-8">
-
-                    <h1 className="text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight leading-none text-white mb-6">
-                        Bring <span className="relative inline-block border border-rose-700/50 bg-rose-900/20 text-zinc-200 px-3 py-1 mx-2">
-                            <span className="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-rose-600 border border-rose-700/50"></span>
-                            <span className="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-rose-600 border border-rose-700/50"></span>
-                            <span className="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-rose-600 border border-rose-700/50"></span>
-                            <span className="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-rose-600 border border-rose-700/50"></span>
-                            Doctors
-                        </span><br />
-                        Into Your Orbit!
-                    </h1>
-
-                    <p className="text-lg sm:text-xl leading-relaxed text-zinc-300 max-w-xl mx-auto mb-14">
-                        Find the right doctor and book your appointment instantly. Scheduling made
-                        simple, reliable and fast.
-                    </p>
-
+                {/* Ambient rose depth glows + masked grid (generative, no photo) */}
+                <div className="absolute inset-0 z-0" aria-hidden="true">
                     <div
-                        className="w-full max-w-2xl mx-auto rounded-2xl p-6 border border-zinc-800"
+                        className="absolute left-1/2 top-[16%] -translate-x-1/2 w-[900px] max-w-[150vw] aspect-square rounded-full blur-[100px]"
+                        style={{ background: 'radial-gradient(circle, rgba(136,19,55,0.38), rgba(76,5,25,0.16) 40%, transparent 68%)' }}
+                    />
+                    <div
+                        className="absolute left-1/2 bottom-[-10%] -translate-x-1/2 w-[720px] max-w-[130vw] aspect-square rounded-full blur-[120px]"
+                        style={{ background: 'radial-gradient(circle, rgba(225,29,72,0.16), transparent 62%)' }}
+                    />
+                    <div
+                        className="absolute inset-0 opacity-[0.05]"
                         style={{
-                            background: 'rgba(0, 0, 0,0.6)',
-                            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
-                            backdropFilter: 'blur(12px)',
+                            backgroundImage:
+                                'linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)',
+                            backgroundSize: '56px 56px',
+                            WebkitMaskImage: 'radial-gradient(circle at 50% 38%, black, transparent 70%)',
+                            maskImage: 'radial-gradient(circle at 50% 38%, black, transparent 70%)',
                         }}
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className="flex-1 flex items-center bg-zinc-950/50 rounded-xl p-4 border border-zinc-800 focus-within:border-zinc-500 transition-colors duration-200">
-                                <Search className="w-6 h-6 text-zinc-600 mr-3 flex-shrink-0" />
+                    />
+                </div>
+
+                {/* Hero content — pitch on the left, the product itself on the right */}
+                <div className="relative z-20 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] items-center gap-14 lg:gap-12 px-4 md:px-8">
+
+                    {/* ---------- Left: pitch + search ----------
+                        Indented off the container edge, and its blocks kept close
+                        so the headline, promise, search and fact read as one unit
+                        rather than four stacked elements. */}
+                    <div className="flex flex-col items-center text-center lg:items-start lg:pl-10 lg:text-left">
+
+                        <motion.h1
+                            initial={{ opacity: 0, y: 26 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                            className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.05] text-white mb-4"
+                        >
+                            Bring{' '}
+                            <span className="relative inline-block px-3 py-1 mx-1 align-middle">
+                                <span className="absolute inset-0 rounded-md border border-rose-700/50 bg-rose-900/20" style={{ boxShadow: '0 0 48px -8px rgba(225,29,72,0.65)' }}></span>
+                                <span className="absolute -top-[3px] -left-[3px] w-1.5 h-1.5 bg-rose-600 border border-rose-700/50"></span>
+                                <span className="absolute -top-[3px] -right-[3px] w-1.5 h-1.5 bg-rose-600 border border-rose-700/50"></span>
+                                <span className="absolute -bottom-[3px] -left-[3px] w-1.5 h-1.5 bg-rose-600 border border-rose-700/50"></span>
+                                <span className="absolute -bottom-[3px] -right-[3px] w-1.5 h-1.5 bg-rose-600 border border-rose-700/50"></span>
+                                <span className="relative bg-gradient-to-b from-white to-rose-200 bg-clip-text text-transparent">Doctors</span>
+                            </span><br />
+                            Into Your{' '}
+                            <span className="bg-gradient-to-r from-rose-400 via-rose-500 to-rose-300 bg-clip-text text-transparent">Orbit!</span>
+                        </motion.h1>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                            className="text-lg sm:text-xl leading-relaxed text-zinc-300 max-w-xl mx-auto lg:mx-0 mb-6"
+                        >
+                            Find the right doctor and book your appointment instantly. Scheduling made
+                            simple, reliable and fast.
+                        </motion.p>
+
+                        {/* AI symptom search — one pill: field and action share a
+                            single surface rather than nesting a bordered box inside
+                            a padded panel, which is what made it bulky. */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                            role="search"
+                            className="relative w-full max-w-xl mx-auto lg:mx-0"
+                        >
+                            <div
+                                aria-hidden="true"
+                                className="absolute -inset-[1.5px] rounded-full bg-gradient-to-r from-rose-600/40 via-rose-400/25 to-rose-600/40 blur-[6px]"
+                            />
+                            <div
+                                className="relative flex items-center gap-2 rounded-full border border-rose-500/20 py-1.5 pl-4 pr-1.5 transition-colors duration-200 focus-within:border-rose-500/60"
+                                style={{
+                                    background: 'rgba(9, 9, 11, 0.72)',
+                                    boxShadow: '0 18px 50px -22px rgba(225,29,72,0.4), 0 6px 24px rgba(0,0,0,0.6)',
+                                    backdropFilter: 'blur(16px)',
+                                    WebkitBackdropFilter: 'blur(16px)',
+                                }}
+                            >
+                                <Search className="h-4 w-4 flex-shrink-0 text-zinc-500" />
                                 <input
+                                    ref={searchInputRef}
                                     type="text"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     onKeyDown={handleSearchKeyDown}
                                     onFocus={warmUpModel}
-                                    placeholder="Describe your symptoms... e.g. headache, skin rash"
-                                    className="w-full outline-none text-lg bg-transparent text-white placeholder-zinc-600"
+                                    aria-label="Describe your symptoms"
+                                    autoComplete="off"
+                                    enterKeyHint="search"
+                                    placeholder="Describe your symptoms… e.g. headache"
+                                    className="min-w-0 flex-1 bg-transparent py-2 text-sm text-white outline-none placeholder:text-zinc-600"
                                 />
                                 {searchQuery && (
                                     <button
                                         onClick={clearSearch}
-                                        className="text-zinc-600 hover:text-zinc-300 transition-colors flex-shrink-0 ml-2"
-                                        aria-label="Clear"
+                                        className="flex-shrink-0 cursor-pointer rounded-full p-1 text-zinc-600 transition-colors hover:bg-white/5 hover:text-zinc-300"
+                                        aria-label="Clear search"
                                     >
-                                        <X className="w-5 h-5" />
+                                        <X className="h-4 w-4" />
                                     </button>
                                 )}
-                            </div>
-                            <button
-                                onClick={handleSymptomSearch}
-                                className="bg-rose-600 text-white rounded-full px-8 py-4 font-medium text-lg hover:bg-rose-500 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex-shrink-0 cursor-pointer shadow-lg shadow-rose-900/40"
-                            >
-                                Search
-                            </button>
-                        </div>
-
-                        {/* Model status line */}
-                        {triageStatus === 'loading' && (
-                            <p className="text-[11px] text-rose-400/80 mt-3 text-left flex items-center gap-1.5 pl-1">
-                                <Loader2 className="w-3 h-3 animate-spin" />
-                                Preparing on-device AI… {modelProgress}% (one-time, then instant)
-                            </p>
-                        )}
-                        {triageStatus === 'ready' && !hasSearched && (
-                            <p className="text-[11px] text-zinc-500 mt-3 text-left flex items-center gap-1.5 pl-1">
-                                <Lock className="w-3 h-3 text-emerald-500" />
-                                On-device AI ready — your symptoms are matched privately in your browser
-                            </p>
-                        )}
-
-                        {/* Inline AI results */}
-                        <AnimatePresence>
-                            {hasSearched && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    transition={{ duration: 0.25 }}
-                                    className="overflow-hidden"
+                                <button
+                                    onClick={handleSymptomSearch}
+                                    className="flex-shrink-0 cursor-pointer rounded-full bg-rose-600 px-5 py-2 text-sm font-medium text-white shadow-lg shadow-rose-900/40 transition-all duration-200 hover:bg-rose-500 active:scale-[0.97]"
                                 >
-                                    <div className="mt-4 pt-4 border-t border-white/10 text-left">
+                                    Search
+                                </button>
+                            </div>
 
-                                        {/* Instant on-device match */}
-                                        <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-400 mb-2">
-                                            <Zap className="w-3.5 h-3.5" />
-                                            Instant match — on your device
-                                        </div>
+                            {/* One-time model download — the only status worth the space */}
+                            {triageStatus === 'loading' && (
+                                <p className="mt-2.5 flex items-center gap-1.5 pl-4 text-left text-[11px] text-rose-400/80">
+                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                    Preparing on-device AI… {modelProgress}%
+                                </p>
+                            )}
+                        </motion.div>
 
-                                        {!triage ? (
-                                            <div className="flex items-center gap-2 text-zinc-400 text-sm">
-                                                <Loader2 className="w-4 h-4 animate-spin text-rose-400" />
-                                                Analyzing your symptoms…
-                                            </div>
-                                        ) : lowConfidence ? (
-                                            <p className="text-zinc-300 text-sm">
-                                                I couldn't pin that down confidently — starting you with a{' '}
-                                                <strong className="font-semibold text-rose-400">General Physician</strong>{' '}
-                                                is a safe bet. Add a little more detail for a sharper match.
-                                            </p>
-                                        ) : (
-                                            <p className="text-zinc-300 text-sm">
-                                                Your symptoms point to a{' '}
-                                                <strong className="font-semibold text-rose-400">{matchedSpecialty}</strong>
-                                                {triage.confidence === 'moderate' ? ' (possible match)' : ''}.
-                                                {refining && (
-                                                    <span className="text-zinc-500 inline-flex items-center gap-1 ml-1">
-                                                        <Loader2 className="w-3 h-3 animate-spin" />
-                                                        refining…
-                                                    </span>
-                                                )}
-                                            </p>
-                                        )}
+                        {healthQuote && (
+                            <motion.p
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 1, delay: 0.5 }}
+                                className="mt-5 max-w-xl text-sm sm:text-base leading-relaxed text-zinc-200"
+                            >
+                                <span className="drop-shadow-[0_0_12px_rgba(253,224,71,0.9)] text-lg inline-block mr-2">💡</span>{healthQuote}
+                            </motion.p>
+                        )}
+                    </div>
 
-                                        {/* Doctor recommendations */}
-                                        {doctorsLoading && (
-                                            <div className="flex items-center gap-2 text-zinc-500 text-xs mt-3">
-                                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                                Finding available specialists…
-                                            </div>
-                                        )}
-
-                                        {!doctorsLoading && doctors.length > 0 && (
-                                            <div className="mt-3 grid sm:grid-cols-3 gap-2">
-                                                {doctors.map((doc) => (
-                                                    <Link
-                                                        key={doc._id}
-                                                        to={`/book-appointment/${doc._id}`}
-                                                        className="group flex flex-col gap-1 px-3 py-2.5 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-rose-500/40 rounded-xl transition-all"
-                                                    >
-                                                        <span className="flex items-center gap-1 font-medium text-zinc-100 text-sm truncate">
-                                                            {doc.userId?.name || 'Doctor'}
-                                                            {doc.userId?.isVerified && <BadgeCheck className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />}
-                                                        </span>
-                                                        <span className="flex items-center justify-between text-xs">
-                                                            <span className="text-zinc-500">₹{doc.fees}</span>
-                                                            <span className="text-rose-400 font-semibold flex items-center gap-0.5 group-hover:gap-1.5 transition-all">
-                                                                Book <ArrowRight className="w-3 h-3" />
-                                                            </span>
-                                                        </span>
-                                                    </Link>
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        {!doctorsLoading && triage && doctors.length === 0 && (
-                                            <p className="text-zinc-500 text-xs mt-3">
-                                                No {matchedSpecialty} available right now.
-                                            </p>
-                                        )}
-
-                                        {/* Browse-all link */}
-                                        {triage && !lowConfidence && (
-                                            <button
-                                                onClick={() => navigate('/doctors', { state: { speciality: matchedSpecialty } })}
-                                                className="mt-3 text-xs text-zinc-400 hover:text-rose-400 transition-colors inline-flex items-center gap-1"
-                                            >
-                                                Browse all {matchedSpecialty}s
-                                                <ArrowRight className="w-3 h-3" />
-                                            </button>
-                                        )}
-
-                                        {/* Tier 2: full Gemini guidance */}
-                                        {(adviceLoading || advice || adviceError || !user) && (
-                                            <div className="mt-4 pt-4 border-t border-white/10">
-                                                <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-300 mb-2">
-                                                    <Sparkles className="w-3.5 h-3.5" />
-                                                    AI health guidance
-                                                </div>
-
-                                                {!user ? (
-                                                    <p className="text-zinc-400 text-sm">
-                                                        <Link to="/login" className="text-rose-400 font-medium hover:underline">Log in</Link>{' '}
-                                                        for detailed AI guidance. The instant match above works without an account.
-                                                    </p>
-                                                ) : adviceLoading ? (
-                                                    <div className="flex items-center gap-2 text-zinc-400 text-sm">
-                                                        <Loader2 className="w-4 h-4 animate-spin text-rose-300" />
-                                                        Generating detailed guidance…
-                                                    </div>
-                                                ) : adviceError ? (
-                                                    <p className="text-zinc-500 text-sm">{adviceError}</p>
-                                                ) : (
-                                                    <div className="text-zinc-300 text-sm leading-relaxed">
-                                                        <ReactMarkdown
-                                                            components={{
-                                                                strong: ({ children }) => <strong className="font-semibold text-rose-400">{children}</strong>,
-                                                                em: ({ children }) => <em className="italic">{children}</em>,
-                                                                p: ({ children }) => <p className="mb-1.5 last:mb-0">{children}</p>,
-                                                            }}
-                                                        >
-                                                            {advice}
-                                                        </ReactMarkdown>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-
-                                        {/* Privacy + disclaimer */}
-                                        <div className="flex items-center gap-1 text-[10px] text-zinc-600 mt-4">
-                                            <Lock className="w-3 h-3" />
-                                            Instant match runs locally — that text never leaves your browser. Not a medical diagnosis.
-                                        </div>
-                                    </div>
+                    {/* ---------- Right: the product, running ----------
+                        Loops the real flows as mock scenes until the visitor
+                        searches, then hands the panel over to their live result. */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 24, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        className="w-full"
+                    >
+                        <AnimatePresence mode="wait">
+                            {hasSearched ? (
+                                <motion.div
+                                    key="result"
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -12 }}
+                                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                                >
+                                    <HeroResultPanel
+                                        triage={triage}
+                                        refining={refining}
+                                        doctors={doctors}
+                                        doctorsLoading={doctorsLoading}
+                                        advice={advice}
+                                        adviceLoading={adviceLoading}
+                                        adviceError={adviceError}
+                                    />
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="showcase"
+                                    initial={{ opacity: 0, y: 12 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -12 }}
+                                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                                    // art only — the mouse falls through to the page,
+                                    // unlike the result branch, which stays clickable
+                                    className="pointer-events-none"
+                                >
+                                    <HeroShowcase />
                                 </motion.div>
                             )}
                         </AnimatePresence>
-                    </div>
-
-                    {healthQuote && !hasSearched && (
-                        <p className="mt-10 text-sm sm:text-base w-full leading-relaxed text-center text-zinc-200">
-                            <span className="drop-shadow-[0_0_12px_rgba(253,224,71,0.9)] text-lg inline-block mr-2">💡</span>{healthQuote}
-                        </p>
-                    )}
+                    </motion.div>
                 </div>
 
-                <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-[#09090b] to-transparent z-10 pointer-events-none"></div>
+                {/* Bottom fade into the content sections */}
+                <div className="absolute bottom-0 left-0 w-full h-56 bg-gradient-to-t from-[#09090b] to-transparent z-10 pointer-events-none"></div>
             </section>
 
-            <div className="relative z-10 bg-zinc-950 pt-16 pb-24 px-6 md:px-12 w-full">
+            {/* ===================== CONTENT SECTIONS ===================== */}
+            <div className="relative z-10 bg-zinc-950 pt-8 pb-24 px-6 md:px-12 w-full">
+                {/* Localized rose glow that follows the content column */}
+                <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-1/2 top-40 -translate-x-1/2 w-[600px] max-w-[120vw] aspect-square rounded-full blur-[120px] opacity-60"
+                    style={{ background: 'radial-gradient(circle, rgba(136,19,55,0.18), transparent 65%)' }}
+                />
 
-                <SpecialityMenu />
+                <div className="relative">
+                    <Reveal>
+                        <SpecialityMenu onAskAI={focusSymptomSearch} />
+                    </Reveal>
 
-                <TopArticles />
+                    <Reveal>
+                        <TopArticles />
+                    </Reveal>
 
-                <UserReviews />
+                    <Reveal>
+                        <UserReviews />
+                    </Reveal>
 
-                <FAQ />
+                    <Reveal>
+                        <FAQ />
+                    </Reveal>
 
-                <Footer />
+                    <Footer />
+                </div>
             </div>
-        </motion.div >
+        </motion.div>
     );
 };
 

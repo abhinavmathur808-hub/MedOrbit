@@ -40,6 +40,22 @@
   --shadow-elevated: 0 20px 40px -12px rgb(0 0 0 / 0.7);
 }
 
+/* ── Wall-of-love marquee ─────────────────────────────────
+   Each track holds two identical copies of its reviews, so travelling exactly
+   half the track's own width lands copy two where copy one began — seamless,
+   and independent of card width or review count. Kept as CSS rather than
+   framer-motion for two reasons: it runs on the compositor, and only a real CSS
+   animation can be frozen by `animation-play-state: paused` on hover. */
+@keyframes marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes marquee-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+
 body {
   margin: 0;
   min-height: 100vh;

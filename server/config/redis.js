@@ -10,7 +10,7 @@ const redisClient = createClient({
         // (and logging errors) forever when Redis is permanently unreachable.
         reconnectStrategy: (retries) => {
             if (retries > 10) {
-                console.error('Redis unreachable after 10 attempts — running without cache');
+                console.warn('Redis unreachable after 10 attempts — running without cache');
                 return false;
             }
             return Math.min(retries * 500, 3000);
@@ -18,11 +18,19 @@ const redisClient = createClient({
     },
 });
 
+// Fires once per reconnect attempt, so an unreachable cache would otherwise
+// print the same line eleven times and read like a fatal boot loop. Warn once:
+// this is degraded mode, not a failure — every call site falls back to MongoDB.
+let cacheWarned = false;
 redisClient.on('error', (err) => {
-    console.error('Redis Client Error:', err.message);
+    if (!cacheWarned) {
+        console.warn('Redis cache unavailable — serving from MongoDB:', err.message);
+        cacheWarned = true;
+    }
 });
 
 redisClient.on('ready', () => {
+    cacheWarned = false; // so a later outage warns again instead of staying silent
     console.log('Redis connected successfully');
 });
 
