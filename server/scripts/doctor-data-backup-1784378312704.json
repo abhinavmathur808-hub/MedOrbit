@@ -1,0 +1,768 @@
+[
+  {
+    "userId": "698a0f4155e1462382a9ec11",
+    "email": "doctor10@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec69",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Psychiatry"
+      ],
+      "experience": 13,
+      "fees": 1200,
+      "about": "Dr. Meera Iyer is a renowned Psychiatrist with over 13 years of clinical expertise in mood, anxiety, and behavioural health across all ages. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec12",
+    "email": "doctor11@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec6f",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Dermatology"
+      ],
+      "experience": 20,
+      "fees": 1500,
+      "about": "Dr. Aditya Verma is a highly experienced Dermatologist with over 20 years of clinical expertise in medical and cosmetic dermatology and skin health. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec13",
+    "email": "doctor12@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec75",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - Orthopaedics",
+        "FRCS"
+      ],
+      "experience": 27,
+      "fees": 1500,
+      "about": "Dr. Aditya Verma is a highly experienced Orthopedic with over 27 years of clinical expertise in joint replacement, sports injuries, and complex trauma surgery. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec14",
+    "email": "doctor13@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec79",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - ENT"
+      ],
+      "experience": 12,
+      "fees": 1200,
+      "about": "Dr. Karthik Iyer is a renowned ENT Specialist with over 12 years of clinical expertise in disorders of the ear, nose, and throat. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec15",
+    "email": "doctor14@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec7d",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - ENT"
+      ],
+      "experience": 19,
+      "fees": 1200,
+      "about": "Dr. Karthik Iyer is a renowned ENT Specialist with over 19 years of clinical expertise in disorders of the ear, nose, and throat. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec16",
+    "email": "doctor15@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec81",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - Obstetrics & Gynaecology"
+      ],
+      "experience": 26,
+      "fees": 1500,
+      "about": "Dr. Suresh Kumar is a highly experienced Gynecologist with over 26 years of clinical expertise in women's health, high-risk pregnancy, and minimally invasive gynaecological surgery. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec17",
+    "email": "doctor16@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec85",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Psychiatry"
+      ],
+      "experience": 11,
+      "fees": 800,
+      "about": "Dr. Suresh Kumar is a dedicated Psychiatrist with over 11 years of clinical expertise in mood, anxiety, and behavioural health across all ages. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec18",
+    "email": "doctor17@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec8b",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Internal Medicine"
+      ],
+      "experience": 5,
+      "fees": 500,
+      "about": "Dr. Manoj Desai is a dedicated General Physician with over 5 years of clinical expertise in preventive care and the management of common and chronic conditions. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec19",
+    "email": "doctor18@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec8f",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Internal Medicine"
+      ],
+      "experience": 12,
+      "fees": 700,
+      "about": "Dr. Manoj Desai is a renowned General Physician with over 12 years of clinical expertise in preventive care and the management of common and chronic conditions. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec1a",
+    "email": "doctor19@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec95",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - ENT"
+      ],
+      "experience": 10,
+      "fees": 800,
+      "about": "Dr. Ankit Joshi is a dedicated ENT Specialist with over 10 years of clinical expertise in disorders of the ear, nose, and throat. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec08",
+    "email": "doctor1@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec3b",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Gastroenterology"
+      ],
+      "experience": 20,
+      "fees": 2500,
+      "about": "Dr. Aarav Sharma is a highly experienced Gastroenterologist with over 20 years of clinical expertise in diagnosing and treating digestive, liver, and pancreatic conditions. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec1b",
+    "email": "doctor20@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec9a",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1591604021695-0c69b7c05981?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Cardiology"
+      ],
+      "experience": 13,
+      "fees": 2000,
+      "about": "Dr. Ritika Agarwal is a renowned Cardiologist with over 13 years of clinical expertise in the diagnosis and management of complex cardiovascular and heart-rhythm disorders. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec1c",
+    "email": "doctor21@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec9f",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Dermatology"
+      ],
+      "experience": 24,
+      "fees": 1500,
+      "about": "Dr. Sanjay Mishra is a highly experienced Dermatologist with over 24 years of clinical expertise in medical and cosmetic dermatology and skin health. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec1d",
+    "email": "doctor22@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9eca4",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Cardiology"
+      ],
+      "experience": 27,
+      "fees": 2500,
+      "about": "Dr. Swati Mishra is a highly experienced Cardiologist with over 27 years of clinical expertise in the diagnosis and management of complex cardiovascular and heart-rhythm disorders. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec1e",
+    "email": "doctor23@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9eca9",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - ENT"
+      ],
+      "experience": 16,
+      "fees": 1200,
+      "about": "Dr. Rakesh Agarwal is a renowned ENT Specialist with over 16 years of clinical expertise in disorders of the ear, nose, and throat. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec1f",
+    "email": "doctor24@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecad",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Paediatrics"
+      ],
+      "experience": 23,
+      "fees": 1500,
+      "about": "Dr. Rakesh Agarwal is a highly experienced Pediatrician with over 23 years of clinical expertise in newborn, child, and adolescent health. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec20",
+    "email": "doctor25@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecb3",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Internal Medicine"
+      ],
+      "experience": 21,
+      "fees": 800,
+      "about": "Dr. Deepak Choudhary is a highly experienced General Physician with over 21 years of clinical expertise in preventive care and the management of common and chronic conditions. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec21",
+    "email": "doctor26@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecb8",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Gastroenterology"
+      ],
+      "experience": 15,
+      "fees": 2000,
+      "about": "Dr. Tanvi Choudhary is a renowned Gastroenterologist with over 15 years of clinical expertise in diagnosing and treating digestive, liver, and pancreatic conditions. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec22",
+    "email": "doctor27@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecbe",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Cardiology"
+      ],
+      "experience": 22,
+      "fees": 2500,
+      "about": "Dr. Nikhil Saxena is a highly experienced Cardiologist with over 22 years of clinical expertise in the diagnosis and management of complex cardiovascular and heart-rhythm disorders. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec23",
+    "email": "doctor28@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecc2",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1591604021695-0c69b7c05981?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - Obstetrics & Gynaecology"
+      ],
+      "experience": 7,
+      "fees": 800,
+      "about": "Dr. Aishwarya Rao is a dedicated Gynecologist with over 7 years of clinical expertise in women's health, high-risk pregnancy, and minimally invasive gynaecological surgery. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec24",
+    "email": "doctor29@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecc7",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Psychiatry"
+      ],
+      "experience": 14,
+      "fees": 1200,
+      "about": "Dr. Amit Kapoor is a renowned Psychiatrist with over 14 years of clinical expertise in mood, anxiety, and behavioural health across all ages. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec09",
+    "email": "doctor2@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec40",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Neurology"
+      ],
+      "experience": 27,
+      "fees": 2500,
+      "about": "Dr. Aarav Sharma is a highly experienced Neurologist with over 27 years of clinical expertise in treating disorders of the brain, spine, and nervous system. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec25",
+    "email": "doctor30@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9eccc",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Psychiatry"
+      ],
+      "experience": 21,
+      "fees": 1500,
+      "about": "Dr. Amit Kapoor is a highly experienced Psychiatrist with over 21 years of clinical expertise in mood, anxiety, and behavioural health across all ages. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec26",
+    "email": "doctor31@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecd2",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - ENT"
+      ],
+      "experience": 6,
+      "fees": 800,
+      "about": "Dr. Vivek Malhotra is a dedicated ENT Specialist with over 6 years of clinical expertise in disorders of the ear, nose, and throat. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec27",
+    "email": "doctor32@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecd7",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Dermatology"
+      ],
+      "experience": 13,
+      "fees": 1200,
+      "about": "Dr. Rashmi Kulkarni is a renowned Dermatologist with over 13 years of clinical expertise in medical and cosmetic dermatology and skin health. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec28",
+    "email": "doctor33@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecdb",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Cardiology"
+      ],
+      "experience": 24,
+      "fees": 2500,
+      "about": "Dr. Harsh Mehta is a highly experienced Cardiologist with over 24 years of clinical expertise in the diagnosis and management of complex cardiovascular and heart-rhythm disorders. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec29",
+    "email": "doctor34@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecdf",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Internal Medicine"
+      ],
+      "experience": 4,
+      "fees": 500,
+      "about": "Dr. Harsh Mehta is a dedicated General Physician with over 4 years of clinical expertise in preventive care and the management of common and chronic conditions. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec2a",
+    "email": "doctor35@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ece4",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - ENT"
+      ],
+      "experience": 12,
+      "fees": 1200,
+      "about": "Dr. Gaurav Pandey is a renowned ENT Specialist with over 12 years of clinical expertise in disorders of the ear, nose, and throat. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec2b",
+    "email": "doctor36@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ece9",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - ENT"
+      ],
+      "experience": 19,
+      "fees": 1200,
+      "about": "Dr. Deepika Mehta is a renowned ENT Specialist with over 19 years of clinical expertise in disorders of the ear, nose, and throat. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec2c",
+    "email": "doctor37@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecef",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Neurology"
+      ],
+      "experience": 12,
+      "fees": 2000,
+      "about": "Dr. Ashish Tiwari is a renowned Neurologist with over 12 years of clinical expertise in treating disorders of the brain, spine, and nervous system. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec2d",
+    "email": "doctor38@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecf3",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1591604021695-0c69b7c05981?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Internal Medicine"
+      ],
+      "experience": 12,
+      "fees": 700,
+      "about": "Dr. Anjali Tiwari is a renowned General Physician with over 12 years of clinical expertise in preventive care and the management of common and chronic conditions. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec2e",
+    "email": "doctor39@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecf8",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - Obstetrics & Gynaecology"
+      ],
+      "experience": 18,
+      "fees": 1200,
+      "about": "Dr. Rajesh Nair is a renowned Gynecologist with over 18 years of clinical expertise in women's health, high-risk pregnancy, and minimally invasive gynaecological surgery. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec0a",
+    "email": "doctor3@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec46",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Neurology"
+      ],
+      "experience": 14,
+      "fees": 2000,
+      "about": "Dr. Rahul Patel is a renowned Neurologist with over 14 years of clinical expertise in treating disorders of the brain, spine, and nervous system. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec2f",
+    "email": "doctor40@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ecfd",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Gastroenterology"
+      ],
+      "experience": 13,
+      "fees": 2000,
+      "about": "Dr. Vandana Bhatia is a renowned Gastroenterologist with over 13 years of clinical expertise in diagnosing and treating digestive, liver, and pancreatic conditions. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec30",
+    "email": "doctor41@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ed01",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Cardiology"
+      ],
+      "experience": 20,
+      "fees": 2500,
+      "about": "Dr. Pranav Kulkarni is a highly experienced Cardiologist with over 20 years of clinical expertise in the diagnosis and management of complex cardiovascular and heart-rhythm disorders. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec31",
+    "email": "doctor42@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ed06",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - ENT"
+      ],
+      "experience": 17,
+      "fees": 1200,
+      "about": "Dr. Pranav Kulkarni is a renowned ENT Specialist with over 17 years of clinical expertise in disorders of the ear, nose, and throat. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec32",
+    "email": "doctor43@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ed0a",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - Orthopaedics",
+        "FRCS"
+      ],
+      "experience": 24,
+      "fees": 1500,
+      "about": "Dr. Siddharth Rao is a highly experienced Orthopedic with over 24 years of clinical expertise in joint replacement, sports injuries, and complex trauma surgery. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec33",
+    "email": "doctor44@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ed0f",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Neurology"
+      ],
+      "experience": 21,
+      "fees": 2500,
+      "about": "Dr. Siddharth Rao is a highly experienced Neurologist with over 21 years of clinical expertise in treating disorders of the brain, spine, and nervous system. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec34",
+    "email": "doctor45@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ed14",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Internal Medicine"
+      ],
+      "experience": 21,
+      "fees": 800,
+      "about": "Dr. Abhishek Chatterjee is a highly experienced General Physician with over 21 years of clinical expertise in preventive care and the management of common and chronic conditions. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec35",
+    "email": "doctor46@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ed19",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Dermatology"
+      ],
+      "experience": 23,
+      "fees": 1500,
+      "about": "Dr. Shalini Chatterjee is a highly experienced Dermatologist with over 23 years of clinical expertise in medical and cosmetic dermatology and skin health. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec36",
+    "email": "doctor47@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ed1f",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - Obstetrics & Gynaecology"
+      ],
+      "experience": 8,
+      "fees": 800,
+      "about": "Dr. Varun Bhatia is a dedicated Gynecologist with over 8 years of clinical expertise in women's health, high-risk pregnancy, and minimally invasive gynaecological surgery. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec37",
+    "email": "doctor48@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ed24",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1591604021695-0c69b7c05981?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MS - ENT"
+      ],
+      "experience": 15,
+      "fees": 1200,
+      "about": "Dr. Aditi Srivastava is a renowned ENT Specialist with over 15 years of clinical expertise in disorders of the ear, nose, and throat. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec38",
+    "email": "doctor49@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ed28",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Psychiatry"
+      ],
+      "experience": 22,
+      "fees": 1500,
+      "about": "Dr. Mohit Srivastava is a highly experienced Psychiatrist with over 22 years of clinical expertise in mood, anxiety, and behavioural health across all ages. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec0b",
+    "email": "doctor4@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec4a",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Cardiology"
+      ],
+      "experience": 21,
+      "fees": 2500,
+      "about": "Dr. Sneha Patel is a highly experienced Cardiologist with over 21 years of clinical expertise in the diagnosis and management of complex cardiovascular and heart-rhythm disorders. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec39",
+    "email": "doctor50@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ed2c",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Internal Medicine"
+      ],
+      "experience": 16,
+      "fees": 700,
+      "about": "Dr. Rekha Singh is a renowned General Physician with over 16 years of clinical expertise in preventive care and the management of common and chronic conditions. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec0c",
+    "email": "doctor5@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec4e",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Internal Medicine"
+      ],
+      "experience": 21,
+      "fees": 800,
+      "about": "Dr. Vikram Singh is a highly experienced General Physician with over 21 years of clinical expertise in preventive care and the management of common and chronic conditions. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec0d",
+    "email": "doctor6@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec54",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Internal Medicine"
+      ],
+      "experience": 8,
+      "fees": 500,
+      "about": "Dr. Vikram Singh is a dedicated General Physician with over 8 years of clinical expertise in preventive care and the management of common and chronic conditions. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec0e",
+    "email": "doctor7@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec5a",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1622902046580-2b47f47f5471?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Psychiatry"
+      ],
+      "experience": 14,
+      "fees": 1200,
+      "about": "Dr. Arjun Reddy is a renowned Psychiatrist with over 14 years of clinical expertise in mood, anxiety, and behavioural health across all ages. Committed to evidence-based care, they have helped thousands of patients achieve lasting, meaningful outcomes."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec0f",
+    "email": "doctor8@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec5f",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1591604021695-0c69b7c05981?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - General Medicine",
+        "DM - Neurology"
+      ],
+      "experience": 29,
+      "fees": 2500,
+      "about": "Dr. Kavya Reddy is a highly experienced Neurologist with over 29 years of clinical expertise in treating disorders of the brain, spine, and nervous system. Their practice blends the latest clinical techniques with a warm, reassuring bedside manner trusted by patients and peers alike."
+    }
+  },
+  {
+    "userId": "698a0f4155e1462382a9ec10",
+    "email": "doctor9@healthconnect.com",
+    "doctorId": "698a0f4155e1462382a9ec64",
+    "before": {
+      "photo": "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&q=80&w=400&h=400",
+      "qualifications": [
+        "MBBS",
+        "MD - Internal Medicine"
+      ],
+      "experience": 9,
+      "fees": 500,
+      "about": "Dr. Rohan Gupta is a dedicated General Physician with over 9 years of clinical expertise in preventive care and the management of common and chronic conditions. Known for a patient-first approach, they pair advanced diagnostics with clear, compassionate communication at every visit."
+    }
+  }
+]

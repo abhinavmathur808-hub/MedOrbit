@@ -33,6 +33,13 @@ const doctorSchema = new mongoose.Schema(
             default: '',
         },
 
+        // Short professional biography shown on the doctor's profile.
+        about: {
+            type: String,
+            trim: true,
+            default: '',
+        },
+
         availability: {
             type: [
                 {

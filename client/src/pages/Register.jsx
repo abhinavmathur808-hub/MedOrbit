@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { registerUser, reset } from '../redux/features/authSlice';
 import { User, Mail, Lock, ArrowRight, Stethoscope, Send, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
@@ -33,6 +33,15 @@ const Register = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Where to land after registering / OAuth: the page that sent the user here
+    // (e.g. a booking page), falling back to Home. Only internal paths honored.
+    const from = typeof location.state?.from === 'string'
+        && location.state.from.startsWith('/')
+        && !location.state.from.startsWith('//') // reject protocol-relative → open redirect
+        ? location.state.from
+        : '/';
 
     const { isLoading, isSuccess, isError, message } = useSelector(
         (state) => state.auth
@@ -40,13 +49,13 @@ const Register = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            navigate('/');
+            navigate(from, { replace: true });
         }
 
         return () => {
             dispatch(reset());
         };
-    }, [isSuccess, navigate, dispatch]);
+    }, [isSuccess, navigate, dispatch, from]);
 
     const handleChange = (e) => {
         setFormData((prev) => ({
@@ -138,7 +147,7 @@ const Register = () => {
         dispatch(registerUser({ name: fullName, email, password, role, otp }));
     };
 
-    const inputClass = "w-full bg-[#121212] border border-zinc-800 rounded-lg px-4 py-3 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors mb-4";
+    const inputClass = "w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500 transition-all mb-4";
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center relative m-0 py-12 overflow-x-hidden">
@@ -149,7 +158,7 @@ const Register = () => {
 
             <div className="absolute inset-0 w-full h-full bg-zinc-950/85 z-[1]"></div>
 
-            <div className="w-full max-w-[400px] bg-zinc-950/95 backdrop-blur-md border border-zinc-800/50 p-8 rounded-2xl shadow-2xl z-10 mx-4">
+            <div className="w-full max-w-[400px] bg-zinc-950/80 backdrop-blur-xl border border-zinc-800/50 shadow-2xl shadow-black/50 p-8 rounded-2xl z-10 mx-4">
                 <img
                     src={logo}
                     alt="MedOrbit"
@@ -182,7 +191,7 @@ const Register = () => {
                 )}
 
                 <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="grid grid-cols-2 gap-4 mb-4">
                         <input type="text" id="firstName" name="firstName" value={firstName} onChange={handleChange} required placeholder="First name" className={`${inputClass} mb-0`} />
                         <input type="text" id="lastName" name="lastName" value={lastName} onChange={handleChange} placeholder="Last name (optional)" className={`${inputClass} mb-0`} />
                     </div>
@@ -195,7 +204,7 @@ const Register = () => {
                             disabled={otpLoading || otpCooldown > 0}
                             className={`px-3 py-3 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 shrink-0 ${otpSent && otpCooldown > 0
                                 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                : 'bg-rose-950/30 text-rose-500 hover:bg-rose-950/50 border border-rose-900/30'
+                                : 'border border-rose-500/50 text-rose-500 hover:bg-rose-500/10'
                                 } disabled:opacity-50 disabled:cursor-not-allowed`}
                         >
                             {otpLoading ? (
@@ -231,8 +240,8 @@ const Register = () => {
                             type="button"
                             onClick={() => setFormData({ ...formData, role: 'patient' })}
                             className={`p-3 rounded-lg border transition-all flex items-center justify-center gap-2 text-sm ${role === 'patient'
-                                ? 'border-rose-900/50 bg-rose-950/30 text-rose-500'
-                                : 'border-zinc-800 bg-[#121212] hover:border-zinc-700 text-zinc-500'
+                                ? 'bg-zinc-800 text-white border-zinc-700'
+                                : 'bg-transparent border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700'
                                 }`}
                         >
                             <User className="w-4 h-4" />
@@ -242,8 +251,8 @@ const Register = () => {
                             type="button"
                             onClick={() => setFormData({ ...formData, role: 'doctor' })}
                             className={`p-3 rounded-lg border transition-all flex items-center justify-center gap-2 text-sm ${role === 'doctor'
-                                ? 'border-rose-900/50 bg-rose-950/30 text-rose-500'
-                                : 'border-zinc-800 bg-[#121212] hover:border-zinc-700 text-zinc-500'
+                                ? 'bg-zinc-800 text-white border-zinc-700'
+                                : 'bg-transparent border-zinc-800 text-zinc-500 hover:text-zinc-300 hover:border-zinc-700'
                                 }`}
                         >
                             <Stethoscope className="w-4 h-4" />
@@ -268,10 +277,10 @@ const Register = () => {
                     <button
                         type="submit"
                         disabled={isLoading || !otpSent}
-                        className="w-full bg-rose-950/30 text-rose-500 hover:bg-rose-950/50 border border-rose-900/30 py-3 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full bg-rose-600 hover:bg-rose-500 text-white font-semibold py-3 rounded-lg text-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {isLoading ? (
-                            <div className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         ) : (
                             'Continue'
                         )}
@@ -285,7 +294,7 @@ const Register = () => {
                 </div>
 
                 <a
-                    href={`${API_BASE}/auth/google`}
+                    href={`${API_BASE}/auth/google?redirect=${encodeURIComponent(from)}`}
                     className="w-full flex items-center justify-center gap-2 bg-[#121212] hover:bg-zinc-900 border border-zinc-800 text-zinc-300 py-3 rounded-lg text-sm transition-colors"
                 >
                     <FcGoogle className="w-5 h-5" />
@@ -293,7 +302,7 @@ const Register = () => {
                 </a>
 
                 <a
-                    href={`${API_BASE}/auth/github`}
+                    href={`${API_BASE}/auth/github?redirect=${encodeURIComponent(from)}`}
                     className="w-full flex items-center justify-center gap-2 bg-[#121212] hover:bg-zinc-900 border border-zinc-800 text-zinc-300 py-3 rounded-lg text-sm transition-colors mt-3"
                 >
                     <FaGithub className="w-5 h-5" />
@@ -302,14 +311,14 @@ const Register = () => {
 
                 <p className="text-center text-zinc-500 text-sm mt-4">
                     Already have an account?{' '}
-                    <Link to="/login" className="text-rose-500 hover:text-rose-400 transition-colors">
+                    <Link to="/login" state={{ from }} className="text-rose-500 hover:text-rose-400 transition-colors">
                         Sign in
                     </Link>
                 </p>
 
                 <div className="text-center mt-6">
-                    <Link to="/" className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors">
-                        Skip & continue to <span className="text-rose-500">Home</span>
+                    <Link to="/" className="text-sm text-zinc-400 hover:text-zinc-300 hover:underline transition-colors">
+                        Back to Home
                     </Link>
                 </div>
             </div>

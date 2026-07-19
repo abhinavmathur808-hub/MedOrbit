@@ -1,13 +1,14 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import {
     ArrowLeft,
+    ArrowRight,
     Clock,
-    DollarSign,
+    IndianRupee,
     MapPin,
     Calendar,
     CheckCircle,
@@ -76,6 +77,7 @@ const formatDoctorName = (name) => {
 const BookAppointment = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const { user } = useSelector((state) => state.auth);
     const toast = useToast();
 
@@ -188,7 +190,7 @@ const BookAppointment = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!user) { navigate('/login'); return; }
+        if (!user) { navigate('/login', { state: { from: location.pathname } }); return; }
         if (!selectedDate || !selectedTime) { setError('Please select both date and time'); return; }
 
         setBooking(true);
@@ -317,23 +319,29 @@ const BookAppointment = () => {
                         <div className="grid lg:grid-cols-[340px_1fr] gap-6">
 
                             <div className="rounded-2xl p-6 h-fit" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
-                                <Skeleton className="h-5 w-32 mb-4" />
-
-                                <div className="flex items-center space-x-4 mb-6">
-                                    <Skeleton className="w-16 h-16 rounded-xl flex-shrink-0" />
-                                    <div className="space-y-2">
-                                        <Skeleton className="h-5 w-36" />
-                                        <Skeleton className="h-4 w-24" />
+                                <div className="flex flex-col items-center">
+                                    <Skeleton className="w-24 h-24 rounded-full" />
+                                    <Skeleton className="h-5 w-36 mt-4" />
+                                    <Skeleton className="h-4 w-24 mt-2" />
+                                    <div className="flex gap-1.5 mt-3">
+                                        <Skeleton className="h-6 w-14 rounded-md" />
+                                        <Skeleton className="h-6 w-16 rounded-md" />
                                     </div>
                                 </div>
 
-                                <div className="space-y-3">
+                                <div className="space-y-3 mt-6 pt-6 border-t border-zinc-800/50">
                                     {[0, 1, 2].map((i) => (
                                         <div key={i} className="flex items-center space-x-3">
                                             <Skeleton className="w-5 h-5 rounded-md flex-shrink-0" />
                                             <Skeleton className="h-4 w-40" />
                                         </div>
                                     ))}
+                                </div>
+
+                                <div className="mt-6 pt-6 border-t border-zinc-800/50 space-y-2">
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-11/12" />
+                                    <Skeleton className="h-4 w-3/4" />
                                 </div>
                             </div>
 
@@ -419,6 +427,16 @@ const BookAppointment = () => {
     const fees = doctor?.fees || 0;
     const hospitalAddress = doctor?.hospitalAddress || 'Not specified';
     const isVerified = doctor?.userId?.isVerified || false;
+    const about = doctor?.about || '';
+
+    // qualifications is a [String] array on the model, but tolerate a legacy
+    // comma-string too, mirroring how DoctorCard normalises it.
+    const rawQualifications = doctor?.qualifications || '';
+    const tags = Array.isArray(rawQualifications)
+        ? rawQualifications.filter(Boolean).slice(0, 4)
+        : rawQualifications
+            ? rawQualifications.split(',').map((q) => q.trim()).filter(Boolean).slice(0, 4)
+            : [];
 
     const isFormReady = selectedDate && selectedTime && user && !booking;
 
@@ -437,39 +455,62 @@ const BookAppointment = () => {
                     <div className="grid lg:grid-cols-[340px_1fr] gap-6">
 
                         <div className="rounded-2xl p-6 h-fit" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
-                            <h2 className="text-lg font-semibold text-white mb-4">Doctor Details</h2>
-
-                            <div className="flex items-center space-x-4 mb-6">
-                                <div className="w-16 h-16 bg-gradient-to-br from-rose-600 to-rose-800 rounded-xl flex items-center justify-center text-white text-xl font-bold">
-                                    {photo ? (
-                                        <motion.img layoutId={`doctor-img-${doctor._id}`} src={optimizeCloudinaryUrl(photo)} alt={name} className="w-full h-full object-cover rounded-xl" loading="lazy" />
-                                    ) : (
-                                        name.charAt(0).toUpperCase()
-                                    )}
-                                </div>
-                                <div>
-                                    <div className="flex items-center gap-1">
-                                        <h3 className="text-xl font-bold text-white">{name}</h3>
-                                        {isVerified && <BadgeCheck className="w-5 h-5 text-blue-400" />}
+                            {/* Centered profile: avatar, name, specialty, qualification tags */}
+                            <div className="flex flex-col items-center text-center">
+                                {photo ? (
+                                    <motion.img
+                                        layoutId={`doctor-img-${doctor._id}`}
+                                        src={optimizeCloudinaryUrl(photo)}
+                                        alt={name}
+                                        className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-zinc-800/80"
+                                        loading="lazy"
+                                    />
+                                ) : (
+                                    <div className="w-24 h-24 rounded-full mx-auto border-2 border-zinc-800/80 bg-gradient-to-br from-rose-600 to-rose-800 flex items-center justify-center text-white text-3xl font-bold">
+                                        {name.charAt(0).toUpperCase()}
                                     </div>
-                                    <p className="text-rose-400 font-medium">{specialization}</p>
+                                )}
+
+                                <div className="flex items-center justify-center gap-1.5 mt-4">
+                                    <h3 className="text-xl font-bold text-white">{name}</h3>
+                                    {isVerified && <BadgeCheck className="w-5 h-5 text-blue-400 flex-shrink-0" />}
                                 </div>
+                                <p className="text-rose-400 font-medium mt-0.5">{specialization}</p>
+
+                                {tags.length > 0 && (
+                                    <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3">
+                                        {tags.map((tag, i) => (
+                                            <span key={i} className="bg-zinc-800/50 text-zinc-300 text-xs px-2 py-1 rounded-md border border-zinc-700/50">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
-                            <div className="space-y-3">
+                            {/* Stats */}
+                            <div className="space-y-3 mt-6 pt-6 border-t border-zinc-800/50">
                                 <div className="flex items-center space-x-3 text-zinc-400">
-                                    <Clock className="w-5 h-5 text-rose-500" />
+                                    <Clock className="w-5 h-5 text-rose-500 flex-shrink-0" />
                                     <span>{experience} years experience</span>
                                 </div>
                                 <div className="flex items-center space-x-3 text-zinc-400">
-                                    <DollarSign className="w-5 h-5 text-rose-500" />
+                                    <IndianRupee className="w-5 h-5 text-rose-500 flex-shrink-0" />
                                     <span>₹{fees} consultation fee</span>
                                 </div>
                                 <div className="flex items-center space-x-3 text-zinc-400">
-                                    <MapPin className="w-5 h-5 text-zinc-600" />
+                                    <MapPin className="w-5 h-5 text-zinc-600 flex-shrink-0" />
                                     <span className="text-sm">{hospitalAddress}</span>
                                 </div>
                             </div>
+
+                            {/* About */}
+                            {about && (
+                                <div className="mt-6 pt-6 border-t border-zinc-800/50">
+                                    <h4 className="text-sm font-semibold text-white mb-2">About</h4>
+                                    <p className="text-sm text-zinc-400 leading-relaxed">{about}</p>
+                                </div>
+                            )}
                         </div>
 
                         <div className="rounded-2xl p-6" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
@@ -479,11 +520,25 @@ const BookAppointment = () => {
                             </h2>
 
                             {!user && (
-                                <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start space-x-3">
-                                    <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
-                                    <p className="text-amber-400 text-sm">
-                                        Please <Link to="/login" className="text-rose-400 font-medium hover:underline">login</Link> to book an appointment.
-                                    </p>
+                                <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+                                    <div className="flex items-start space-x-3">
+                                        <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                                        <div>
+                                            <p className="text-amber-300 text-sm font-medium">Sign in required</p>
+                                            <p className="text-amber-400/80 text-sm mt-0.5">
+                                                You'll need an account to book this appointment.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {/* Carry the current path so login returns the user right back here */}
+                                    <Link
+                                        to="/login"
+                                        state={{ from: location.pathname }}
+                                        className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold py-2.5 transition-colors"
+                                    >
+                                        Sign In to Continue
+                                        <ArrowRight className="w-4 h-4" />
+                                    </Link>
                                 </div>
                             )}
 
@@ -620,7 +675,7 @@ const BookAppointment = () => {
                                                             className={`text-sm font-medium px-3 py-2.5 rounded-full border transition-all duration-150 ${isUnavailable
                                                                 ? 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed line-through opacity-50'
                                                                 : selected
-                                                                    ? 'bg-rose-600 border-rose-600 text-white shadow-md'
+                                                                    ? 'bg-rose-600 border-rose-500 text-white shadow-md'
                                                                     : 'border-zinc-700 text-zinc-300 hover:border-rose-500 hover:bg-white/[0.03]'
                                                                 }`}
                                                         >

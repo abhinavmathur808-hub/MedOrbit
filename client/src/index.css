@@ -92,3 +92,26 @@ textarea,
 .profile-label {
   color: #f5f5f5 !important; /* zinc-100 */
 }
+
+/* ── Sleek scrollbar ──────────────────────────────────────
+   Thin, track-less bar for internal scroll areas like the Find Doctors filter
+   sidebar. Firefox reads scrollbar-width/color; WebKit uses the pseudo-elements.
+   The thumb stays faint until hovered so it never competes with the content. */
+.scrollbar-sleek {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(113, 113, 122, 0.4) transparent; /* zinc-500/40 thumb */
+}
+.scrollbar-sleek::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-sleek::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-sleek::-webkit-scrollbar-thumb {
+  background-color: rgba(113, 113, 122, 0.4); /* zinc-500/40 */
+  border-radius: 9999px;
+}
+.scrollbar-sleek::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(113, 113, 122, 0.7);
+}

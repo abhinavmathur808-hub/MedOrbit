@@ -13,6 +13,14 @@ const OAuthCallback = () => {
         const token = searchParams.get('token');
         const userParam = searchParams.get('user');
 
+        // Where to land after OAuth: the page the user started from, threaded
+        // through as `redirect`. Only internal paths are honored (guard against
+        // an open redirect), otherwise fall back to Home.
+        const redirectParam = searchParams.get('redirect');
+        const redirect = (typeof redirectParam === 'string' && redirectParam.startsWith('/') && !redirectParam.startsWith('//'))
+            ? redirectParam
+            : '/';
+
         if (token && userParam) {
             try {
                 const user = JSON.parse(decodeURIComponent(userParam));
@@ -22,7 +30,7 @@ const OAuthCallback = () => {
 
                 dispatch(setCredentials({ token, user }));
 
-                navigate('/', { replace: true });
+                navigate(redirect, { replace: true });
             } catch (error) {
                 navigate('/login?error=oauth_failed', { replace: true });
             }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { loginUser, reset } from '../redux/features/authSlice';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
@@ -22,6 +22,15 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Where to land after login: the page that sent the user here (e.g. a
+    // booking page), falling back to Home. Only internal paths are honored.
+    const from = typeof location.state?.from === 'string'
+        && location.state.from.startsWith('/')
+        && !location.state.from.startsWith('//') // reject protocol-relative → open redirect
+        ? location.state.from
+        : '/';
 
     const { isLoading, isSuccess, isError, message, user } = useSelector(
         (state) => state.auth
@@ -29,13 +38,13 @@ const Login = () => {
 
     useEffect(() => {
         if (isSuccess && user) {
-            navigate('/');
+            navigate(from, { replace: true });
         }
 
         return () => {
             dispatch(reset());
         };
-    }, [isSuccess, user, navigate, dispatch]);
+    }, [isSuccess, user, navigate, dispatch, from]);
 
     const handleChange = (e) => {
         setFormData((prev) => ({
@@ -58,7 +67,7 @@ const Login = () => {
 
             <div className="absolute inset-0 w-full h-full bg-zinc-950/85 z-[1]"></div>
 
-            <div className="w-full max-w-[400px] bg-zinc-950/95 backdrop-blur-md border border-zinc-800/50 p-8 rounded-2xl shadow-2xl z-10 mx-4">
+            <div className="w-full max-w-[400px] bg-zinc-950/80 backdrop-blur-xl border border-zinc-800/50 shadow-2xl shadow-black/50 p-8 rounded-2xl z-10 mx-4">
                 <img
                     src={logo}
                     alt="MedOrbit"
@@ -68,7 +77,7 @@ const Login = () => {
                 />
 
                 <h2 className="text-xl font-bold text-white text-center mb-6">
-                    Welcome 👋 Let's Get started!
+                    Welcome 👋 Let's Get Started!
                 </h2>
 
                 {isError && (
@@ -86,7 +95,7 @@ const Login = () => {
                         onChange={handleChange}
                         required
                         placeholder="example@gmail.com"
-                        className="w-full bg-[#121212] border border-zinc-800 rounded-lg px-4 py-3 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors mb-4"
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500 transition-all mb-4"
                     />
 
                     <div className="relative mb-4">
@@ -98,7 +107,7 @@ const Login = () => {
                             onChange={handleChange}
                             required
                             placeholder="••••••••"
-                            className="w-full bg-[#121212] border border-zinc-800 rounded-lg px-4 py-3 pr-10 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-600 transition-colors"
+                            className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 pr-10 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500 transition-all"
                         />
                         <button
                             type="button"
@@ -113,10 +122,10 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-rose-950/30 text-rose-500 hover:bg-rose-950/50 border border-rose-900/30 py-3 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full bg-rose-600 hover:bg-rose-500 text-white font-semibold py-3 rounded-lg text-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {isLoading ? (
-                            <div className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         ) : (
                             'Continue'
                         )}
@@ -130,7 +139,7 @@ const Login = () => {
                 </div>
 
                 <a
-                    href={`${API_BASE}/auth/google`}
+                    href={`${API_BASE}/auth/google?redirect=${encodeURIComponent(from)}`}
                     className="w-full flex items-center justify-center gap-2 bg-[#121212] hover:bg-zinc-900 border border-zinc-800 text-zinc-300 py-3 rounded-lg text-sm transition-colors"
                 >
                     <FcGoogle className="w-5 h-5" />
@@ -138,7 +147,7 @@ const Login = () => {
                 </a>
 
                 <a
-                    href={`${API_BASE}/auth/github`}
+                    href={`${API_BASE}/auth/github?redirect=${encodeURIComponent(from)}`}
                     className="w-full flex items-center justify-center gap-2 bg-[#121212] hover:bg-zinc-900 border border-zinc-800 text-zinc-300 py-3 rounded-lg text-sm transition-colors mt-3"
                 >
                     <FaGithub className="w-5 h-5" />
@@ -147,14 +156,14 @@ const Login = () => {
 
                 <p className="text-center text-zinc-500 text-sm mt-4">
                     Don't have an account?{' '}
-                    <Link to="/register" className="text-rose-500 hover:text-rose-400 transition-colors">
+                    <Link to="/register" state={{ from }} className="text-rose-500 hover:text-rose-400 transition-colors">
                         Create one
                     </Link>
                 </p>
 
                 <div className="text-center mt-6">
-                    <Link to="/" className="text-sm text-zinc-400 hover:text-zinc-300 transition-colors">
-                        Skip & continue to <span className="text-rose-500">Home</span>
+                    <Link to="/" className="text-sm text-zinc-400 hover:text-zinc-300 hover:underline transition-colors">
+                        Back to Home
                     </Link>
                 </div>
             </div>

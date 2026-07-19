@@ -1,10 +1,9 @@
-import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { optimizeCloudinaryUrl } from '../utils/cloudinaryUrl';
 import { Link } from 'react-router-dom';
+import { optimizeCloudinaryUrl } from '../utils/cloudinaryUrl';
 import {
     Clock,
-    DollarSign,
+    IndianRupee,
     MapPin,
     Calendar,
     CheckCircle,
@@ -29,159 +28,100 @@ const DoctorCard = ({ doctor }) => {
             ? qualifications.split(',').map((q) => q.trim()).filter(Boolean).slice(0, 3)
             : [];
 
-    const shortLocation = hospitalAddress
-        ? hospitalAddress.split(',').slice(-2).join(',').trim() || hospitalAddress
-        : 'N/A';
-
-    const cardRef = useRef(null);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [opacity, setOpacity] = useState(0);
-    const [cardTransform, setCardTransform] = useState('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)');
-
-    const handleMouseMove = (e) => {
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        setPosition({ x, y });
-
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * -8;
-        const rotateY = ((x - centerX) / centerX) * 8;
-
-        setCardTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`);
-    };
-
-    const handleMouseEnter = () => setOpacity(1);
-
-    const handleMouseLeave = () => {
-        setOpacity(0);
-        setCardTransform('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)');
-    };
-
     return (
-        <Link
-            to={`/book-appointment/${doctor._id}`}
-            className="block group"
-        >
-            <motion.div
-                ref={cardRef}
-                onMouseMove={handleMouseMove}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                className="w-full relative overflow-hidden bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-lg shadow-black/30 hover:border-zinc-700"
-                style={{ transform: cardTransform, transition: opacity === 0 ? 'transform 0.5s ease-out' : 'none' }}
-                whileHover={{ scale: 1.03, boxShadow: '0 8px 30px rgba(225, 29, 72, 0.15)' }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-                <div
-                    className="pointer-events-none absolute -inset-px transition-opacity duration-300 rounded-2xl"
-                    style={{
-                        opacity,
-                        background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(225, 29, 72, 0.15), transparent 40%)`,
-                    }}
-                />
-
-                <div className="relative z-10">
-
-                    <div className="flex flex-col items-center text-center">
-                        <div className="relative">
-                            <div className="w-24 h-24 rounded-full border-2 border-zinc-800 overflow-hidden bg-rose-950/30 flex items-center justify-center">
-                                {photo ? (
-                                    <motion.img
-                                        layoutId={`doctor-img-${doctor._id}`}
-                                        src={optimizeCloudinaryUrl(photo)}
-                                        alt={name}
-                                        className="w-full h-full object-cover"
-                                        loading="lazy"
-                                    />
-                                ) : (
-                                    <span className="text-3xl font-bold text-rose-500">
-                                        {name.charAt(0).toUpperCase()}
-                                    </span>
-                                )}
-                            </div>
-                            {isVerified && (
-                                <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center border-2 border-zinc-900">
-                                    <CheckCircle className="w-4 h-4 text-white" />
-                                </div>
-                            )}
-                        </div>
-
-                        <h3 className="text-lg font-bold text-zinc-100 mt-4">
-                            {name}
-                        </h3>
-
-                        <p className="text-sm text-rose-500 font-medium mt-0.5">
-                            {specialization}
-                        </p>
-
-                        {totalRatings > 0 && (
-                            <div className="flex items-center gap-1 mt-2">
-                                <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                                <span className="text-sm font-semibold text-zinc-200">
-                                    {averageRating.toFixed(1)}
-                                </span>
-                                <span className="text-xs text-zinc-500">
-                                    ({totalRatings})
+        <Link to={`/book-appointment/${doctor._id}`} className="group block h-full">
+            {/* flex-col + h-full lets the CTA sit at the card's bottom edge
+                (mt-auto), so buttons line up across a row regardless of content. */}
+            <div className="flex flex-col h-full bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 rounded-2xl p-5 transition-all hover:border-zinc-700 hover:-translate-y-1">
+                {/* Compact circular avatar. The overflow-hidden ring is split from
+                    the positioning wrapper so the verified badge can sit on the
+                    edge without being clipped. */}
+                <div className="relative w-24 h-24 mx-auto mt-2 mb-4 shrink-0">
+                    <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-zinc-800/80">
+                        {photo ? (
+                            <motion.img
+                                layoutId={`doctor-img-${doctor._id}`}
+                                src={optimizeCloudinaryUrl(photo)}
+                                alt={name}
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-rose-950/30">
+                                <span className="text-3xl font-bold text-rose-500">
+                                    {name.charAt(0).toUpperCase()}
                                 </span>
                             </div>
                         )}
-
-                        {tags.length > 0 && (
-                            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3">
-                                {tags.map((tag, i) => (
-                                    <span
-                                        key={i}
-                                        className="bg-zinc-800 text-zinc-300 text-xs font-medium px-2.5 py-1 rounded-full border border-zinc-700"
-                                    >
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
                     </div>
+                    {isVerified && (
+                        <div className="absolute -bottom-0.5 -right-0.5 w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center border-2 border-zinc-900">
+                            <CheckCircle className="w-4 h-4 text-white" />
+                        </div>
+                    )}
+                </div>
 
-                    <div className="grid grid-cols-3 gap-2 bg-zinc-950 border border-zinc-800 rounded-xl p-3 mt-4">
-                        <div className="flex flex-col items-center text-center">
-                            <Clock className="w-4 h-4 text-rose-500 mb-1" />
+                <div className="text-center min-w-0">
+                    <h3 className="text-lg font-bold text-zinc-100 truncate">
+                        {name}
+                    </h3>
+                    <p className="text-sm text-rose-500 font-medium mt-0.5 truncate">
+                        {specialization}
+                    </p>
+
+                    {totalRatings > 0 && (
+                        <div className="flex items-center justify-center gap-1 mt-2">
+                            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
                             <span className="text-sm font-semibold text-zinc-200">
-                                {experience} {experience === 1 ? 'Year' : 'Years'}
+                                {averageRating.toFixed(1)}
                             </span>
-                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
-                                Exp.
+                            <span className="text-xs text-zinc-500">
+                                ({totalRatings})
                             </span>
                         </div>
+                    )}
 
-                        <div className="flex flex-col items-center text-center border-x border-zinc-800">
-                            <DollarSign className="w-4 h-4 text-rose-500 mb-1" />
-                            <span className="text-sm font-semibold text-zinc-200">
-                                ₹{fees}
-                            </span>
-                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
-                                Fees
-                            </span>
+                    {tags.length > 0 && (
+                        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3">
+                            {tags.map((tag, i) => (
+                                <span
+                                    key={i}
+                                    className="bg-zinc-800/60 text-zinc-300 text-xs font-medium px-2.5 py-1 rounded-full border border-zinc-700/60"
+                                >
+                                    {tag}
+                                </span>
+                            ))}
                         </div>
+                    )}
+                </div>
 
-                        <div className="flex flex-col items-center text-center">
-                            <MapPin className="w-4 h-4 text-rose-500 mb-1" />
-                            <span className="text-sm font-semibold text-zinc-200 truncate max-w-[80px]">
-                                {shortLocation}
-                            </span>
-                            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">
-                                Location
-                            </span>
-                        </div>
+                {/* Strict vertical stat stack — Exp/Fees on one row, address on
+                    its own truncating line, so it never wraps unpredictably. */}
+                <div className="flex flex-col gap-2 w-full mt-4 bg-zinc-950/50 rounded-lg p-3">
+                    <div className="flex justify-between items-center text-xs text-zinc-400">
+                        <span className="inline-flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                            {experience} {experience === 1 ? 'yr' : 'yrs'} exp
+                        </span>
+                        <span className="inline-flex items-center gap-1.5">
+                            <IndianRupee className="w-3.5 h-3.5 text-zinc-500" />
+                            {fees} fee
+                        </span>
                     </div>
+                    <div className="flex items-center gap-1 text-xs text-zinc-400 border-t border-zinc-800/50 pt-2 mt-1">
+                        <MapPin className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                        <span className="truncate">{hospitalAddress || 'N/A'}</span>
+                    </div>
+                </div>
 
-                    <button className="w-full mt-4 bg-rose-700 hover:bg-rose-600 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                {/* Pinned to the bottom for cross-card button alignment */}
+                <div className="mt-auto pt-4">
+                    <span className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800/50 py-2.5 font-medium text-zinc-300 transition-all duration-300 group-hover:border-rose-500 group-hover:bg-rose-600 group-hover:text-white">
                         <Calendar className="w-4 h-4" />
                         Book Appointment
-                    </button>
+                    </span>
                 </div>
-            </motion.div>
+            </div>
         </Link>
     );
 };

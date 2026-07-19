@@ -3,6 +3,7 @@ import {
     getDoctorProfile,
     updateDoctorProfile,
     getAllDoctors,
+    getSpecialties,
     getDoctorById,
     addReview,
     addPrescription,
@@ -28,6 +29,9 @@ router.post('/prescription', authMiddleware, doctorMiddleware, addPrescription);
 router.get('/prescription/:appointmentId', authMiddleware, getPrescription);
 
 router.get('/related', getRelatedDoctors);
+
+// Must precede '/:id', otherwise 'specialties' is captured as a doctor id
+router.get('/specialties', getSpecialties);
 
 router.get('/:id', getDoctorById);
 

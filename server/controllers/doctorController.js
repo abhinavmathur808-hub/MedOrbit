@@ -116,25 +116,34 @@ export const getAllDoctors = async (req, res) => {
         const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 10));
         const skip = (page - 1) * limit;
 
-        // Optional specialty filter. Express has already URI-decoded the query
-        // value; we trim it and match case-insensitively so the filter works
-        // regardless of how the specialty was cased upstream (AI match, menu, or
-        // a manually typed URL). Paginating the FILTERED set server-side is what
-        // fixes "Browse all X" only showing the specialists that happened to
-        // land on the first unfiltered page.
-        const specialization = (req.query.specialization || '').trim();
+        // Optional specialty filter — accepts one OR several. Express parses a
+        // repeated query (?specialization=a&specialization=b) into an array and
+        // a single one into a string, so normalise both into a clean list. Each
+        // specialty is matched with an anchored, case-insensitive, regex-escaped
+        // exact match via $in, so the multi-select faceted sidebar stays
+        // COMPLETE and paginated server-side rather than collapsing to whatever
+        // specialists happened to land on the first unfiltered page. A single
+        // value stays backward-compatible with the hero / related-doctors flows.
+        const rawSpec = req.query.specialization;
+        const specializations = (Array.isArray(rawSpec) ? rawSpec : rawSpec ? [rawSpec] : [])
+            .map((s) => String(s).trim())
+            .filter(Boolean);
 
         const query = { isVerified: true };
-        if (specialization) {
-            // Anchored, case-insensitive exact match (regex-escaped to prevent
-            // injection via the query string)
-            const escaped = specialization.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            query.specialization = new RegExp(`^${escaped}$`, 'i');
+        if (specializations.length) {
+            query.specialization = {
+                $in: specializations.map(
+                    (s) => new RegExp(`^${s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i')
+                ),
+            };
         }
 
-        // Cache key must vary by specialty so filtered and unfiltered pages
-        // don't collide (invalidateDoctorsListCache clears all doctorsList:*)
-        const specKey = specialization ? specialization.toLowerCase() : 'all';
+        // Cache key must vary by the (order-independent) specialty set so
+        // filtered and unfiltered pages don't collide
+        // (invalidateDoctorsListCache clears all doctorsList:*)
+        const specKey = specializations.length
+            ? specializations.map((s) => s.toLowerCase()).sort().join(',')
+            : 'all';
         const CACHE_KEY = `doctorsList:spec:${specKey}:page:${page}:limit:${limit}`;
 
         // Cache is optional — when Redis is down, isReady is false and we go
@@ -149,6 +158,7 @@ export const getAllDoctors = async (req, res) => {
                         count: parsed.doctors.length,
                         doctors: parsed.doctors,
                         hasMore: parsed.hasMore,
+                        totalCount: parsed.totalCount,
                         source: 'cache',
                     });
                 }
@@ -158,6 +168,11 @@ export const getAllDoctors = async (req, res) => {
         }
 
         const doctors = await Doctor.find(query)
+            // Stable sort on a unique key: skip/limit over MongoDB's natural
+            // order can repeat or drop a document at a page boundary, which
+            // surfaces as duplicate React keys and missing doctors once pages
+            // are stitched together. _id ordering makes pagination deterministic.
+            .sort({ _id: 1 })
             .populate('userId', 'name email phone photo isVerified')
             .select('-__v')
             .skip(skip)
@@ -172,11 +187,15 @@ export const getAllDoctors = async (req, res) => {
             slots_booked: doc.slots_booked || {},
         }));
 
+        // Full size of the filtered set (ignores skip/limit) so the client can
+        // show an accurate "N doctors" before paginating through the results.
+        const totalCount = await Doctor.countDocuments(query);
+
         if (redisClient.isReady) {
             try {
                 await redisClient.set(
                     CACHE_KEY,
-                    JSON.stringify({ doctors: safeDoctors, hasMore }),
+                    JSON.stringify({ doctors: safeDoctors, hasMore, totalCount }),
                     { EX: 3600 }
                 );
             } catch (cacheErr) {
@@ -189,12 +208,37 @@ export const getAllDoctors = async (req, res) => {
             count: safeDoctors.length,
             doctors: safeDoctors,
             hasMore,
+            totalCount,
             source: 'db',
         });
     } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Server error fetching doctors',
+        });
+    }
+};
+
+// Distinct specialties that actually have a verified doctor behind them, so the
+// faceted sidebar can be data-driven instead of a hardcoded list — and never
+// offers a facet that would return zero results. NOTE: the schema field is
+// `specialization` (not `speciality`/`specialty`).
+export const getSpecialties = async (req, res) => {
+    try {
+        const specialties = (await Doctor.distinct('specialization', { isVerified: true }))
+            .map((s) => (s || '').trim())
+            .filter(Boolean)
+            .sort((a, b) => a.localeCompare(b));
+
+        res.status(200).json({
+            success: true,
+            count: specialties.length,
+            specialties,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server error fetching specialties',
         });
     }
 };
@@ -474,7 +518,7 @@ export const getRelatedDoctors = async (req, res) => {
         const doctors = await Doctor.find(query)
             .populate('userId', 'name email photo isVerified')
             .limit(3)
-            .select('specialization experience fees hospitalAddress averageRating totalRatings');
+            .select('specialization qualifications experience fees hospitalAddress averageRating totalRatings');
 
         res.status(200).json({
             success: true,
