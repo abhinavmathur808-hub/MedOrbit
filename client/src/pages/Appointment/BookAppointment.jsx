@@ -104,8 +104,8 @@ const BookAppointment = () => {
     const [confirmedDate, setConfirmedDate] = useState(null);
 
     const [copied, setCopied] = useState(false);
-    const handleCopyUPI = () => {
-        navigator.clipboard.writeText('success@razorpay');
+    const handleCopyCard = () => {
+        navigator.clipboard.writeText('4111 1111 1111 1111');
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
@@ -713,20 +713,21 @@ const BookAppointment = () => {
                                             </p>
                                             <div className="space-y-2">
                                                 <ol className="text-zinc-300 text-sm space-y-2 list-decimal list-inside">
-                                                    <li>Click <strong className="font-semibold text-zinc-100">Confirm Booking</strong> → Select <strong className="font-semibold text-zinc-100">UPI</strong></li>
-                                                    <li>Enter UPI ID:
+                                                    <li>Click <strong className="font-semibold text-zinc-100">Confirm Booking</strong> → Select <strong className="font-semibold text-zinc-100">Card</strong></li>
+                                                    <li>Card Number:
                                                         <span className="inline-flex items-center gap-2 bg-rose-950/40 border border-rose-900/50 rounded-md px-2 py-1 mx-1">
-                                                            <span className="font-mono text-xs text-rose-400">success@razorpay</span>
+                                                            <span className="font-mono text-xs text-rose-400">4111 1111 1111 1111</span>
                                                             <button
                                                                 type="button"
-                                                                onClick={handleCopyUPI}
+                                                                onClick={handleCopyCard}
                                                                 className="text-zinc-400 hover:text-rose-400 transition-colors focus:outline-none"
-                                                                title="Copy UPI ID"
+                                                                title="Copy card number"
                                                             >
                                                                 {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                                                             </button>
                                                         </span>
                                                     </li>
+                                                    <li>Expiry: <strong className="font-semibold text-zinc-100">Any future date</strong> | CVV: <strong className="font-semibold text-zinc-100">Any 3 digits</strong></li>
                                                     <li>Click <strong className="font-semibold text-zinc-100">Pay Now</strong></li>
                                                 </ol>
                                             </div>
