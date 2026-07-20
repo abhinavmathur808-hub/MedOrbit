@@ -219,7 +219,7 @@ const MyAppointments = () => {
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center space-x-6">
+                                        <div className="flex flex-wrap items-center gap-3 md:flex-nowrap md:gap-0 md:space-x-6">
                                             <div className="text-center space-y-2">
                                                 <Skeleton className="h-3 w-10 mx-auto" />
                                                 <Skeleton className="h-4 w-24" />
@@ -229,7 +229,7 @@ const MyAppointments = () => {
                                                 <Skeleton className="h-4 w-20" />
                                             </div>
                                             <Skeleton className="h-7 w-28 rounded-full" />
-                                            <Skeleton className="h-9 w-40 rounded-lg ml-4" />
+                                            <Skeleton className="h-9 w-40 rounded-lg md:ml-4" />
                                         </div>
                                     </div>
                                 </div>
@@ -386,7 +386,7 @@ const MyAppointments = () => {
                                                             </div>
                                                         </div>
 
-                                                        <div className="flex items-center space-x-6">
+                                                        <div className="flex flex-wrap items-center gap-3 md:flex-nowrap md:gap-0 md:space-x-6">
                                                             <div className="text-center">
                                                                 <p className="text-zinc-600 text-xs uppercase">Date</p>
                                                                 <p className="font-semibold text-white">{formatDate(appt.date)}</p>
@@ -399,11 +399,11 @@ const MyAppointments = () => {
                                                             <StatusBadge status={effectiveStatus} />
 
                                                             {isDoctor && effectiveStatus === 'pending' && (
-                                                                <div className="flex items-center space-x-2 ml-4">
+                                                                <div className="flex items-center space-x-2 w-full md:w-auto md:ml-4">
                                                                     <button
                                                                         onClick={() => handleStatusChange(appt._id, 'confirmed')}
                                                                         disabled={updating === appt._id}
-                                                                        className="flex items-center space-x-1 bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
+                                                                        className="flex flex-1 md:flex-none justify-center items-center space-x-1 bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
                                                                     >
                                                                         {updating === appt._id ? (
                                                                             <RefreshCw className="w-4 h-4 animate-spin" />
@@ -415,7 +415,7 @@ const MyAppointments = () => {
                                                                     <button
                                                                         onClick={() => handleStatusChange(appt._id, 'cancelled')}
                                                                         disabled={updating === appt._id}
-                                                                        className="flex items-center space-x-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
+                                                                        className="flex flex-1 md:flex-none justify-center items-center space-x-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
                                                                     >
                                                                         <X className="w-4 h-4" />
                                                                         <span>Cancel</span>
@@ -427,7 +427,7 @@ const MyAppointments = () => {
                                                                 <button
                                                                     onClick={() => openCancelModal(appt._id)}
                                                                     disabled={updating === appt._id}
-                                                                    className="text-sm text-zinc-400 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300 ml-4 px-4 disabled:opacity-50"
+                                                                    className="text-sm text-zinc-400 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300 md:ml-4 px-4 disabled:opacity-50 w-full md:w-auto"
                                                                 >
                                                                     {updating === appt._id ? (
                                                                         <RefreshCw className="w-4 h-4 animate-spin inline mr-1" />
@@ -447,7 +447,7 @@ const MyAppointments = () => {
                                                                     <button
                                                                         onClick={() => canJoin && navigate(`/room/${appt._id}`)}
                                                                         disabled={!canJoin}
-                                                                        className={`flex items-center space-x-1 px-4 py-1.5 rounded-lg text-sm font-medium transition-all ml-4 ${canJoin
+                                                                        className={`flex w-full md:w-auto justify-center items-center space-x-1 px-4 py-1.5 rounded-lg text-sm font-medium transition-all md:ml-4 ${canJoin
                                                                             ? 'bg-rose-600 hover:bg-rose-500 text-white cursor-pointer'
                                                                             : 'bg-zinc-700/50 text-zinc-500 cursor-not-allowed'
                                                                             }`}
@@ -465,7 +465,7 @@ const MyAppointments = () => {
                                                                         setSelectedAppointment(appt);
                                                                         setReviewModalOpen(true);
                                                                     }}
-                                                                    className="flex items-center space-x-1 bg-rose-600 hover:bg-rose-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all ml-4"
+                                                                    className="flex w-full md:w-auto justify-center items-center space-x-1 bg-rose-600 hover:bg-rose-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all md:ml-4"
                                                                 >
                                                                     <Star className="w-4 h-4" />
                                                                     <span>Leave Review</span>
@@ -473,7 +473,7 @@ const MyAppointments = () => {
                                                             )}
 
                                                             {!isDoctor && appt.status === 'completed' && reviewedAppointments.has(appt._id) && (
-                                                                <div className="flex items-center space-x-1 bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-lg text-sm font-medium ml-4">
+                                                                <div className="flex w-full md:w-auto justify-center md:justify-start items-center space-x-1 bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-lg text-sm font-medium md:ml-4">
                                                                     <CheckCircle className="w-4 h-4" />
                                                                     <span>Reviewed</span>
                                                                 </div>
@@ -485,7 +485,7 @@ const MyAppointments = () => {
                                                                         setSelectedAppointmentForPrescription(appt._id);
                                                                         setPrescriptionModalOpen(true);
                                                                     }}
-                                                                    className="flex items-center space-x-1 bg-rose-600 hover:bg-rose-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all ml-4"
+                                                                    className="flex w-full md:w-auto justify-center items-center space-x-1 bg-rose-600 hover:bg-rose-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all md:ml-4"
                                                                 >
                                                                     <FileText className="w-4 h-4" />
                                                                     <span>View Prescription</span>
