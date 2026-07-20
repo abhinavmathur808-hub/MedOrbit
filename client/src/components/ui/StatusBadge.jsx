@@ -1,4 +1,4 @@
-import { CheckCircle, AlertCircle, XCircle, Clock } from 'lucide-react';
+import { CheckCircle, AlertCircle, XCircle, Clock, CalendarX } from 'lucide-react';
 
 // Single source of truth for appointment status pills. Previously each screen
 // (MyAppointments / DoctorDashboard / AdminDashboard) reimplemented this map
@@ -9,6 +9,7 @@ const STATUS = {
     confirmed: { label: 'Confirmed', cls: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', Icon: CheckCircle },
     completed: { label: 'Completed', cls: 'bg-rose-500/10 text-rose-300 border-rose-500/20', Icon: CheckCircle },
     cancelled: { label: 'Cancelled', cls: 'bg-red-500/10 text-red-400 border-red-500/20', Icon: XCircle },
+    'no-show': { label: 'No-show', cls: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20', Icon: CalendarX },
 };
 
 const FALLBACK = { cls: 'bg-zinc-800 text-zinc-300 border-zinc-700', Icon: Clock };

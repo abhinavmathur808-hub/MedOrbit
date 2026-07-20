@@ -17,12 +17,18 @@ const appointmentSchema = new mongoose.Schema(
             required: [true, 'Appointment date is required'],
         },
         slotTime: {
-            type: String, // Format: 'HH:MM' (e.g., '10:30')
+            // Canonical format: 'hh:mm A' (e.g., '09:30 AM'). Enforced by
+            // normalizeSlotTime() in appointmentController before any save.
+            type: String,
             required: [true, 'Slot time is required'],
         },
         status: {
             type: String,
-            enum: ['pending', 'confirmed', 'cancelled', 'completed'],
+            // 'no-show' is a terminal state for a PAID appointment whose time
+            // passed without the doctor ever confirming it. It is derived for
+            // display on read (the client owns local-time logic); this enum makes
+            // it a legal value for future persistence via the background sweeper.
+            enum: ['pending', 'confirmed', 'cancelled', 'completed', 'no-show'],
             default: 'pending',
         },
         paymentStatus: {

@@ -354,10 +354,19 @@ const MyAppointments = () => {
                                                 ? 'Patient'
                                                 : (appt.specialization || 'Doctor');
 
+                                            // A paid appointment whose time has passed without the
+                                            // doctor ever confirming it is a no-show. Derived here so it
+                                            // stays consistent with the tab split's local-time logic
+                                            // (the stored status remains 'pending').
+                                            const apptTs = getTimestamp(appt);
+                                            const isNoShow = appt.status === 'pending' && appt.paymentStatus && apptTs > 0 && apptTs < nowMs;
+                                            const effectiveStatus = isNoShow ? 'no-show' : appt.status;
+                                            const isTerminal = ['cancelled', 'completed', 'no-show'].includes(effectiveStatus);
+
                                             return (
                                                 <div
                                                     key={appt._id}
-                                                    className="rounded-2xl p-6 transition-all"
+                                                    className={`rounded-2xl p-6 transition-all ${appt.isDeleted ? 'opacity-50 grayscale' : ''}`}
                                                     style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}
                                                 >
                                                     <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
@@ -387,9 +396,9 @@ const MyAppointments = () => {
                                                                 <p className="font-semibold text-white">{appt.slotTime || 'N/A'}</p>
                                                             </div>
 
-                                                            <StatusBadge status={appt.status} />
+                                                            <StatusBadge status={effectiveStatus} />
 
-                                                            {isDoctor && appt.status === 'pending' && (
+                                                            {isDoctor && effectiveStatus === 'pending' && (
                                                                 <div className="flex items-center space-x-2 ml-4">
                                                                     <button
                                                                         onClick={() => handleStatusChange(appt._id, 'confirmed')}
@@ -414,7 +423,7 @@ const MyAppointments = () => {
                                                                 </div>
                                                             )}
 
-                                                            {!isDoctor && appt.status !== 'cancelled' && appt.status !== 'completed' && activeTab === 'upcoming' && (
+                                                            {!isDoctor && !isTerminal && activeTab === 'upcoming' && (
                                                                 <button
                                                                     onClick={() => openCancelModal(appt._id)}
                                                                     disabled={updating === appt._id}
@@ -425,12 +434,6 @@ const MyAppointments = () => {
                                                                     ) : null}
                                                                     Cancel Appointment
                                                                 </button>
-                                                            )}
-
-                                                            {!isDoctor && appt.status === 'cancelled' && (
-                                                                <span className="text-red-500 font-medium border border-red-500 rounded px-2 py-1 text-sm ml-4">
-                                                                    Cancelled
-                                                                </span>
                                                             )}
 
                                                             {appt.status === 'confirmed' && (() => {

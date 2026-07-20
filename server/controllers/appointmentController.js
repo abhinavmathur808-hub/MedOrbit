@@ -19,6 +19,60 @@ const getResend = () => {
     return _resend;
 };
 
+// The single canonical slot-time format used across the whole app: 'hh:mm A'
+// (e.g. '09:30 AM'), matching the booking UI's TIME_SLOTS and the client-side
+// sort parser. Normalising here — at the only write path — is what stops format
+// drift: '9:00 AM', '09:00 AM' and '13:30' would otherwise be stored as three
+// distinct strings that defeat the unique-slot index and the slots_booked match,
+// double-booking the same time. Returns the normalised string, or null if the
+// input is not a recognisable time.
+export const normalizeSlotTime = (raw) => {
+    if (typeof raw !== 'string') return null;
+    const s = raw.trim().toUpperCase();
+
+    // 12-hour with meridiem: "9:00 AM" / "09:30 PM"
+    let m = s.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+    if (m) {
+        const h = parseInt(m[1], 10);
+        const min = parseInt(m[2], 10);
+        if (h < 1 || h > 12 || min > 59) return null;
+        return `${String(h).padStart(2, '0')}:${m[2]} ${m[3]}`;
+    }
+
+    // 24-hour, no meridiem: "13:30" -> "01:30 PM"
+    m = s.match(/^(\d{1,2}):(\d{2})$/);
+    if (m) {
+        const h = parseInt(m[1], 10);
+        const min = parseInt(m[2], 10);
+        if (h > 23 || min > 59) return null;
+        const period = h >= 12 ? 'PM' : 'AM';
+        const h12 = h % 12 === 0 ? 12 : h % 12;
+        return `${String(h12).padStart(2, '0')}:${String(min).padStart(2, '0')} ${period}`;
+    }
+
+    return null;
+};
+
+// A pending, unpaid appointment older than the 15-minute checkout window is an
+// abandoned hold (closed tab / crashed browser), not a real booking. The
+// production sweeper (utils/appointmentSweeper.js) DELETES these and frees the
+// slot; here we merely OMIT them from any list so a zombie hold never surfaces
+// as a stale 'pending'. Read-only on purpose: a GET must stay idempotent, and
+// mirroring the delete here would let a dev machine reap live prod holds (the
+// exact hazard the sweeper's production gate exists to prevent). A PAID pending
+// appointment is a real visit awaiting the doctor and is never hidden.
+const CHECKOUT_WINDOW_MS = 15 * 60 * 1000;
+const isAbandonedHold = (appt) =>
+    appt.status === 'pending' &&
+    !appt.paymentStatus &&
+    Date.now() - new Date(appt.updatedAt).getTime() > CHECKOUT_WINDOW_MS;
+
+// Any pending appointment that has not been paid for, regardless of age. The
+// doctor's queue excludes these entirely — an unpaid hold is not a real booking
+// a doctor should see or act on. Only confirmed, paid-pending, and terminal
+// appointments reach them.
+const isUnpaidHold = (appt) => appt.status === 'pending' && !appt.paymentStatus;
+
 export const sendAppointmentEmails = async (doctorEmail, doctorName, patientEmail, patientName, date, slotTime) => {
     try {
         const formattedDate = new Date(date).toLocaleDateString('en-IN', {
@@ -98,49 +152,73 @@ export const getMyAppointments = async (req, res) => {
             });
         }
 
-        let appointments = [];
         let formattedAppointments = [];
 
         if (userRole === 'doctor') {
-            appointments = await Appointment.find({ doctorId: userId })
+            const appointments = (await Appointment.find({ doctorId: userId })
                 .populate({
                     path: 'patientId',
                     select: 'name email phone photo',
                 })
-                .sort({ date: -1 });
+                .sort({ date: -1, createdAt: -1 }))
+                .filter((appt) => !isUnpaidHold(appt));
 
-            formattedAppointments = appointments.map((appt) => ({
-                _id: appt._id,
-                patientName: appt.patientId?.name || 'Patient',
-                patientEmail: appt.patientId?.email || '',
-                patientPhone: appt.patientId?.phone || '',
-                patientPhoto: appt.patientId?.photo || '',
-                date: appt.date,
-                slotTime: appt.slotTime,
-                status: appt.status,
-                paymentStatus: appt.paymentStatus,
-                createdAt: appt.createdAt,
-                isDoctor: true,
-            }));
+            formattedAppointments = appointments.map((appt) => {
+                const patient = appt.patientId; // null once the patient account is deleted
+                return {
+                    _id: appt._id,
+                    patientName: patient?.name || 'Unavailable Patient',
+                    patientEmail: patient?.email || '',
+                    patientPhone: patient?.phone || '',
+                    patientPhoto: patient?.photo || '',
+                    isDeleted: !patient,
+                    date: appt.date,
+                    slotTime: appt.slotTime,
+                    status: appt.status,
+                    paymentStatus: appt.paymentStatus,
+                    createdAt: appt.createdAt,
+                    isDoctor: true,
+                };
+            });
         } else {
-            appointments = await Appointment.find({ patientId: userId })
+            const appointments = (await Appointment.find({ patientId: userId })
                 .populate({
                     path: 'doctorId',
                     select: 'name email phone photo',
                 })
-                .sort({ date: -1 });
+                .sort({ date: -1, createdAt: -1 }))
+                .filter((appt) => !isAbandonedHold(appt));
 
-            formattedAppointments = await Promise.all(
-                appointments.map(async (appt) => {
-                    const doctorProfile = await Doctor.findOne({ userId: appt.doctorId?._id });
+            // Specialization lives on the Doctor model, keyed by the doctor's User
+            // id. Batch every profile into ONE query keyed by userId, instead of
+            // the previous per-appointment Doctor.findOne (an N+1).
+            const doctorUserIds = [
+                ...new Set(
+                    appointments.map((a) => a.doctorId?._id?.toString()).filter(Boolean)
+                ),
+            ];
+            const profiles = await Doctor.find({ userId: { $in: doctorUserIds } })
+                .select('userId specialization');
+            const specByDoctorUserId = new Map(
+                profiles.map((p) => [p.userId.toString(), p.specialization])
+            );
 
+            const baseAppointments = appointments.map((appt) => {
+                const doctor = appt.doctorId; // null once the doctor account is deleted
+
+                // Tombstone: the referenced doctor no longer exists. Return a
+                // structured, self-describing placeholder flagged with isDeleted,
+                // instead of leaking a bare 'Doctor' / 'General' fallback. The
+                // patient paid for this visit, so we keep the record, not drop it.
+                if (!doctor) {
                     return {
                         _id: appt._id,
-                        doctorName: appt.doctorId?.name || 'Doctor',
-                        doctorEmail: appt.doctorId?.email || '',
-                        doctorPhone: appt.doctorId?.phone || '',
-                        doctorPhoto: appt.doctorId?.photo || '',
-                        specialization: doctorProfile?.specialization || 'General',
+                        doctorName: 'Unavailable Provider',
+                        doctorEmail: '',
+                        doctorPhone: '',
+                        doctorPhoto: '',
+                        specialization: 'N/A',
+                        isDeleted: true,
                         date: appt.date,
                         slotTime: appt.slotTime,
                         status: appt.status,
@@ -148,17 +226,34 @@ export const getMyAppointments = async (req, res) => {
                         createdAt: appt.createdAt,
                         isDoctor: false,
                     };
-                })
-            );
+                }
 
-            const appointmentIds = formattedAppointments.map(a => a._id);
+                return {
+                    _id: appt._id,
+                    doctorName: doctor.name,
+                    doctorEmail: doctor.email || '',
+                    doctorPhone: doctor.phone || '',
+                    doctorPhoto: doctor.photo || '',
+                    specialization: specByDoctorUserId.get(doctor._id.toString()) || 'General Practice',
+                    isDeleted: false,
+                    date: appt.date,
+                    slotTime: appt.slotTime,
+                    status: appt.status,
+                    paymentStatus: appt.paymentStatus,
+                    createdAt: appt.createdAt,
+                    isDoctor: false,
+                };
+            });
+
+            const appointmentIds = baseAppointments.map((a) => a._id);
+
             const prescriptions = await Prescription.find({ appointmentId: { $in: appointmentIds } }).select('appointmentId');
-            const prescribedSet = new Set(prescriptions.map(p => p.appointmentId.toString()));
+            const prescribedSet = new Set(prescriptions.map((p) => p.appointmentId.toString()));
 
             const reviews = await Review.find({ appointmentId: { $in: appointmentIds } }).select('appointmentId');
-            const reviewedSet = new Set(reviews.map(r => r.appointmentId.toString()));
+            const reviewedSet = new Set(reviews.map((r) => r.appointmentId.toString()));
 
-            formattedAppointments = formattedAppointments.map(a => ({
+            formattedAppointments = baseAppointments.map((a) => ({
                 ...a,
                 hasPrescription: prescribedSet.has(a._id.toString()),
                 hasReview: reviewedSet.has(a._id.toString()),
@@ -182,16 +277,28 @@ export const getMyAppointments = async (req, res) => {
 export const createAppointment = async (req, res) => {
     try {
         const patientId = req.userId;
-        const { doctorId, date, slotTime } = req.body;
+        const { doctorId, date } = req.body;
+
+        // Force the incoming time into the one canonical format before it is used
+        // anywhere (conflict check, slots_booked, unique index, save).
+        const slotTime = normalizeSlotTime(req.body.slotTime);
 
         if (!patientId || !doctorId || !date || !slotTime) {
             return res.status(400).json({
                 success: false,
-                message: 'Missing required fields: doctorId, date, slotTime',
+                message: req.body.slotTime && !slotTime
+                    ? 'Invalid slot time format. Expected e.g. "09:30 AM".'
+                    : 'Missing required fields: doctorId, date, slotTime',
             });
         }
 
         const appointmentDate = new Date(date);
+        if (Number.isNaN(appointmentDate.getTime())) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid appointment date',
+            });
+        }
 
         const existingAppointment = await Appointment.findOne({
             doctorId,
@@ -296,12 +403,13 @@ export const getDoctorAppointments = async (req, res) => {
     try {
         const doctorUserId = req.userId;
 
-        const appointments = await Appointment.find({ doctorId: doctorUserId })
+        const appointments = (await Appointment.find({ doctorId: doctorUserId })
             .populate({
                 path: 'patientId',
                 select: 'name email phone',
             })
-            .sort({ date: -1 });
+            .sort({ date: -1, createdAt: -1 }))
+            .filter((appt) => !isUnpaidHold(appt));
 
         res.status(200).json({
             success: true,
