@@ -207,7 +207,7 @@ const MyAppointments = () => {
                             {[0, 1, 2].map((i) => (
                                 <div
                                     key={i}
-                                    className="rounded-2xl p-6"
+                                    className="rounded-2xl p-4 md:p-6"
                                     style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}
                                 >
                                     <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
@@ -366,7 +366,7 @@ const MyAppointments = () => {
                                             return (
                                                 <div
                                                     key={appt._id}
-                                                    className={`rounded-2xl p-6 transition-all ${appt.isDeleted ? 'opacity-50 grayscale' : ''}`}
+                                                    className={`rounded-2xl p-4 md:p-6 transition-all ${appt.isDeleted ? 'opacity-50 grayscale' : ''}`}
                                                     style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}
                                                 >
                                                     <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
@@ -403,7 +403,7 @@ const MyAppointments = () => {
                                                                     <button
                                                                         onClick={() => handleStatusChange(appt._id, 'confirmed')}
                                                                         disabled={updating === appt._id}
-                                                                        className="flex flex-1 md:flex-none justify-center items-center space-x-1 bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
+                                                                        className="flex flex-1 md:flex-none justify-center items-center space-x-1 bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-3 md:py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
                                                                     >
                                                                         {updating === appt._id ? (
                                                                             <RefreshCw className="w-4 h-4 animate-spin" />
@@ -415,7 +415,7 @@ const MyAppointments = () => {
                                                                     <button
                                                                         onClick={() => handleStatusChange(appt._id, 'cancelled')}
                                                                         disabled={updating === appt._id}
-                                                                        className="flex flex-1 md:flex-none justify-center items-center space-x-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
+                                                                        className="flex flex-1 md:flex-none justify-center items-center space-x-1 bg-red-500 hover:bg-red-600 text-white px-3 py-3 md:py-1.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
                                                                     >
                                                                         <X className="w-4 h-4" />
                                                                         <span>Cancel</span>
@@ -447,7 +447,7 @@ const MyAppointments = () => {
                                                                     <button
                                                                         onClick={() => canJoin && navigate(`/room/${appt._id}`)}
                                                                         disabled={!canJoin}
-                                                                        className={`flex w-full md:w-auto justify-center items-center space-x-1 px-4 py-1.5 rounded-lg text-sm font-medium transition-all md:ml-4 ${canJoin
+                                                                        className={`flex w-full md:w-auto justify-center items-center space-x-1 px-4 py-3 md:py-1.5 rounded-lg text-sm font-medium transition-all md:ml-4 ${canJoin
                                                                             ? 'bg-rose-600 hover:bg-rose-500 text-white cursor-pointer'
                                                                             : 'bg-zinc-700/50 text-zinc-500 cursor-not-allowed'
                                                                             }`}
@@ -465,7 +465,7 @@ const MyAppointments = () => {
                                                                         setSelectedAppointment(appt);
                                                                         setReviewModalOpen(true);
                                                                     }}
-                                                                    className="flex w-full md:w-auto justify-center items-center space-x-1 bg-rose-600 hover:bg-rose-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all md:ml-4"
+                                                                    className="flex w-full md:w-auto justify-center items-center space-x-1 bg-rose-600 hover:bg-rose-500 text-white px-4 py-3 md:py-1.5 rounded-lg text-sm font-medium transition-all md:ml-4"
                                                                 >
                                                                     <Star className="w-4 h-4" />
                                                                     <span>Leave Review</span>
@@ -473,7 +473,7 @@ const MyAppointments = () => {
                                                             )}
 
                                                             {!isDoctor && appt.status === 'completed' && reviewedAppointments.has(appt._id) && (
-                                                                <div className="flex w-full md:w-auto justify-center md:justify-start items-center space-x-1 bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-lg text-sm font-medium md:ml-4">
+                                                                <div className="flex w-full md:w-auto justify-center md:justify-start items-center space-x-1 bg-emerald-500/10 text-emerald-400 px-3 py-3 md:py-1.5 rounded-lg text-sm font-medium md:ml-4">
                                                                     <CheckCircle className="w-4 h-4" />
                                                                     <span>Reviewed</span>
                                                                 </div>
@@ -485,7 +485,7 @@ const MyAppointments = () => {
                                                                         setSelectedAppointmentForPrescription(appt._id);
                                                                         setPrescriptionModalOpen(true);
                                                                     }}
-                                                                    className="flex w-full md:w-auto justify-center items-center space-x-1 bg-rose-600 hover:bg-rose-500 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all md:ml-4"
+                                                                    className="flex w-full md:w-auto justify-center items-center space-x-1 bg-rose-600 hover:bg-rose-500 text-white px-4 py-3 md:py-1.5 rounded-lg text-sm font-medium transition-all md:ml-4"
                                                                 >
                                                                     <FileText className="w-4 h-4" />
                                                                     <span>View Prescription</span>

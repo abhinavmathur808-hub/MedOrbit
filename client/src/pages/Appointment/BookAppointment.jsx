@@ -318,7 +318,7 @@ const BookAppointment = () => {
 
                         <div className="grid lg:grid-cols-[340px_1fr] gap-6">
 
-                            <div className="rounded-2xl p-6 h-fit" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+                            <div className="rounded-2xl p-5 md:p-6 h-fit" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
                                 <div className="flex flex-col items-center">
                                     <Skeleton className="w-24 h-24 rounded-full" />
                                     <Skeleton className="h-5 w-36 mt-4" />
@@ -345,7 +345,7 @@ const BookAppointment = () => {
                                 </div>
                             </div>
 
-                            <div className="rounded-2xl p-6" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+                            <div className="rounded-2xl p-5 md:p-6" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
                                 <Skeleton className="h-5 w-44 mb-5" />
 
                                 <Skeleton className="h-4 w-24 mb-3" />
@@ -380,7 +380,7 @@ const BookAppointment = () => {
         return (
             <div className="min-h-screen bg-zinc-950">
                 <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
-                    <div className="text-center rounded-2xl p-8 max-w-md" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+                    <div className="text-center rounded-2xl p-6 md:p-8 max-w-md" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
                         <XCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
                         <h2 className="text-xl font-bold text-white mb-2">Doctor Not Found</h2>
                         <p className="text-zinc-400 mb-6">{error}</p>
@@ -397,7 +397,7 @@ const BookAppointment = () => {
         return (
             <div className="min-h-screen bg-zinc-950">
                 <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
-                    <div className="text-center rounded-2xl p-8 max-w-md" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+                    <div className="text-center rounded-2xl p-6 md:p-8 max-w-md" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
                         <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
                         <h2 className="text-xl font-bold text-white mb-2">Booking Confirmed!</h2>
                         <p className="text-zinc-400 mb-2">
@@ -454,7 +454,7 @@ const BookAppointment = () => {
 
                     <div className="grid lg:grid-cols-[340px_1fr] gap-6">
 
-                        <div className="rounded-2xl p-6 h-fit" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+                        <div className="rounded-2xl p-5 md:p-6 h-fit" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
                             {/* Centered profile: avatar, name, specialty, qualification tags */}
                             <div className="flex flex-col items-center text-center">
                                 {photo ? (
@@ -462,8 +462,11 @@ const BookAppointment = () => {
                                         layoutId={`doctor-img-${doctor._id}`}
                                         src={optimizeCloudinaryUrl(photo)}
                                         alt={name}
+                                        width={96}
+                                        height={96}
                                         className="w-24 h-24 rounded-full object-cover mx-auto border-2 border-zinc-800/80"
                                         loading="lazy"
+                                        decoding="async"
                                     />
                                 ) : (
                                     <div className="w-24 h-24 rounded-full mx-auto border-2 border-zinc-800/80 bg-gradient-to-br from-rose-600 to-rose-800 flex items-center justify-center text-white text-3xl font-bold">
@@ -513,7 +516,7 @@ const BookAppointment = () => {
                             )}
                         </div>
 
-                        <div className="rounded-2xl p-6" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
+                        <div className="rounded-2xl p-5 md:p-6" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', boxShadow: 'var(--card-shadow)' }}>
                             <h2 className="text-lg font-semibold text-white mb-5 flex items-center space-x-2">
                                 <Calendar className="w-5 h-5 text-rose-500" />
                                 <span>Book Appointment</span>
@@ -672,7 +675,7 @@ const BookAppointment = () => {
                                                                 if (isUnavailable) return;
                                                                 setSelectedTime(slot);
                                                             }}
-                                                            className={`text-sm font-medium px-3 py-2.5 rounded-full border transition-all duration-150 ${isUnavailable
+                                                            className={`text-sm font-medium px-3 py-3 md:py-2.5 rounded-full border transition-all duration-150 ${isUnavailable
                                                                 ? 'bg-zinc-900 border-zinc-800 text-zinc-600 cursor-not-allowed line-through opacity-50'
                                                                 : selected
                                                                     ? 'bg-rose-600 border-rose-500 text-white shadow-md'

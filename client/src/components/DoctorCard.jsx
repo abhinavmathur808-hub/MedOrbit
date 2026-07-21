@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { optimizeCloudinaryUrl } from '../utils/cloudinaryUrl';
@@ -32,7 +33,11 @@ const DoctorCard = ({ doctor }) => {
         <Link to={`/book-appointment/${doctor._id}`} className="group block h-full">
             {/* flex-col + h-full lets the CTA sit at the card's bottom edge
                 (mt-auto), so buttons line up across a row regardless of content. */}
-            <div className="flex flex-col h-full bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 rounded-2xl p-5 transition-all hover:border-zinc-700 hover:-translate-y-1">
+            {/* backdrop-blur is gated to md+: a blurred backdrop is recomposited
+                every frame, and 12–45 of them on a phone is the single biggest
+                scroll-jank source here. The translucent bg alone reads almost
+                identically on a small dark screen; desktop glass is untouched. */}
+            <div className="flex flex-col h-full bg-zinc-900/40 md:backdrop-blur-md border border-zinc-800/50 rounded-2xl p-5 transition-all hover:border-zinc-700 hover:-translate-y-1">
                 {/* Compact circular avatar. The overflow-hidden ring is split from
                     the positioning wrapper so the verified badge can sit on the
                     edge without being clipped. */}
@@ -43,8 +48,11 @@ const DoctorCard = ({ doctor }) => {
                                 layoutId={`doctor-img-${doctor._id}`}
                                 src={optimizeCloudinaryUrl(photo)}
                                 alt={name}
+                                width={96}
+                                height={96}
                                 className="w-full h-full object-cover"
                                 loading="lazy"
+                                decoding="async"
                             />
                         ) : (
                             <div className="w-full h-full flex items-center justify-center bg-rose-950/30">
@@ -116,7 +124,7 @@ const DoctorCard = ({ doctor }) => {
 
                 {/* Pinned to the bottom for cross-card button alignment */}
                 <div className="mt-auto pt-4">
-                    <span className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800/50 py-2.5 font-medium text-zinc-300 transition-all duration-300 group-hover:border-rose-500 group-hover:bg-rose-600 group-hover:text-white">
+                    <span className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-800/50 py-3 md:py-2.5 font-medium text-zinc-300 transition-all duration-300 group-hover:border-rose-500 group-hover:bg-rose-600 group-hover:text-white">
                         <Calendar className="w-4 h-4" />
                         Book Appointment
                     </span>
@@ -126,4 +134,8 @@ const DoctorCard = ({ doctor }) => {
     );
 };
 
-export default DoctorCard;
+// Memoised: the doctor grid re-renders on every keystroke in the sidebar search
+// (searchParams change → Doctors re-renders). The `doctor` objects keep their
+// identity through the filter, so memo lets untouched cards skip re-rendering
+// entirely — the difference between re-rendering 1 card and 45 per keypress.
+export default memo(DoctorCard);

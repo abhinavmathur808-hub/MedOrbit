@@ -291,11 +291,11 @@ const Doctors = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.35, ease: 'easeInOut' }}
         >
-            <div className="bg-zinc-950 pt-32 pb-20 text-center px-6">
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-3">
+            <div className="bg-zinc-950 pt-24 pb-12 md:pt-32 md:pb-20 text-center px-6">
+                <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-3">
                     Find Doctors
                 </h1>
-                <p className="text-zinc-400 text-lg">
+                <p className="text-zinc-400 text-sm md:text-lg">
                     Book appointments with verified healthcare professionals
                 </p>
             </div>
@@ -308,7 +308,7 @@ const Doctors = () => {
                         {/* On lg the panel is sticky, so cap it to the viewport and
                             let it scroll internally (sleek bar) when the specialty
                             list runs long. On mobile it flows in the page normally. */}
-                        <div className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800/50 rounded-2xl p-6 flex flex-col gap-6 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto scrollbar-sleek">
+                        <div className="bg-zinc-900/40 md:backdrop-blur-md border border-zinc-800/50 rounded-2xl p-5 md:p-6 flex flex-col gap-6 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto scrollbar-sleek">
 
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
@@ -366,7 +366,7 @@ const Doctors = () => {
                                                 <button
                                                     key={value}
                                                     onClick={() => toggleSpecialty(value)}
-                                                    className="group flex items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-zinc-800/40 cursor-pointer"
+                                                    className="group flex items-center gap-3 rounded-lg px-2 py-2 min-h-[44px] md:min-h-0 text-left transition-colors hover:bg-zinc-800/40 cursor-pointer"
                                                 >
                                                     <span
                                                         className={`grid h-[18px] w-[18px] flex-shrink-0 place-items-center rounded-[5px] border transition-colors ${
