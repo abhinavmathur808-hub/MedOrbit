@@ -54,7 +54,7 @@ const AdminDashboard = () => {
                 if (statsData.success) setStats(statsData.stats);
                 if (activityData.success) setRecentActivity(activityData.appointments || []);
                 if (doctorsData.success) setDoctors(doctorsData.doctors || []);
-            } catch (err) {
+            } catch {
                 setError('Failed to connect to server');
                 toast.error('Failed to connect to server');
             } finally {
@@ -81,7 +81,7 @@ const AdminDashboard = () => {
             } else {
                 toast.error(`Could not verify ${doctorName} — please try again`);
             }
-        } catch (err) {
+        } catch {
             toast.error(`Could not verify ${doctorName} — please try again`);
         } finally {
             setVerifyingId(null);

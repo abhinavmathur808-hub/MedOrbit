@@ -6,7 +6,7 @@ import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 
-import logo from '../assets/logo-light-mode.png';
+import logo from '../assets/logo-light-mode.webp';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 

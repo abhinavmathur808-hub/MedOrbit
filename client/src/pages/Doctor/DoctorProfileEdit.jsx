@@ -101,7 +101,7 @@ const DoctorProfileEdit = () => {
                         qualifications: '',
                     });
                 }
-            } catch (err) {
+            } catch {
                 setFormData({
                     name: user?.name || '',
                     phone: user?.phone || '',
@@ -215,7 +215,7 @@ const DoctorProfileEdit = () => {
             } else {
                 setError('Upload failed. Please try again.');
             }
-        } catch (err) {
+        } catch {
             setError('Failed to upload image');
         } finally {
             setUploading(false);

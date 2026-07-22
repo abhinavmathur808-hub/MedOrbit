@@ -137,7 +137,7 @@ const PrescriptionModal = ({ isOpen, onClose, appointment, onPrescriptionSubmitt
             } else {
                 setError(data.message || 'Failed to create prescription');
             }
-        } catch (err) {
+        } catch {
             setError('Failed to connect to server');
         } finally {
             setLoading(false);

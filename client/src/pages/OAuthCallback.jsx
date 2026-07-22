@@ -31,7 +31,7 @@ const OAuthCallback = () => {
                 dispatch(setCredentials({ token, user }));
 
                 navigate(redirect, { replace: true });
-            } catch (error) {
+            } catch {
                 navigate('/login?error=oauth_failed', { replace: true });
             }
         } else {

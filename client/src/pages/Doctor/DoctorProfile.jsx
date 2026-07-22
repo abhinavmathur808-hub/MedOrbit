@@ -26,7 +26,6 @@ const DoctorProfile = () => {
 
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [fetchError, setFetchError] = useState('');
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -51,10 +50,10 @@ const DoctorProfile = () => {
 
                 if (data.success && data.doctor) {
                     setProfile(data.doctor);
-                } else {
                 }
-            } catch (err) {
-                setFetchError(err.message);
+            } catch {
+                // Fetch failed — `profile` stays null and the component falls
+                // through to its "no profile yet" empty state.
             } finally {
                 setLoading(false);
             }

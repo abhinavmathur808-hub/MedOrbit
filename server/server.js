@@ -14,6 +14,7 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import connectDB from './config/db.js';
 import { globalLimiter } from './middlewares/rateLimiter.js';
+import sanitizeMongo from './middlewares/sanitizeMongo.js';
 import { startAppointmentSweeper } from './utils/appointmentSweeper.js';
 import User from './models/User.js';
 
@@ -146,15 +147,19 @@ app.use(compression());
 app.use(globalLimiter);
 
 const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
-const allowedOrigins = [
-    clientUrl,
-    'http://localhost:5174',
-];
+const allowedOrigins = [clientUrl];
 // Dynamically allow both www and non-www variants of CLIENT_URL
 if (clientUrl.includes('://www.')) {
     allowedOrigins.push(clientUrl.replace('://www.', '://'));
 } else if (clientUrl.includes('://')) {
     allowedOrigins.push(clientUrl.replace('://', '://www.'));
+}
+// Local dev origins are NOT trusted in production. Combined with
+// credentials:true, leaving them in the production allowlist means any page a
+// victim runs locally on these ports could make authenticated cross-origin
+// calls against the live API.
+if (process.env.NODE_ENV !== 'production') {
+    allowedOrigins.push('http://localhost:5173', 'http://localhost:5174');
 }
 app.use(
     cors({
@@ -167,6 +172,9 @@ app.use(
 app.use(express.json({ limit: '1mb' }));
 
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+
+// Must sit after the body parsers (so req.body exists) and before every route.
+app.use(sanitizeMongo);
 
 app.use(cookieParser());
 
@@ -204,4 +212,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });

@@ -123,7 +123,7 @@ const BookAppointment = () => {
             } else {
                 setError(data.message || 'Failed to fetch doctor details');
             }
-        } catch (err) {
+        } catch {
             setError('Failed to connect to server');
         } finally {
             setLoading(false);
@@ -139,7 +139,9 @@ const BookAppointment = () => {
                 );
                 const data = await response.json();
                 if (data.success) setRelatedDoctors(data.doctors);
-            } catch (err) {
+            } catch {
+                // Related doctors are a nice-to-have carousel, not part of the
+                // booking flow — a failure here just leaves the section empty.
             }
         };
 
@@ -248,7 +250,7 @@ const BookAppointment = () => {
                     },
                     body: JSON.stringify({ appointmentId, reason: 'Payment not completed' }),
                 });
-            } catch (err) {
+            } catch {
                 // Slot stays held; it can still be cancelled from My Appointments
             }
         };

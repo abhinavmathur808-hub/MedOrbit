@@ -2,7 +2,6 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { FileText, Image, Tag, UserCheck, Calendar, AlignLeft, Send, Loader2, CheckCircle, Clock } from 'lucide-react';
 
 const CATEGORIES = [
@@ -18,7 +17,6 @@ const CATEGORIES = [
 
 const AddArticle = () => {
     const { token } = useSelector((state) => state.auth);
-    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         title: '',
@@ -75,7 +73,7 @@ const AddArticle = () => {
             } else {
                 setError(data.message || 'Failed to add article');
             }
-        } catch (err) {
+        } catch {
             setError('Failed to add article. Please try again.');
         } finally {
             setLoading(false);

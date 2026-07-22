@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
-import logoDark from '../assets/logo-light-mode.png';
+import logoDark from '../assets/logo-light-mode.webp';
 
 // Shared hover treatment for every contact affordance: lift and brighten.
 const CONTACT_HOVER =

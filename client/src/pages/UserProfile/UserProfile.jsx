@@ -82,7 +82,9 @@ const UserProfile = () => {
                     });
                     setMedicalHistory(data.user.medicalHistory || []);
                 }
-            } catch (err) {
+            } catch {
+                // Profile fetch failed — the form keeps its Redux-seeded
+                // defaults instead of blanking out what the user already has.
             } finally {
                 setLoading(false);
             }
@@ -126,7 +128,7 @@ const UserProfile = () => {
             } else {
                 throw new Error('Upload failed');
             }
-        } catch (err) {
+        } catch {
             setError('Failed to upload image');
         } finally {
             setUploading(false);

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/features/authSlice';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import logoDark from '../assets/logo-light-mode.png';
+import logoDark from '../assets/logo-light-mode.webp';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

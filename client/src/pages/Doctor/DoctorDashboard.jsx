@@ -68,7 +68,7 @@ const DoctorDashboard = () => {
                 setError(data.message || 'Failed to fetch appointments');
                 toast.error(data.message || 'Failed to fetch appointments');
             }
-        } catch (err) {
+        } catch {
             setError('Failed to connect to server');
             toast.error('Failed to connect to server');
         } finally {
@@ -106,7 +106,7 @@ const DoctorDashboard = () => {
             } else {
                 toast.error(data.message || 'Failed to update status');
             }
-        } catch (err) {
+        } catch {
             toast.error('Failed to update appointment status');
         } finally {
             setUpdating(null);
@@ -146,7 +146,7 @@ const DoctorDashboard = () => {
             } else {
                 toast.error(data.message || 'Failed to cancel appointment');
             }
-        } catch (err) {
+        } catch {
             toast.error('Failed to cancel appointment');
         } finally {
             setUpdating(null);

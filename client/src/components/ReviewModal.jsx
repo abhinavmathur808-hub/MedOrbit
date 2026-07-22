@@ -55,7 +55,7 @@ const ReviewModal = ({ isOpen, onClose, appointment, onReviewSubmitted }) => {
             } else {
                 setError(data.message || 'Failed to submit review');
             }
-        } catch (err) {
+        } catch {
             setError('Failed to connect to server');
         } finally {
             setLoading(false);

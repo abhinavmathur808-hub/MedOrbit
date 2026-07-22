@@ -36,7 +36,7 @@ const ViewPrescriptionModal = ({ isOpen, onClose, appointmentId }) => {
             } else {
                 setError(data.message || 'Failed to fetch prescription');
             }
-        } catch (err) {
+        } catch {
             setError('Failed to connect to server');
         } finally {
             setLoading(false);

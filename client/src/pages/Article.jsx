@@ -22,7 +22,7 @@ const Article = () => {
                 } else {
                     setError('Article not found');
                 }
-            } catch (err) {
+            } catch {
                 setError('Failed to load article');
             } finally {
                 setLoading(false);

@@ -18,7 +18,9 @@ const getResend = () => {
 
 export const sendOtpController = async (req, res) => {
     try {
-        const { email } = req.body;
+        // Explicit string cast: a non-string previously reached .toLowerCase() and
+        // threw, surfacing as a 500 instead of a clean validation error.
+        const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
 
         if (!email) {
             return res.status(400).json({
@@ -89,7 +91,12 @@ export const sendOtpController = async (req, res) => {
 
 export const registerController = async (req, res) => {
     try {
-        const { name, email, password, gender, phone, otp } = req.body;
+        const { name, password, gender, phone } = req.body;
+
+        // Same string-cast discipline as login: these two are the only body values
+        // that reach a query (Otp/User lookups) or bcrypt.compare.
+        const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+        const otp = typeof req.body.otp === 'string' ? req.body.otp.trim() : '';
 
         const allowedRoles = ['patient', 'doctor'];
         const role = allowedRoles.includes(req.body.role?.toLowerCase())
@@ -197,7 +204,13 @@ export const registerController = async (req, res) => {
 
 export const loginController = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        // Cast to a string BEFORE the value can reach a query. Without this, a body
+        // of {"email":{"$ne":null}} passes the truthy check below (objects are
+        // truthy) and injects a MongoDB operator into findOne (CWE-943) — allowing
+        // arbitrary record selection, $regex user-enumeration via the bcrypt timing
+        // difference, and ReDoS against the users collection.
+        const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+        const password = typeof req.body.password === 'string' ? req.body.password : '';
 
         if (!email || !password) {
             return res.status(400).json({

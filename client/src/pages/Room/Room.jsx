@@ -127,7 +127,9 @@ const Room = () => {
                 zpRef.current.destroy();
                 zpRef.current = null;
             }
-        } catch (err) {
+        } catch {
+            // destroy() throws if the SDK already tore itself down (peer ended
+            // the call first) — there is nothing left to clean up either way.
         }
     }, []);
 
@@ -162,7 +164,7 @@ const Room = () => {
                     setAccessState('denied');
                     setDenyMessage(data.message || 'You are not authorized to join this consultation.');
                 }
-            } catch (err) {
+            } catch {
                 if (!cancelled) {
                     setAccessState('denied');
                     setDenyMessage('Could not verify access to this consultation. Please try again.');
@@ -218,11 +220,12 @@ const Room = () => {
                         destroyZego();
                         navigate(getReturnPath());
                     },
-                    onUserLeave: (users) => {
-                    },
                 });
 
-            } catch (error) {
+            } catch {
+                // Zego setup failed (bad token, no media permission, SDK load
+                // error). The room stays on its loading shell rather than
+                // half-mounting a broken call UI.
             }
         };
 

@@ -75,7 +75,7 @@ const MyAppointments = () => {
                 } else {
                     setError(data.message || 'Failed to fetch appointments');
                 }
-            } catch (err) {
+            } catch {
                 setError('Failed to connect to server');
             } finally {
                 setLoading(false);
@@ -114,7 +114,7 @@ const MyAppointments = () => {
             } else {
                 toast.error(data.message || 'Failed to update status');
             }
-        } catch (err) {
+        } catch {
             toast.error('Failed to update appointment status');
         } finally {
             setUpdating(null);
@@ -157,7 +157,7 @@ const MyAppointments = () => {
             } else {
                 toast.error(data.message || 'Failed to cancel appointment');
             }
-        } catch (err) {
+        } catch {
             toast.error('Failed to cancel appointment');
         } finally {
             setUpdating(null);

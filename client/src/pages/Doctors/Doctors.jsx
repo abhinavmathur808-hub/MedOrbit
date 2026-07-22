@@ -188,7 +188,7 @@ const Doctors = () => {
                 setError(data.message || 'Failed to fetch doctors');
                 if (targetPage > 1) toast.error('Could not load more doctors — please try again');
             }
-        } catch (err) {
+        } catch {
             setError('Failed to connect to server');
             if (targetPage > 1) toast.error('Could not load more doctors — please try again');
         } finally {
