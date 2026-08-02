@@ -194,6 +194,11 @@ app.get('/', (req, res) => {
     res.status(200).send('Server is awake');
 });
 
+// Lightweight health-check for frontend pre-warming (zero DB queries)
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'active', message: 'Server is awake' });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/doctor', doctorRoutes);
 app.use('/api/appointments', appointmentRoutes);

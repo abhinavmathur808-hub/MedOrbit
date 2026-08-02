@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { ToastProvider } from './components/ui/Toast';
@@ -33,6 +34,15 @@ function App() {
 function AppContent() {
   const location = useLocation();
   const hideNavbar = ['/login', '/register'].includes(location.pathname) || location.pathname.startsWith('/room/');
+
+  // Pre-warm the backend on first load (fire-and-forget, non-blocking)
+  useEffect(() => {
+    try {
+      fetch(`${import.meta.env.VITE_API_URL}/api/health`).catch(() => {});
+    } catch {
+      // silently swallow – the ping is purely optimistic
+    }
+  }, []);
 
   return (
     <>
